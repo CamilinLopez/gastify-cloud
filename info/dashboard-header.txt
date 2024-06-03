@@ -1,0 +1,28 @@
++--------------------------------------+
+|            Dashboard Header          |
++--------------------------------------+
+| Sidebar Navigation   | Main Content  |
+|                      |               |
+| - Inicio             |               |
+| - Inventario         |               |
+|   - Registro         |               |
+|   - Control Diario   |               |
+| - Operaciones Diarias|               |
+|   - Carga y Descarga |               |
+| - Reportes           |               |
+|   - Diarios          |               |
+|   - Mensuales        |               |
+| - Abastecimiento     |               |
+|   - Registro         |               |
+|   - Alertas          |               |
+| - Usuarios y Permisos|               |
+|   - Gestión          |               |
+|   - Configuración    |               |
+| - Historial y Auditoría|             |
+|   - Modificaciones   |               |
+|   - Auditoría        |               |
+| - Observaciones      |               |
+|   - Agregar          |               |
+|   - Ver              |               |
+| - Configuración      |               |
++----------------------+---------------+
