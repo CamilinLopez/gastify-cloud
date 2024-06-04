@@ -11,6 +11,7 @@ const config: Config = {
       colors: {
         gris: { '1': '#F0F2F5', '2': '#637887' },
         negro: '#121417',
+        blanco: '#ffffff',
       },
     },
   },

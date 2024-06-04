@@ -1,15 +1,9 @@
 import React from 'react'
 
-
-
-
-
-
-
-export default function Notificaciones_alertas() {
+export default function Reportes() {
   return (
     <div>
-      
+      hola desde reportes
     </div>
   )
 }
