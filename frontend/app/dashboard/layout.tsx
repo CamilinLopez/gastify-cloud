@@ -12,11 +12,14 @@ export default function LayoutDashboard({ children }: { children: React.ReactNod
           <NavBar />
         </div>
       </div>
-      <div className="flex flex-grow overflow-auto px-6 py-5">
+      <div className="flex flex-grow overflow-auto px-6 py-5 w-screen">
         <div className="sticky top-0 h-full w-3/12">
           <Menu />
         </div>
-        <div className="p-4">{children}</div>
+        <div className="p-4 w-9/12">
+          <h1 className="px-4 text-36px">Dashboard</h1>
+          {children}
+        </div>
       </div>
       <div>
         <Footer />

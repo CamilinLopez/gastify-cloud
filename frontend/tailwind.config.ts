@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        Inter: ['Inter', 'sans-serif'],
+      },
       colors: {
         gris: { '1': '#F0F2F5', '2': '#637887' },
         negro: '#121417',
