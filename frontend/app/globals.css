@@ -177,6 +177,7 @@ body {
   padding: 12px 16px;
   flex-direction: column;
   align-items: flex-start;
+  text-align: left;
   flex-shrink: 0;
   color: #121417;
   /*font properties for table header*/
@@ -184,23 +185,26 @@ body {
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 21px; /* 150% */
-  border: 1 px solid #E5E8EB;
+
+  align-self: stretch;
+  
 }
 
 .table-data {
-  width: 352.938px;
+  
   height: 72px;
   padding: 8px 16px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  border: 1px solid #E5E8EB;
+  
 }
 
 .left-table-data {
+  width:40%;
   color: #121417;
   font-feature-settings: 'dlig' on;
   font-family: Inter;
@@ -211,6 +215,7 @@ body {
 }
 
 .center-table-data {
+  width: 30%;
   color: #637887;
   font-feature-settings: 'dlig' on;
   font-family: Inter;
@@ -222,18 +227,33 @@ body {
 
 .right-table-data {
   display: flex;
-  padding: 8px 16px;
-  width: 189.719px;
+  width: 70%;
+  text-align: right;
+  margin-top: 20px;
   height: 32px;
+  padding: 8px 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
   border-radius: 12px;
   background: #F0F2F5;
+  font-weight: 500;
 }
 
 .table-general {
+  
   display: flex;
   height: 431.5px;
   padding: 12px 16px;
   flex-direction: column;
   align-items: flex-start;
   flex-shrink: 0;
+  
+  
+}
+
+.table-border {
+  border: 1px solid #F0F2F5;
+  border-radius: 12px;
 }
