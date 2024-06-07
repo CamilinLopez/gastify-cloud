@@ -1,9 +1,6 @@
-import React from 'react'
+import SectionsInventario from "@/components/inventario";
 
 export default function Inventario() {
-  return (
-    <div>
-      hola desde inventario
-    </div>
-  )
+  return <SectionsInventario/>
 }
+
