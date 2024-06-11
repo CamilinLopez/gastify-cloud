@@ -1,13 +1,53 @@
-import { InfoMovimientosDiarios } from "@/types/movimientos_diarios";
+import { InfoMovimientosDiarios } from '@/types/movimientos_diarios';
 
 const Tabla = () => {
   const data: InfoMovimientosDiarios[] = [
-  { tipoCilindro: '5 kg', Llenos: 200, Vacios: 50, Fallados: 10, Prestados: 5, FechadeMovimientos: '2023-07-01', IDResponsable: 123 },
-  { tipoCilindro: '11 kg', Llenos: 300, Vacios: 75, Fallados: 15, Prestados: 10, FechadeMovimientos: '2023-07-02', IDResponsable: 124 },
-  { tipoCilindro: '15 kg', Llenos: 400, Vacios: 100, Fallados: 20, Prestados: 15, FechadeMovimientos: '2023-07-03', IDResponsable: 125 },
-  { tipoCilindro: '45 kg', Llenos: 500, Vacios: 125, Fallados: 25, Prestados: 20, FechadeMovimientos: '2023-07-04', IDResponsable: 126 },
-  { tipoCilindro: 'H15', Llenos: 600, Vacios: 150, Fallados: 30, Prestados: 25, FechadeMovimientos: '2023-07-05', IDResponsable: 127 }
-];
+    {
+      tipoCilindro: '5 kg',
+      Llenos: 200,
+      Vacios: 50,
+      Fallados: 10,
+      Prestados: 5,
+      FechadeMovimientos: '2023-07-01',
+      IDResponsable: 123,
+    },
+    {
+      tipoCilindro: '11 kg',
+      Llenos: 300,
+      Vacios: 75,
+      Fallados: 15,
+      Prestados: 10,
+      FechadeMovimientos: '2023-07-02',
+      IDResponsable: 124,
+    },
+    {
+      tipoCilindro: '15 kg',
+      Llenos: 400,
+      Vacios: 100,
+      Fallados: 20,
+      Prestados: 15,
+      FechadeMovimientos: '2023-07-03',
+      IDResponsable: 125,
+    },
+    {
+      tipoCilindro: '45 kg',
+      Llenos: 500,
+      Vacios: 125,
+      Fallados: 25,
+      Prestados: 20,
+      FechadeMovimientos: '2023-07-04',
+      IDResponsable: 126,
+    },
+    {
+      tipoCilindro: 'H15',
+      Llenos: 600,
+      Vacios: 150,
+      Fallados: 30,
+      Prestados: 25,
+      FechadeMovimientos: '2023-07-05',
+      IDResponsable: 127,
+    },
+  ];
 
   return (
     <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
@@ -41,29 +81,31 @@ const Tabla = () => {
   );
 };
 
-
 export default function MovimientosDiarios() {
   return (
     <div className="p-4 w-full">
       <h2 className="text-18px py-4">Movimientos Diarios</h2>
       <h3 className="text-18px">Filtros</h3>
-      <label className="text-16px">
-        <p className="text-16px">Buscar por fecha</p>
-        <input
-          type="string"
-          className="border bg-gris-1 rounded-xl py-4 pr-24 md:pr-28 text-gris-2"
-          placeholder="Seleccionar fecha"
-        />
-      </label>
+      <form className="max-w-96 [&>*]:text-16px">
+        <label>
+          <p className="text-16px py-2">Buscar por fecha</p>
+          <input
+            type="string"
+            className="border bg-gris-1 rounded-xl pl-4 py-3 pr-24 md:pr-28 text-gris-2"
+            placeholder="Seleccionar fecha"
+          />
+        </label>
 
-      <label className="text-16px">
-        <p className="text-16px">ID Representante</p>
-        <input
-          type="text"
-          className="border bg-gris-1 rounded-xl py-4 pr-24 md:pr-28 text-gris-2"
-          placeholder="Ingresar ID"
-        />
-      </label>
+        <label>
+          <p className="text-16px py-2">ID Representante</p>
+          <input
+            type="text"
+            className="border bg-gris-1 rounded-xl pl-4  py-3 pr-24 md:pr-28 text-gris-2"
+            placeholder="Ingresar ID"
+          />
+        </label>
+        <button className="bg-blue-400 text-white rounded-xl w-full my-4 py-2 md:px-10 font-bold">Buscar</button>
+      </form>
 
       <div className="py-5">
         <Tabla />
