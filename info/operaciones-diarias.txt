@@ -1,6 +1,7 @@
 +---------------------------------------------------------+
 |             Formulario de Carga y Descarga              |
 +---------------------------------------------------------+
+| Identificador Único: [Generado Automáticamente]         |
 | Fecha: [Date Picker]                                    |
 | Número de Móvil (Camión): [Dropdown/List]               |
 | Nombre del Conductor: [Dropdown/List]                   |
@@ -29,11 +30,11 @@
 | [Botón Guardar Descarga]                                |
 +---------------------------------------------------------+
 
-
 +---------------------------------------------------------+
 |                   Tabla de Cargas Diarias               |
 +---------------------------------------------------------+
 | Columnas:                                               |
+| - Identificador Único                                   |
 | - Fecha                                                 |
 | - Número de Móvil (Camión)                              |
 | - Nombre del Conductor                                  |
@@ -45,11 +46,11 @@
 | [Exportar Datos (CSV, Excel, PDF)]                      |
 +---------------------------------------------------------+
 
-
 +---------------------------------------------------------+
 |                  Tabla de Descargas Diarias             |
 +---------------------------------------------------------+
 | Columnas:                                               |
+| - Identificador Único                                   |
 | - Fecha                                                 |
 | - Número de Móvil (Camión)                              |
 | - Nombre del Conductor                                  |
@@ -64,29 +65,31 @@
 +---------------------------------------------------------+
 
 
++--------------------------------------+
+| Sidebar Navigation   | Main Content  |
+|                      |               |
+| - Inicio             |               |
+| - Inventario         |               |
+|   - Registro         |               |
+|   - Control Diario   |               |
+| - Operaciones Diarias|               |
+|   - Carga y Descarga |               |
+| - Reportes           |               |
+|   - Diarios          |               |
+|   - Mensuales        |               |
+| - Abastecimiento     |               |
+|   - Registro         |               |
+|   - Alertas          |               |
+| - Usuarios y Permisos|               |
+|   - Gestión          |               |
+|   - Configuración    |               |
+| - Historial y Auditoría|             |
+|   - Modificaciones   |               |
+|   - Auditoría        |               |
+| - Observaciones      |               |
+|   - Agregar          |               |
+|   - Ver              |               |
+| - Configuración      |               |
++----------------------+---------------+
 
 
-Asociación de la Tabla de Carga y Descarga
-Estructura de la Base de Datos
-Tabla de Operaciones
-
-id (Identificador único de la operación)
-fecha (Fecha de la operación)
-numero_movil (Número del camión)
-nombre_conductor (Nombre del conductor)
-Tabla de Cargas
-
-id (Identificador único de la carga)
-operacion_id (Referencia al identificador de la operación)
-tipo_cilindro (Tipo de cilindro)
-cantidad_cargada (Cantidad de cilindros cargados)
-observaciones (Observaciones de la carga)
-Tabla de Descargas
-
-id (Identificador único de la descarga)
-operacion_id (Referencia al identificador de la operación)
-tipo_cilindro (Tipo de cilindro)
-cantidad_fallados (Cantidad de cilindros fallados)
-cantidad_prestados (Cantidad de cilindros prestados)
-cantidad_vacios (Cantidad de cilindros vacíos)
-observaciones (Observaciones de la descarga)
