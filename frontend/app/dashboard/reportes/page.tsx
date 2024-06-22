@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
+import SectionReportes from '@/components/reportes';
 
 export default function Reportes() {
   return (
     <div>
-      hola desde reportes
+      <SectionReportes />
     </div>
-  )
+  );
 }

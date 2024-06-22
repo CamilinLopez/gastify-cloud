@@ -1,0 +1,95 @@
++---------------------------------------------------------+
+|             Formulario de Carga y Descarga              |
++---------------------------------------------------------+
+| Identificador Único: [Generado Automáticamente]         |
+| Fecha: [Date Picker]                                    |
+| Número de Móvil (Camión): [Dropdown/List]               |
+| Nombre del Conductor: [Dropdown/List]                   |
++---------------------------------------------------------+
+|                    Carga de Cilindros                   |
++---------------------------------------------------------+
+| Tipo de Cilindro  | Cantidad Cargada | Observaciones    |
+| ----------------- | ---------------- | ---------------- |
+| 5 kg              | [Input Field]    | [Text Area]      |
+| 11 kg             | [Input Field]    | [Text Area]      |
+| 15 kg             | [Input Field]    | [Text Area]      |
+| 45 kg             | [Input Field]    | [Text Area]      |
+| H15               | [Input Field]    | [Text Area]      |
+| [Botón Guardar Carga]                                   |
++---------------------------------------------------------+
+|                   Descarga de Cilindros                 |
++---------------------------------------------------------+
+| Tipo de Cilindro | Fallados        | Prestados      | Vacíos       |
+| ---------------- | --------------- | -------------- | ------------ |
+| 5 kg             | [Input Field]   | [Input Field]  | [Input Field]|
+| 11 kg            | [Input Field]   | [Input Field]  | [Input Field]|
+| 15 kg            | [Input Field]   | [Input Field]  | [Input Field]|
+| 45 kg            | [Input Field]   | [Input Field]  | [Input Field]|
+| H15              | [Input Field]   | [Input Field]  | [Input Field]|
+| Observaciones    | [Text Area]     |                |              |
+| [Botón Guardar Descarga]                                |
++---------------------------------------------------------+
+
++---------------------------------------------------------+
+|                   Tabla de Cargas Diarias               |
++---------------------------------------------------------+
+| Columnas:                                               |
+| - Identificador Único                                   |
+| - Fecha                                                 |
+| - Número de Móvil (Camión)                              |
+| - Nombre del Conductor                                  |
+| - Tipo de Cilindro                                      |
+| - Cantidad Cargada                                      |
+| - Observaciones                                         |
+| ------------------------------------------------------- |
+| [Opciones de Filtrado y Búsqueda]                       |
+| [Exportar Datos (CSV, Excel, PDF)]                      |
++---------------------------------------------------------+
+
++---------------------------------------------------------+
+|                  Tabla de Descargas Diarias             |
++---------------------------------------------------------+
+| Columnas:                                               |
+| - Identificador Único                                   |
+| - Fecha                                                 |
+| - Número de Móvil (Camión)                              |
+| - Nombre del Conductor                                  |
+| - Tipo de Cilindro                                      |
+| - Cantidad Fallados                                     |
+| - Cantidad Prestados                                    |
+| - Cantidad Vacíos                                       |
+| - Observaciones                                         |
+| ------------------------------------------------------- |
+| [Opciones de Filtrado y Búsqueda]                       |
+| [Exportar Datos (CSV, Excel, PDF)]                      |
++---------------------------------------------------------+
+
+
++--------------------------------------+
+| Sidebar Navigation   | Main Content  |
+|                      |               |
+| - Inicio             |               |
+| - Inventario         |               |
+|   - Registro         |               |
+|   - Control Diario   |               |
+| - Operaciones Diarias|               |
+|   - Carga y Descarga |               |
+| - Reportes           |               |
+|   - Diarios          |               |
+|   - Mensuales        |               |
+| - Abastecimiento     |               |
+|   - Registro         |               |
+|   - Alertas          |               |
+| - Usuarios y Permisos|               |
+|   - Gestión          |               |
+|   - Configuración    |               |
+| - Historial y Auditoría|             |
+|   - Modificaciones   |               |
+|   - Auditoría        |               |
+| - Observaciones      |               |
+|   - Agregar          |               |
+|   - Ver              |               |
+| - Configuración      |               |
++----------------------+---------------+
+
+
