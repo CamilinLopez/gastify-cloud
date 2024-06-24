@@ -35,10 +35,10 @@ const TablaCarga = () => {
               <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
                 <td className="text-secondary-14px text-center">{row.tipoCilindro}</td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-4  text-black overflow-hidden" placeholder="0" />
+                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-4  text-black overflow-hidden" placeholder="0" />
+                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
                 </td>
               </tr>
             ))}
@@ -89,13 +89,13 @@ const TablaDescarga = () => {
               <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
                 <td className="text-secondary-14px text-center">{row.tipoCilindro}</td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-4  text-black overflow-hidden" placeholder="0" />
+                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-4  text-black overflow-hidden" placeholder="0" />
+                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-4  text-black overflow-hidden" placeholder="0" />
+                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
                 </td>
                 <td className="text-secondary-14px text-center">
                   <input type="text" className="text-black overflow-hidden" placeholder="Ingrese sus Observaciones" />
