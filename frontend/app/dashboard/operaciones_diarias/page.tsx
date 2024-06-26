@@ -1,9 +1,9 @@
-import React from 'react'
+import SectionsOperacion from '@/components/operaciones';
 
 export default function Operaciones() {
   return (
     <div>
-      hola desde operaciones
+      <SectionsOperacion />
     </div>
-  )
+  );
 }
