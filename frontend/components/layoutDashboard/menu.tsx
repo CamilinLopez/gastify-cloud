@@ -20,7 +20,7 @@ export default function Menu() {
           </div>
         ))}
       </div>
-      <div className="flex flex-col">
+      {/* <div className="flex flex-col">
         <div className="flex gap-x-3 px-3 py-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
             <path
@@ -43,7 +43,7 @@ export default function Menu() {
           </svg>
           <p>Documentación</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

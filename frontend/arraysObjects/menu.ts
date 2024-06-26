@@ -25,12 +25,12 @@ export const RoutesMenu: Routes[] = [
     name: 'Usuarios y permisos',
     path: '/dashboard/usuarion_permisos',
   },
-  {
-    name: 'Historial y auditoria',
-    path: '/dashboard/historial_auditoria',
-  },
-  {
-    name: 'Observaciones',
-    path: '/dashboard/observaciones',
-  },
+  // {
+  //   name: 'Historial y auditoria',
+  //   path: '/dashboard/historial_auditoria',
+  // },
+  // {
+  //   name: 'Observaciones',
+  //   path: '/dashboard/observaciones',
+  // },
 ];
