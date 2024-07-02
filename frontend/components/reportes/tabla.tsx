@@ -47,7 +47,9 @@ export default function Tabla() {
   const textTable = ['Fecha', 'ID Conductor', '5kg', '11kg', '15kg', '45kg', 'H15', 'Total kilos vendidos'];
   return (
     <div className="p-4 w-full">
-      <h1 className="text-18px py-6">Resumen de Reportes Diarios</h1>
+      <h1 className="text-18px py-6" id="resumen_reportes_diarios">
+        Resumen de Reportes Diarios
+      </h1>
       <div className="overflow-x-auto border-[1px] rounded-xl">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-blanco">

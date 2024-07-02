@@ -91,7 +91,9 @@ const Tabla = () => {
 export default function InventarioCamiones() {
   return (
     <div className="p-4 w-full">
-      <h3 className="text-18px py-4 ">Inventario En Camiones</h3>
+      <h3 className="text-18px py-4 " id="inventario_camiones">
+        Inventario En Camiones
+      </h3>
 
       <form className="text-16px">
         <div className="flex gap-5 flex-wrap max-w-xl">

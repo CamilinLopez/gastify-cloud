@@ -99,7 +99,9 @@ export default function Resumen_ventas() {
   return (
     <div className="bg-blanco px-4 py-6 w-full">
       <div>
-        <h1 className="text-18px">Resumen de Ventas</h1>
+        <h1 className="text-18px" id="resumen_ventas">
+          Resumen de Ventas
+        </h1>
       </div>
       <div className="py-6 w-full flex flex-col gap-y-10">
         <CilindrosPorDia data={data} />

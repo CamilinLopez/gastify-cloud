@@ -12,7 +12,7 @@ const mockData: Inventario[] = [
 export default function ResumenInventario() {
   return (
     <div className="p-4 w-full">
-      <h3 className="text-18px py-4">Resumen de Inventario</h3>
+      <h3 className="text-18px py-4" id='resumen_inventario'>Resumen de Inventario</h3>
       <div className="flex w-full">
         <div className="w-1/2">
           <h4 className="text-16px">Cantidad de cilindros llenos por tipo</h4>

@@ -53,7 +53,7 @@ export default function InvitarUsuarios() {
   ];
   return (
     <div className="w-full p-4">
-      <h1 className="text-18px py-6">Invitar usuarios</h1>
+      <h1 className="text-18px py-6" id='invitar_usuarios'>Invitar usuarios</h1>
 
       <div className="flex flex-col gap-y-6">
         <Form />

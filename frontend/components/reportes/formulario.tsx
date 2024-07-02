@@ -3,7 +3,9 @@ import React from 'react';
 export default function Formulario() {
   return (
     <div className="p-4 w-full">
-      <h1 className="text-18px py-6">Filtro de Reportes Diarios</h1>
+      <h3 className="text-18px py-6" id="filtro_reportes_diarios">
+        Filtro de Reportes Diarios
+      </h3>
       <div>
         <form className="w-full flex flex-col gap-y-5" action="">
           <div className="w-full flex flex-col gap-y-2">
