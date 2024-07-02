@@ -54,7 +54,9 @@ const Tabla = () => {
 export default function Actividades_recientes() {
   return (
     <div className="bg-blanco px-4 py-6 w-full">
-      <h1 className="text-18px">Actividades Recientes</h1>
+      <h1 className="text-18px" id="actividades_recientes">
+        Actividades Recientes
+      </h1>
       <div className="py-5">
         <Tabla />
       </div>

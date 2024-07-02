@@ -84,7 +84,7 @@ const Tabla = () => {
 export default function InventarioBodega() {
   return (
     <div className="p-4 w-full">
-      <h3 className="text-18px py-4 ">Inventario de Bodega</h3>
+      <h3 className="text-18px py-4 " id='inventario_bodegas'>Inventario de Bodega</h3>
 
       <p className="text-18px">Buscar Por Fecha y Hora</p>
 

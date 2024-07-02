@@ -46,7 +46,9 @@ export default function GestionUsuarios() {
   ];
   return (
     <div className="w-full p-4">
-      <h1 className="text-18px py-6">Gestión de usuarios</h1>
+      <h1 className="text-18px py-6" id="gestion_usuarios">
+        Gestión de usuarios
+      </h1>
       <div className="flex flex-col gap-y-6">
         <Form />
         <div className="overflow-x-auto border-[1px] rounded-xl">

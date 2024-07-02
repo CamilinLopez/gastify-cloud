@@ -1,25 +1,53 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { RoutesMenu } from '@/arraysObjects/menu';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ChevronDown } from '../icons/chevron-down';
+import { ChevronRight } from '../icons/chevron-right';
+import path from 'path';
 
 export default function Menu() {
   const pathname = usePathname();
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+  const handleItemClick = (item: string) => {
+    if (selectedItem === item) {
+      setSelectedItem(null);
+    } else {
+      setSelectedItem(item);
+    }
+  };
+
   return (
     <div className="bg-blanco p-4 flex flex-col h-full justify-between">
       <div className="flex flex-col gap-y-1">
         {RoutesMenu.map((item) => (
-          <div key={item.name} className="flex w-full">
-            <Link
-              href={item.path}
-              className={`cursor-pointer text-14px px-3 py-2 ${pathname === item.path && 'bg-gris-1'} w-full rounded-xl`}>
+          <div
+            key={item.name}
+            className={`cursor-pointer flex flex-col w-full justify-center items-center ${pathname === item.path && 'bg-gris-1'} rounded-xl`}
+            onClick={() => handleItemClick(item.name)}
+          >
+            <Link href={item.path} className={`text-14px py-2 w-full flex gap-2`}>
+              {selectedItem === item.name ? <ChevronDown /> : <ChevronRight />}
               {item.name}
             </Link>
+            
+            {selectedItem === item.name && item.subMenu?.map((subItem) => (
+
+              <Link key={subItem.name} href={path.join(item.path, subItem.path)} className={`text-14px p-2 pl-4 flex flex-col gap-2 w-full bg-white`}>
+                
+                {subItem.name}
+              </Link>
+            ))}
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
       {/* <div className="flex flex-col">
         <div className="flex gap-x-3 px-3 py-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
@@ -43,7 +71,12 @@ export default function Menu() {
           </svg>
           <p>Documentación</p>
         </div>
-      </div> */}
-    </div>
-  );
-}
+      </div> 
+      </div>
+    );
+  }
+  function itemName(prevState: null): null {
+    throw new Error('Function not implemented.');
+  }
+  */}
+

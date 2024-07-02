@@ -37,7 +37,7 @@ export default function Tabla() {
   ];
   return (
     <div className="p-4 w-full">
-      <h1 className="text-18px py-6">Alertas de stock</h1>
+      <h1 className="text-18px py-6" id='alertas_stock'>Alertas de stock</h1>
       <div className="overflow-x-auto border-[1px] rounded-xl">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-blanco">

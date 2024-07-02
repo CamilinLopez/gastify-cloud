@@ -152,9 +152,9 @@ export default function SectionsOperacion() {
         </label>
       </div>
 
-      <h3 className="text-18px py-4">Tabla de Carga</h3>
+      <h3 className="text-18px py-4" id='tabla_carga'>Tabla de Carga</h3>
       <TablaCarga />
-      <h3 className="text-18px py-4">Tabla de Descarga</h3>
+      <h3 className="text-18px py-4" id='tabla_descarga'>Tabla de Descarga</h3>
       <TablaDescarga />
     </div>
   );

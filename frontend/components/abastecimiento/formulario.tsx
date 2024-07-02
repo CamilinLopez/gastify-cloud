@@ -4,7 +4,7 @@ import { Flechas } from '../svg/svgImages';
 export default function Formulario() {
   return (
     <div className="p-4 w-full">
-      <h1 className="text-18px py-6">Registro de abastecimiento</h1>
+      <h1 className="text-18px py-6" id='registro_abastecimiento'>Registro de abastecimiento</h1>
       <div className="w-full">
         <form className="w-full flex flex-col gap-y-5" action="">
           <div className="w-full flex">
