@@ -3,7 +3,7 @@ export interface InfoInventarioCamiones {
   hora: string;
   numeroMovil: number;
   IDdelConductor: number;
-  tipoCilindro: number;
+  tipoCilindro: string;
   Llenos: number;
   Vacios: number;
   Fallados: number;

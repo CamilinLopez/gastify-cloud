@@ -1,7 +1,7 @@
 export interface InfoInventarioBodega {
   fecha: string;
   hora: string;
-  tipoCilindro: number;
+  tipoCilindro: string;
   Llenos: number;
   Vacios: number;
   Fallados: number;

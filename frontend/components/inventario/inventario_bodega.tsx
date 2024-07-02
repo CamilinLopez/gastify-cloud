@@ -5,7 +5,7 @@ const Tabla = () => {
     {
       fecha: '01-01-2023',
       hora: '10:00',
-      tipoCilindro: 123,
+      tipoCilindro: '5kg',
       Llenos: 100,
       Vacios: 200,
       Fallados: 300,
@@ -14,7 +14,7 @@ const Tabla = () => {
     {
       fecha: '02-01-2023',
       hora: '10:00',
-      tipoCilindro: 46,
+      tipoCilindro: '11kg',
       Llenos: 150,
       Vacios: 250,
       Fallados: 350,
@@ -23,7 +23,7 @@ const Tabla = () => {
     {
       fecha: '03-01-2023',
       hora: '10:00',
-      tipoCilindro: 789,
+      tipoCilindro: '15kg',
       Llenos: 120,
       Vacios: 220,
       Fallados: 320,
@@ -32,7 +32,7 @@ const Tabla = () => {
     {
       fecha: '04-01-2023',
       hora: '10:00',
-      tipoCilindro: 12,
+      tipoCilindro: '45kg',
       Llenos: 130,
       Vacios: 230,
       Fallados: 330,
@@ -41,7 +41,7 @@ const Tabla = () => {
     {
       fecha: '05-01-2023',
       hora: '10:00',
-      tipoCilindro: 345,
+      tipoCilindro: 'H15',
       Llenos: 140,
       Vacios: 240,
       Fallados: 340,
@@ -84,7 +84,9 @@ const Tabla = () => {
 export default function InventarioBodega() {
   return (
     <div className="p-4 w-full">
-      <h3 className="text-18px py-4 " id='inventario_bodegas'>Inventario de Bodega</h3>
+      <h3 className="text-18px py-4 " id="inventario_bodegas">
+        Inventario de Bodega
+      </h3>
 
       <p className="text-18px">Buscar Por Fecha y Hora</p>
 

@@ -16,7 +16,7 @@ export default function ResumenInventario() {
       <div className="flex w-full">
         <div className="w-1/2">
           <h4 className="text-16px">Cantidad de cilindros llenos por tipo</h4>
-          <p className="text-32px">100%</p>
+          <p className="text-32px">56</p>
           {mockData.map((item) => (
             <div key={item.tipo} className="py-1">
               <span className="text-13px">{item.tipo}</span>
@@ -28,7 +28,7 @@ export default function ResumenInventario() {
         </div>
         <div className="w-1/2">
           <h4 className="text-16px">Cantidad de cilindros vacíos por tipo</h4>
-          <p className="text-32px">100%</p>
+          <p className="text-32px">35</p>
           {mockData.map((item) => (
             <div key={item.tipo} className="py-1">
               <span className="text-13px">{item.tipo}</span>
