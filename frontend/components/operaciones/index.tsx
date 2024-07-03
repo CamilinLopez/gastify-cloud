@@ -24,7 +24,7 @@ const TablaCarga = () => {
       <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
         <table className="min-w-full divide-y divide-gray-200 ">
           <thead className="bg-blanco">
-            <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px">
+            <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px ">
               <th>Tipo de cilindro</th>
               <th>Cantidad Cargada</th>
               <th>Observaciones</th>
@@ -32,13 +32,13 @@ const TablaCarga = () => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {data.map((row, index) => (
-              <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
+              <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
                 <td className="text-secondary-14px text-center">{row.tipoCilindro}</td>
                 <td className="text-secondary-14px text-center">
                   <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
+                  <input type="text" className="text-black overflow-hidden md:ml-12" placeholder="Ingrese sus Observaciones" />
                 </td>
               </tr>
             ))}
