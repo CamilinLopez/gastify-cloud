@@ -20,6 +20,7 @@ export default function Formulario() {
             <p className="text-16px">ID Conductor</p>
             <input className="p-4 h-14 bg-gris-1 rounded-xl w-5/12 pl-4 pr-24" placeholder="14568dsd55f" type="text" />
           </div>
+          <button className="my-6 w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">Buscar</button>
         </form>
       </div>
     </div>

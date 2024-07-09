@@ -41,7 +41,7 @@ export default function Rendimiento_conductores() {
     <div className="bg-blanco px-4 py-6 w-full">
       <div>
         <h1 className="text-18px" id="rendimiento_conductores">
-          Rendimiento de conductores
+          Rendimiento de conductores en este mes
         </h1>
       </div>
       <div className="py-5">
