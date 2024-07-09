@@ -9,7 +9,7 @@ const initializeDatabase = async () => {
       "Connection to the database has been established successfully."
     );
 
-    await database.sync({ force: true });
+    await database.sync({ force: false });
     console.log(`Connected to ${database.getDatabaseName()} database`);
 
     server.listen(3001, () => {

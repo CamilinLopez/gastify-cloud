@@ -1,5 +1,9 @@
 const { Sequelize } = require("sequelize");
-const { modelPrueba } = require("./models");
+const {
+  modelEstadocilindro,
+  modelInventarioBodega,
+  modelTipoCilindro,
+} = require("./models/inventario/index");
 
 const database = new Sequelize(
   "postgres://postgres:camilo1998@localhost:5432/gastifycloud",
@@ -9,7 +13,9 @@ const database = new Sequelize(
   }
 );
 
-modelPrueba(database);
+modelEstadocilindro(database);
+modelInventarioBodega(database);
+modelTipoCilindro(database);
 
 module.exports = {
   ...database.models,
