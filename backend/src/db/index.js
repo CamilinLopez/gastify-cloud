@@ -13,13 +13,15 @@ const database = new Sequelize(
   }
 );
 
+//llamar modelos 
 modelEstadocilindro(database);
 modelInventarioBodega(database);
 modelTipoCilindro(database);
 
-const { estado_cilindros, inventario_bodega, tipo_cilindros } = database.models; //modelos de seccion inventario
+//modelos de seccion inventario
+const { estado_cilindros, inventario_bodega, tipo_cilindros } = database.models; 
 
-//relacion seccion inventario
+//relaciones seccion inventario
 inventario_bodega.belongsTo(tipo_cilindros, { foreignKey: "tipoCilindroId" });
 inventario_bodega.belongsTo(estado_cilindros, {
   foreignKey: "estadoCilindroId",
