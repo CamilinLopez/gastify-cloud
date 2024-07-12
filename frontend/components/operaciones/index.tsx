@@ -327,7 +327,7 @@ export default function SectionsOperacion() {
         </label>
       </div>
       <TablaCarga />
-      {openTablaOperaciones ? <TablaVisualCarga /> : <TablaOperaciones />}
+      {openTablaOperaciones ? <TablaDescarga /> : <TablaOperaciones />}
     </div>
   );
 }

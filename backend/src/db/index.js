@@ -17,6 +17,14 @@ modelEstadocilindro(database);
 modelInventarioBodega(database);
 modelTipoCilindro(database);
 
+const { estado_cilindros, inventario_bodega, tipo_cilindros } = database.models; //modelos de seccion inventario
+
+//relacion seccion inventario
+inventario_bodega.belongsTo(tipo_cilindros, { foreignKey: "tipoCilindroId" });
+inventario_bodega.belongsTo(estado_cilindros, {
+  foreignKey: "estadoCilindroId",
+});
+
 module.exports = {
   ...database.models,
   database,

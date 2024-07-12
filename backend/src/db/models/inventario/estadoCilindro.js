@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 
 const EstadoCilindro = (sequelize) => {
-  sequelize.define("estado_cilindro", {
+  sequelize.define("estado_cilindros", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
