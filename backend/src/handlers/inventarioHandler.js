@@ -1,4 +1,4 @@
-const { crearDatosDB } = require("../controllers/inicializarInformacion");
+const { crearDatosDB, crearActualizarInventarioDB } = require('../controllers/inicializarInformacion');
 
 const inicializarDatos = async (req, res) => {
   try {
@@ -11,15 +11,12 @@ const inicializarDatos = async (req, res) => {
 
 const crearInventario = async (req, res) => {
   try {
-    const { cantidad, tipoCilindro, estadoCilindro } = req.body;
-    const now = new Date();
-    const data = {
+    const { cantidad, tipoCilindroId, estadoCilindroId } = req.body;
+    const data = await crearActualizarInventarioDB({
       cantidad,
-      tipoCilindro,
-      estadoCilindro,
-      fecha: now.toLocaleDateString(),
-      hora: now.toLocaleTimeString(),
-    };
+      tipoCilindroId,
+      estadoCilindroId,
+    });
 
     res.status(200).json({ data });
   } catch (error) {

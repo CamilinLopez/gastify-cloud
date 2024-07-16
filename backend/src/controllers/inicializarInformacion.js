@@ -1,9 +1,9 @@
 const {
   estado_cilindros,
   tipo_cilindros,
-  inventario_bodega,
+  inventario_bodegas,
 } = require("../db/index");
-const { inventarioInicial } = require("../utils/cargainicialInventaio");
+const moment = require("moment");
 
 const crearDatosDB = async () => {
   const tipos = [
@@ -23,22 +23,44 @@ const crearDatosDB = async () => {
   try {
     await tipo_cilindros.bulkCreate(tipos);
     await estado_cilindros.bulkCreate(estados);
-    await inventario_bodega.bulkCreate(inventarioInicial);
     return "Tipos y estados de cilindros creados";
   } catch (error) {
     throw error;
   }
 };
 
-const crearInventarioDB = async ({
+const crearActualizarInventarioDB = async ({
   cantidad,
-  tipoCilindro,
-  estadoCilindro,
+  tipoCilindroId,
+  estadoCilindroId,
 }) => {
   try {
-  } catch (error) {}
+    const now = new Date();
+
+    const data = {
+      fecha: moment(now).format("YYYY-MM-DD"),
+      hora: moment(now).format("HH:mm:ss"),
+      cantidad,
+      tipoCilindroId,
+      estadoCilindroId,
+    };
+
+    const findTipoCilindro = await inventario_bodegas.findOne({
+      where: { tipoCilindroId },
+    });
+
+    if (findTipoCilindro) {
+      await inventario_bodegas.update(data, { where: { tipoCilindroId } });
+      return "Datos actualizados.";
+    }
+    await inventario_bodegas.create(data);
+    return "Datos creados.";
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = {
   crearDatosDB,
+  crearActualizarInventarioDB,
 };

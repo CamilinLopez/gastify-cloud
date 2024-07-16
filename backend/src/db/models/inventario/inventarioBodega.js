@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 
 const InventarioBodega = (sequelize) => {
-  sequelize.define("inventario_bodega", {
+  sequelize.define("inventario_bodegas", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,

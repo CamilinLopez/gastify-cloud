@@ -293,7 +293,7 @@ export default function SectionsOperacion() {
       <h3 className="text-18px py-4">Operaciones</h3>
 
       <div className="flex flex-col gap-5 ">
-        <label>
+        {/* <label>
           <p className="text-16px py-2 ">Fecha de Operación</p>
           <div>
             <input
@@ -302,7 +302,7 @@ export default function SectionsOperacion() {
               placeholder="Fecha de Operación"
             />
           </div>
-        </label>
+        </label> */}
 
         <label>
           <p className="text-16px  py-2 ">Número de movil</p>
