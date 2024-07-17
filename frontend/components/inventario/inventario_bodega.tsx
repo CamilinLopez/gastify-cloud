@@ -88,29 +88,22 @@ export default function InventarioBodega() {
         Inventario de Bodega
       </h3>
 
-      <p className="text-18px">Buscar Por Fecha y Hora</p>
+      <p className="text-18px pb-4">Buscar Por Fecha y Hora</p>
 
-      <form className=" [&>*]:text-16px">
-        <div className="flex gap-5 ">
-          <label>
-            <p className="text-16px py-2 ">Fecha</p>
-            <div>
-              <input
-                type="string"
-                className="border  pl-4 bg-gris-1  rounded-xl py-3   text-gris-2"
-                placeholder="Fecha"
-              />
+      <form>
+        <div className="flex">
+          <div className="flex w-full gap-4 max-w-xl items-center ">
+            <div className=" flex flex-col w-60">
+              <p className="text-16px py-2">Fecha</p>
+              <input className="p-4 h-14 bg-gris-1 rounded-xl " type="date" />
             </div>
-          </label>
-
-          <label>
-            <p className="text-16px py-2 ">Hora</p>
-            <div className="max-w-52">
-              <input type="text" className="border pl-4  bg-gris-1 rounded-xl py-3  text-gris-2" placeholder="Hora" />
+            <div className=" flex flex-col w-60">
+              <p className="text-16px py-2 ">Hora</p>
+              <input type="text" className="p-4 h-14 bg-gris-1 rounded-xl" placeholder="Hora" />
             </div>
-          </label>
+          </div>
         </div>
-        <button className="bg-blue-400  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold">
+        <button className="bg-blue-400  text-white max-w-lg rounded-xl w-full my-4 py-3 md:px-10 font-bold">
           Buscar
         </button>
       </form>
