@@ -1,5 +1,10 @@
-export interface Routes {
-  path: string;
+export interface TypeRoutes {
   name: string;
-  subMenu?: Routes[];
+  path: string;
+}
+
+export interface Routes {
+  name: string;
+  path: string;
+  subMenu?: TypeRoutes[];
 }
