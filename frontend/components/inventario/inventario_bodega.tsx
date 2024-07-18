@@ -95,7 +95,7 @@ export default function InventarioBodega() {
           <div className="flex w-full gap-4 max-w-xl items-center ">
             <div className=" flex flex-col w-60">
               <p className="text-16px py-2">Fecha</p>
-              <input className="p-4 h-14 bg-gris-1 rounded-xl " type="date" />
+              <input className="p-4 h-14 bg-gris-1 rounded-xl text-gris-2 " type="date" />
             </div>
             <div className=" flex flex-col w-60">
               <p className="text-16px py-2 ">Hora</p>
