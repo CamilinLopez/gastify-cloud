@@ -226,7 +226,7 @@ export default function InventarioCamiones() {
               <p className="text-16px py-2">Fecha</p>
               <div>
                 <input
-                  className="border w-60 px-2  max-w-60  bg-gris-1 rounded-xl py-3 text-gris-2 "
+                  className="border w-60 px-4  max-w-60  bg-gris-1 rounded-xl py-3 text-gris-2 "
                   type="date"
                 />
               </div>
