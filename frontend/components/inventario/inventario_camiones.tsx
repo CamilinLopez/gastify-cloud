@@ -198,7 +198,7 @@ export default function InventarioCamiones() {
       </h3>
 
       <form className="text-16px max-w-2xl">
-        <div className="flex gap-8 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
           <label>
             <p className="text-16px py-2 ">Número de Movil</p>
             <div>
