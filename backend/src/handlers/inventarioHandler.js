@@ -11,7 +11,7 @@ const inicializarDatos = async (req, res) => {
 
 const crearInventario = async (req, res) => {
   try {
-    const { id, fecha, hora, cantidad, tipoCilindroId, estadoCilindroId } = req.body;
+    const { id, fecha, hora, cantidad, tipoCilindroId, estadoCilindroId, modificar } = req.body;
     const data = await crearActualizarInventarioDB({
       id,
       fecha,
@@ -19,10 +19,12 @@ const crearInventario = async (req, res) => {
       cantidad,
       tipoCilindro: { idCilindro: tipoCilindroId.id, nombreCilindro: tipoCilindroId.tipo },
       estadoCilindro: { idEstado: estadoCilindroId.id, nombreEstado: estadoCilindroId.tipo },
+      modificar: { idModificar: modificar.id, nombreModificar: modificar.tipo },
     });
 
     res.status(200).json({ data });
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: error.message });
   }
 };

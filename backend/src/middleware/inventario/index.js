@@ -12,6 +12,8 @@ const validateAbastecimiento = [
   body('tipoCilindroId.tipo').notEmpty().withMessage('El tipo de cilindro no puede estar vacío'),
   body('estadoCilindroId.id').notEmpty().withMessage('El ID del estado del cilindro no puede estar vacío'),
   body('estadoCilindroId.tipo').notEmpty().withMessage('El tipo del estado del cilindro no puede estar vacío'),
+  body('modificar.id').notEmpty().withMessage('El ID del estado de modificar no puede estar vacío'),
+  body('modificar.tipo').notEmpty().withMessage('El tipo del estado de modificar no puede estar vacío'),
 ];
 
 module.exports = {

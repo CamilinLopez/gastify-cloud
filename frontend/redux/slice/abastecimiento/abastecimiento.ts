@@ -9,6 +9,7 @@ const initialState: initialStateFormAbastecimiento = {
   cantidad: 0,
   tipoCilindroId: { id: '', tipo: '' },
   estadoCilindroId: { id: '', tipo: '' },
+  modificar: { id: '', tipo: '' },
   status: 'idle',
   error: null,
   successMessage: null,

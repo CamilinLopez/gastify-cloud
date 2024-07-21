@@ -13,9 +13,11 @@ const crearDatosDB = async () => {
   }
 };
 
-const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCilindro, estadoCilindro }) => {
+const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCilindro, estadoCilindro, modificar }) => {
   const { idCilindro, nombreCilindro } = tipoCilindro;
   const { idEstado, nombreEstado } = estadoCilindro;
+  const { idModificar, nombreModificar } = modificar;
+
   const data = {
     id,
     fecha,
@@ -31,10 +33,21 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
     });
 
     if (findTipoCilindro) {
-      await inventario_bodegas.update(data, { where: { tipoCilindroId: idCilindro } });
-      return 'Datos actualizados.';
-    }
+      const cantidadActual = findTipoCilindro.cantidad;
+      if (nombreModificar === 'Agregar') {
+        const nuevaCantidadS = cantidadActual + Number(cantidad);
 
+        findTipoCilindro.cantidad = nuevaCantidadS;
+        await findTipoCilindro.save();
+        return { nombreCilindro, nombreEstado, nuevaCantidadS };
+      }
+      if (nombreModificar === 'Eliminar') {
+        const nuevaCantidadR = cantidadActual - Number(cantidad);
+        findTipoCilindro.cantidad = nuevaCantidadR;
+        await findTipoCilindro.save();
+        return { nombreCilindro, nombreEstado, nuevaCantidadR };
+      }
+    }
     await inventario_bodegas.create(data);
     return 'Datos creados.';
   } catch (error) {

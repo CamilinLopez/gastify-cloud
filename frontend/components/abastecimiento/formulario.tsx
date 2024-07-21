@@ -6,7 +6,7 @@ import { updateAll } from '@/redux/slice/abastecimiento/abastecimiento';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import { FormAbastecimiento, SelectInputType } from '@/types/abastecimieneto';
-import { estadoCilindros, tipoCilindros } from '@/arraysObjects/dataCilindros';
+import { estadoCilindros, estadoModificar, tipoCilindros } from '@/arraysObjects/dataCilindros';
 import { postInfo } from '@/redux/slice/abastecimiento/thunks';
 import moment from 'moment';
 import { generateId } from '@/utils/generateId';
@@ -30,16 +30,17 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
     });
     setIsOpen(false);
   };
+  const getName = (name: string) => {
+    if (name === 'estadoCilindroId') return formAbastecimiento[name].tipo;
+    if (name === 'tipoCilindroId') return formAbastecimiento[name].tipo;
+    if (name === 'modificar') return formAbastecimiento[name].tipo;
+  };
 
   return (
     <div className="relative w-10/12">
       <input
         name={name}
-        value={
-          name === 'estadoCilindroId'
-            ? formAbastecimiento.estadoCilindroId.tipo
-            : formAbastecimiento.tipoCilindroId.tipo
-        }
+        value={getName(name)}
         onChange={handleOnChange}
         className="p-4 h-14 bg-gris-1 rounded-xl w-full"
         type="text"
@@ -77,6 +78,7 @@ export default function Formulario() {
     cantidad: 0,
     tipoCilindroId: { id: '', tipo: '' },
     estadoCilindroId: { id: '', tipo: '' },
+    modificar: { id: '', tipo: '' },
   });
 
   //funciones
@@ -145,10 +147,15 @@ export default function Formulario() {
                   placeholder="Ingresar cantidad"
                 />
               </div>
-              {/* <div className="w-full flex flex-col gap-y-2">
-                <p className="text-16px py-2">Proveedor</p>
-                <input type="text" className="p-4 h-14 bg-gris-1 rounded-xl w-10/12" placeholder="Ingresar" />
-              </div> */}
+              <div className="w-full flex flex-col gap-y-2">
+                <p className="text-16px py-2">Modificar</p>
+                <SelectInput
+                  name="modificar"
+                  formAbastecimiento={formAbastecimiento}
+                  setFormAbastecimiento={setFormAbastecimiento}
+                  arrayCilindros={estadoModificar}
+                />
+              </div>
             </div>
           </div>
 

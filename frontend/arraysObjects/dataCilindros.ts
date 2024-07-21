@@ -12,3 +12,8 @@ export const estadoCilindros = [
   { id: 3, tipo: 'Fallados' },
   { id: 4, tipo: 'Prestados' },
 ];
+
+export const estadoModificar = [
+  { id: 1, tipo: 'Agregar' },
+  { id: 2, tipo: 'Eliminar' },
+];

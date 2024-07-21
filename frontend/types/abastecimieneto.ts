@@ -10,6 +10,11 @@ export interface typeCilindro {
   tipo: string;
 }
 
+export interface typeModificar {
+  id: string;
+  tipo: string;
+}
+
 export interface FormAbastecimiento {
   id: string;
   fecha: string;
@@ -17,6 +22,7 @@ export interface FormAbastecimiento {
   cantidad: number;
   tipoCilindroId: typeCilindro;
   estadoCilindroId: typeCilindro;
+  modificar: typeModificar;
 }
 
 export interface initialStateFormAbastecimiento extends FormAbastecimiento {
@@ -26,7 +32,7 @@ export interface initialStateFormAbastecimiento extends FormAbastecimiento {
 }
 
 export interface SelectInputType {
-  name: 'tipoCilindroId' | 'estadoCilindroId';
+  name: 'tipoCilindroId' | 'estadoCilindroId' | 'modificar';
   formAbastecimiento: FormAbastecimiento;
   setFormAbastecimiento: React.Dispatch<React.SetStateAction<FormAbastecimiento>>;
   arrayCilindros: { id: number; tipo: string }[];
