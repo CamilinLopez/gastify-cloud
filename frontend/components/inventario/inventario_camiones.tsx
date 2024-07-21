@@ -197,12 +197,16 @@ export default function InventarioCamiones() {
         Inventario En Camiones
       </h3>
 
-      <form className="text-16px">
-        <div className="flex gap-5 flex-wrap max-w-xl">
+      <form className="text-16px max-w-2xl">
+        <div className="flex gap-2 flex-wrap">
           <label>
-            <p className="text-16px py-2 ">Numero de Movil</p>
+            <p className="text-16px py-2 ">Número de Movil</p>
             <div>
-              <input type="string" className="border pl-4 bg-gris-1 rounded-xl py-3 text-gris-2" placeholder="Fecha" />
+              <input
+                type="string"
+                className="border pl-4 max-w-60 bg-gris-1 rounded-xl py-3 text-gris-2"
+                placeholder="Número de Movil"
+              />
             </div>
           </label>
 
@@ -211,21 +215,32 @@ export default function InventarioCamiones() {
             <div>
               <input
                 type="string"
-                className="border pl-4 bg-gris-1 rounded-xl py-3 text-gris-2"
+                className="border pl-4 max-w-60 bg-gris-1 rounded-xl py-3 text-gris-2"
                 placeholder="ID conductor"
               />
             </div>
           </label>
+
           <label>
-            <p className="text-16px py-2 ">Fecha</p>
             <div>
-              <input type="string" className="border pl-4 bg-gris-1 rounded-xl py-3 text-gris-2" placeholder="Fecha" />
+              <p className="text-16px py-2">Fecha</p>
+              <div>
+                <input
+                  className="border w-60 px-4  max-w-60  bg-gris-1 rounded-xl py-3 text-gris-2 "
+                  type="date"
+                />
+              </div>
             </div>
           </label>
+
           <label>
             <p className="text-16px py-2 ">Hora</p>
             <div>
-              <input type="string" className="border pl-4 bg-gris-1 rounded-xl py-3 text-gris-2" placeholder="Hora" />
+              <input
+                type="string"
+                className="border pl-4 max-w-60 bg-gris-1 rounded-xl py-3 text-gris-2"
+                placeholder="Hora"
+              />
             </div>
           </label>
         </div>
