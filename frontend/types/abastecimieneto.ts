@@ -22,6 +22,7 @@ export interface FormAbastecimiento {
 export interface initialStateFormAbastecimiento extends FormAbastecimiento {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: null;
+  successMessage: string | null;
 }
 
 export interface SelectInputType {

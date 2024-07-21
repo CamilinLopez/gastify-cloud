@@ -7,10 +7,12 @@ export const handleFetchAbastecimiento = (builder: any) => {
     })
     .addCase(postInfo.fulfilled, (state: any, action: any) => {
       state.status = 'succeeded';
-      state.list = action.payload;
+      state.error = null;
+      state.successMessage = action.payload.data;
     })
     .addCase(postInfo.rejected, (state: any, action: any) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.successMessage = null;
+      state.error = action.payload.errors || 'Error desconocido';
     });
 };

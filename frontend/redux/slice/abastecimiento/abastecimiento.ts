@@ -1,13 +1,17 @@
-import { FormAbastecimiento } from '@/types/abastecimieneto';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { FormAbastecimiento, initialStateFormAbastecimiento } from '@/types/abastecimieneto';
+import { createSlice } from '@reduxjs/toolkit';
+import { handleFetchAbastecimiento } from './reducer';
 
-const initialState: FormAbastecimiento = {
+const initialState: initialStateFormAbastecimiento = {
   id: '',
   fecha: '',
   hora: '',
   cantidad: 0,
   tipoCilindroId: { id: '', tipo: '' },
   estadoCilindroId: { id: '', tipo: '' },
+  status: 'idle',
+  error: null,
+  successMessage: null,
 };
 
 const abastecimientoSlice = createSlice({
@@ -17,6 +21,9 @@ const abastecimientoSlice = createSlice({
     updateAll(state, action) {
       return { ...state, ...action.payload };
     },
+  },
+  extraReducers: (builder) => {
+    handleFetchAbastecimiento(builder);
   },
 });
 export const { updateAll } = abastecimientoSlice.actions;

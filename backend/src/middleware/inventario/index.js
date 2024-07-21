@@ -1,31 +1,19 @@
-const { check } = require('express-validator');
+const { body } = require('express-validator');
 
-const validateCantidad = [
-  check('cantidad', 'Cantidad es requerida').not().isEmpty(),
-  check('cantidad', 'Cantidad debe ser un número').isNumeric(),
-  check('cantidad', 'Cantidad debe ser un número entero positivo').isInt({
-    gt: 0,
-  }),
-];
-
-const validateTipoCilindro = [
-  check('tipoCilindroId', 'tipoCilindroId es requerido').not().isEmpty(),
-  check('tipoCilindroId', 'tipoCilindroId debe ser un número').isNumeric(),
-  check('tipoCilindroId', 'tipoCilindroId debe ser un número entero positivo').isInt({
-    gt: 0,
-  }),
-];
-
-const validateEstadoCilindro = [
-  check('estadoCilindroId', 'estadoCilindroId es requerido').not().isEmpty(),
-  check('estadoCilindroId', 'estadoCilindroId debe ser un número').isNumeric(),
-  check('estadoCilindroId', 'estadoCilindroId debe ser un número entero positivo').isInt({
-    gt: 0,
-  }),
+// Define las reglas de validación
+const validateAbastecimiento = [
+  body('id').notEmpty().withMessage('El ID no puede estar vacío'),
+  body('fecha').isISO8601().withMessage('La fecha debe ser una fecha válida en formato ISO8601'),
+  body('hora')
+    .matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/)
+    .withMessage('La hora debe estar en formato HH:mm:ss'),
+  body('cantidad').isInt({ min: 1 }).withMessage('La cantidad debe ser un número entero mayor a 0'),
+  body('tipoCilindroId.id').notEmpty().withMessage('El ID del tipo de cilindro no puede estar vacío'),
+  body('tipoCilindroId.tipo').notEmpty().withMessage('El tipo de cilindro no puede estar vacío'),
+  body('estadoCilindroId.id').notEmpty().withMessage('El ID del estado del cilindro no puede estar vacío'),
+  body('estadoCilindroId.tipo').notEmpty().withMessage('El tipo del estado del cilindro no puede estar vacío'),
 ];
 
 module.exports = {
-  validateCantidad,
-  validateTipoCilindro,
-  validateEstadoCilindro,
+  validateAbastecimiento,
 };

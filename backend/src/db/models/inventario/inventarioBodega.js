@@ -3,9 +3,8 @@ const { DataTypes } = require("sequelize");
 const InventarioBodega = (sequelize) => {
   sequelize.define("inventario_bodegas", {
     id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
-      autoIncrement: true,
       allowNull: false,
     },
     fecha: {

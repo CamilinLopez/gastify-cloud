@@ -11,11 +11,14 @@ const inicializarDatos = async (req, res) => {
 
 const crearInventario = async (req, res) => {
   try {
-    const { cantidad, tipoCilindroId, estadoCilindroId } = req.body;
+    const { id, fecha, hora, cantidad, tipoCilindroId, estadoCilindroId } = req.body;
     const data = await crearActualizarInventarioDB({
+      id,
+      fecha,
+      hora,
       cantidad,
-      tipoCilindroId,
-      estadoCilindroId,
+      tipoCilindro: { idCilindro: tipoCilindroId.id, nombreCilindro: tipoCilindroId.tipo },
+      estadoCilindro: { idEstado: estadoCilindroId.id, nombreEstado: estadoCilindroId.tipo },
     });
 
     res.status(200).json({ data });

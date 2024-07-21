@@ -7,8 +7,9 @@ import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import { FormAbastecimiento, SelectInputType } from '@/types/abastecimieneto';
 import { estadoCilindros, tipoCilindros } from '@/arraysObjects/dataCilindros';
-
-
+import { postInfo } from '@/redux/slice/abastecimiento/thunks';
+import moment from 'moment';
+import { generateId } from '@/utils/generateId';
 
 const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCilindros }: SelectInputType) => {
   //estados
@@ -87,7 +88,20 @@ export default function Formulario() {
   };
   const registrarAbastecimiento = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const now = moment();
 
+    const newId = generateId();
+    const newFecha = moment(now).format('YYYY-MM-DD');
+    const newHora = moment(now).format('HH:mm:ss');
+
+    dispatch(
+      postInfo({
+        ...formAbastecimiento,
+        id: newId,
+        fecha: newFecha,
+        hora: newHora,
+      }),
+    );
   };
 
   return (
