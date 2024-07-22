@@ -2,7 +2,7 @@ const { estado_cilindros, tipo_cilindros, inventario_bodegas } = require('../db/
 
 const crearDatosDB = async () => {
   const tipos = [{ tipo: '5kg' }, { tipo: '11kg' }, { tipo: '15kg' }, { tipo: '45kg' }, { tipo: 'H15' }];
-  const estados = [{ estado: 'Lleno' }, { estado: 'Vacío' }, { estado: 'Fallado' }, { estado: 'Prestado' }];
+  const estados = [{ tipo: 'Lleno' }, { tipo: 'Vacío' }, { tipo: 'Fallado' }, { tipo: 'Prestado' }];
 
   try {
     await tipo_cilindros.bulkCreate(tipos);
@@ -55,7 +55,33 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
   }
 };
 
+const getAbastacemientoDB = async () => {
+  try {
+    const data = await inventario_bodegas.findAll({
+      attributes: ['id', 'fecha', 'hora', 'cantidad'],
+      include: [
+        {
+          model: tipo_cilindros,
+          as: 'tipoCilindro', // El alias usado en el belongsTo
+        },
+        {
+          model: estado_cilindros,
+          as: 'estadoCilindro', // El alias usado en el belongsTo
+        },
+      ],
+    });
+
+    return {
+      message: 'Accion completada',
+      data,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   crearDatosDB,
   crearActualizarInventarioDB,
+  getAbastacemientoDB,
 };

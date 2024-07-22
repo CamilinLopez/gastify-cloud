@@ -31,9 +31,9 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
     setIsOpen(false);
   };
   const getName = (name: string) => {
-    if (name === 'estadoCilindroId') return formAbastecimiento[name].tipo;
-    if (name === 'tipoCilindroId') return formAbastecimiento[name].tipo;
-    if (name === 'modificar') return formAbastecimiento[name].tipo;
+    if (name === 'estadoCilindro') return formAbastecimiento[name].tipo;
+    if (name === 'tipoCilindro') return formAbastecimiento[name].tipo;
+    if (name === 'modificar') return formAbastecimiento[name]?.tipo;
   };
 
   return (
@@ -76,8 +76,8 @@ export default function Formulario() {
     fecha: '',
     hora: '',
     cantidad: 0,
-    tipoCilindroId: { id: '', tipo: '' },
-    estadoCilindroId: { id: '', tipo: '' },
+    tipoCilindro: { id: '', tipo: '' },
+    estadoCilindro: { id: '', tipo: '' },
     modificar: { id: '', tipo: '' },
   });
 
@@ -118,7 +118,7 @@ export default function Formulario() {
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2">Estado de cilindro</p>
                 <SelectInput
-                  name="estadoCilindroId"
+                  name="estadoCilindro"
                   formAbastecimiento={formAbastecimiento}
                   setFormAbastecimiento={setFormAbastecimiento}
                   arrayCilindros={estadoCilindros}
@@ -127,7 +127,7 @@ export default function Formulario() {
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2">Tipo de cilindro</p>
                 <SelectInput
-                  name="tipoCilindroId"
+                  name="tipoCilindro"
                   formAbastecimiento={formAbastecimiento}
                   setFormAbastecimiento={setFormAbastecimiento}
                   arrayCilindros={tipoCilindros}

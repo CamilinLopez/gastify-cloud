@@ -1,53 +1,60 @@
+'use client';
 import { InfoInventarioBodega } from '@/types/inventario_bodegas';
+import { useEffect } from 'react';
+import { AppDispatch } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { getInfo } from '@/redux/slice/abastecimiento/thunks';
+import { RootState } from '@/redux/reducer';
+import { FormAbastecimiento } from '@/types/abastecimieneto';
 
-const Tabla = () => {
-  const data: InfoInventarioBodega[] = [
-    {
-      fecha: '01-01-2023',
-      hora: '10:00',
-      tipoCilindro: '5kg',
-      Llenos: 100,
-      Vacios: 200,
-      Fallados: 300,
-      Prestados: 400,
-    },
-    {
-      fecha: '02-01-2023',
-      hora: '10:00',
-      tipoCilindro: '11kg',
-      Llenos: 150,
-      Vacios: 250,
-      Fallados: 350,
-      Prestados: 10,
-    },
-    {
-      fecha: '03-01-2023',
-      hora: '10:00',
-      tipoCilindro: '15kg',
-      Llenos: 120,
-      Vacios: 220,
-      Fallados: 320,
-      Prestados: 15,
-    },
-    {
-      fecha: '04-01-2023',
-      hora: '10:00',
-      tipoCilindro: '45kg',
-      Llenos: 130,
-      Vacios: 230,
-      Fallados: 330,
-      Prestados: 20,
-    },
-    {
-      fecha: '05-01-2023',
-      hora: '10:00',
-      tipoCilindro: 'H15',
-      Llenos: 140,
-      Vacios: 240,
-      Fallados: 340,
-      Prestados: 25,
-    },
-  ];
+const Tabla = ({ data }: { data: FormAbastecimiento[] }) => {
+  // const data: InfoInventarioBodega[] = [
+  //   {
+  //     fecha: '01-01-2023',
+  //     hora: '10:00',
+  //     tipoCilindro: '5kg',
+  //     Llenos: 100,
+  //     Vacios: 200,
+  //     Fallados: 300,
+  //     Prestados: 400,
+  //   },
+  //   {
+  //     fecha: '02-01-2023',
+  //     hora: '10:00',
+  //     tipoCilindro: '11kg',
+  //     Llenos: 150,
+  //     Vacios: 250,
+  //     Fallados: 350,
+  //     Prestados: 10,
+  //   },
+  //   {
+  //     fecha: '03-01-2023',
+  //     hora: '10:00',
+  //     tipoCilindro: '15kg',
+  //     Llenos: 120,
+  //     Vacios: 220,
+  //     Fallados: 320,
+  //     Prestados: 15,
+  //   },
+  //   {
+  //     fecha: '04-01-2023',
+  //     hora: '10:00',
+  //     tipoCilindro: '45kg',
+  //     Llenos: 130,
+  //     Vacios: 230,
+  //     Fallados: 330,
+  //     Prestados: 20,
+  //   },
+  //   {
+  //     fecha: '05-01-2023',
+  //     hora: '10:00',
+  //     tipoCilindro: 'H15',
+  //     Llenos: 140,
+  //     Vacios: 240,
+  //     Fallados: 340,
+  //     Prestados: 25,
+  //   },
+  // ];
 
   return (
     <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
@@ -68,11 +75,13 @@ const Tabla = () => {
             <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
               <td className="text-14px">{row.fecha}</td>
               <td className="text-14px">{row.hora}</td>
-              <td className="text-secondary-14px text-center">{row.tipoCilindro}</td>
-              <td className="text-secondary-14px">{row.Llenos}</td>
-              <td className="text-secondary-14px">{row.Vacios}</td>
-              <td className="text-secondary-14px ">{row.Fallados}</td>
-              <td className="text-secondary-14px text-center">{row.Prestados}</td>
+              <td className="text-secondary-14px text-center">{row.tipoCilindro.tipo}</td>
+              <td className="text-secondary-14px">{row.estadoCilindro.tipo === 'Lleno' ? row.cantidad : 0}</td>
+              <td className="text-secondary-14px">{row.estadoCilindro.tipo === 'Vacío' ? row.cantidad : 0}</td>
+              <td className="text-secondary-14px ">{row.estadoCilindro.tipo === 'Fallado' ? row.cantidad : 0}</td>
+              <td className="text-secondary-14px text-center">
+                {row.estadoCilindro.tipo === 'Prestado' ? row.cantidad : 0}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -82,6 +91,12 @@ const Tabla = () => {
 };
 
 export default function InventarioBodega() {
+  const dispatch: AppDispatch = useDispatch();
+  const data = useSelector((state: RootState) => state.abastecimiento.data);
+  useEffect(() => {
+    dispatch(getInfo());
+  }, [dispatch]);
+
   return (
     <div className="p-4 w-full">
       <h3 className="text-18px py-4 " id="inventario_bodegas">
@@ -109,7 +124,7 @@ export default function InventarioBodega() {
       </form>
 
       <div className="py-3">
-        <Tabla />
+        <Tabla data={data} />
       </div>
     </div>
   );

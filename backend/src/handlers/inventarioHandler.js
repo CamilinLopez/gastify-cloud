@@ -1,4 +1,8 @@
-const { crearDatosDB, crearActualizarInventarioDB } = require('../controllers/inicializarInformacion');
+const {
+  crearDatosDB,
+  crearActualizarInventarioDB,
+  getAbastacemientoDB,
+} = require('../controllers/inicializarInformacion');
 
 const inicializarDatos = async (req, res) => {
   try {
@@ -9,27 +13,37 @@ const inicializarDatos = async (req, res) => {
   }
 };
 
-const crearInventario = async (req, res) => {
+const crearAbastecimiento = async (req, res) => {
   try {
-    const { id, fecha, hora, cantidad, tipoCilindroId, estadoCilindroId, modificar } = req.body;
+    const { id, fecha, hora, cantidad, tipoCilindro, estadoCilindro, modificar } = req.body;
     const data = await crearActualizarInventarioDB({
       id,
       fecha,
       hora,
       cantidad,
-      tipoCilindro: { idCilindro: tipoCilindroId.id, nombreCilindro: tipoCilindroId.tipo },
-      estadoCilindro: { idEstado: estadoCilindroId.id, nombreEstado: estadoCilindroId.tipo },
+      tipoCilindro: { idCilindro: tipoCilindro.id, nombreCilindro: tipoCilindro.tipo },
+      estadoCilindro: { idEstado: estadoCilindro.id, nombreEstado: estadoCilindro.tipo },
       modificar: { idModificar: modificar.id, nombreModificar: modificar.tipo },
     });
 
     res.status(200).json({ data });
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const getAbastacemiento = async (req, res) => {
+  try {
+    const data = await getAbastacemientoDB();
+    res.status(200).json({ data });
+  } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
 module.exports = {
   inicializarDatos,
-  crearInventario,
+  crearAbastecimiento,
+  getAbastacemiento,
 };
