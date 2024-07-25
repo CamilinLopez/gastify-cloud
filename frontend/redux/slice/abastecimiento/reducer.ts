@@ -9,7 +9,8 @@ export const handleFetchAbastecimiento = (builder: any) => {
     .addCase(postInfo.fulfilled, (state: any, action: any) => {
       state.status = 'succeeded';
       state.error = null;
-      state.successMessage = action.payload.data;
+      state.data = action.payload.data.nuevoRegistro;
+      state.successMessage = action.payload.data.message;
     })
     .addCase(postInfo.rejected, (state: any, action: any) => {
       state.status = 'failed';
@@ -27,7 +28,7 @@ export const handleGetAbastecimiento = (builder: any) => {
       state.status = 'succeeded';
       state.error = null;
       state.successMessage = action.payload.data.message;
-      state.data = action.payload.data.data;
+      state.data = action.payload.data.result;
     })
     .addCase(getInfo.rejected, (state: any, action: any) => {
       state.status = 'failed';

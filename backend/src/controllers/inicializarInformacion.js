@@ -1,4 +1,5 @@
 const { estado_cilindros, tipo_cilindros, inventario_bodegas } = require('../db/index');
+const { Op, literal } = require('sequelize');
 
 const crearDatosDB = async () => {
   const tipos = [{ tipo: '5kg' }, { tipo: '11kg' }, { tipo: '15kg' }, { tipo: '45kg' }, { tipo: 'H15' }];
@@ -28,28 +29,30 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
   };
 
   try {
-    const findTipoCilindro = await inventario_bodegas.findOne({
-      where: { tipoCilindroId: idCilindro },
-    });
-
-    if (findTipoCilindro) {
-      const cantidadActual = findTipoCilindro.cantidad;
-      if (nombreModificar === 'Agregar') {
-        const nuevaCantidadS = cantidadActual + Number(cantidad);
-
-        findTipoCilindro.cantidad = nuevaCantidadS;
-        await findTipoCilindro.save();
-        return { nombreCilindro, nombreEstado, nuevaCantidadS };
-      }
-      if (nombreModificar === 'Eliminar') {
-        const nuevaCantidadR = cantidadActual - Number(cantidad);
-        findTipoCilindro.cantidad = nuevaCantidadR;
-        await findTipoCilindro.save();
-        return { nombreCilindro, nombreEstado, nuevaCantidadR };
-      }
+    if (nombreModificar === 'Agregar') {
+      const nuevoRegistro = await inventario_bodegas.create(data);
+      return { message: 'Datos creados', nuevoRegistro };
     }
-    await inventario_bodegas.create(data);
-    return 'Datos creados.';
+    if (nombreModificar === 'eliminar') {
+      const total = await inventario_bodegas.sum('cantidad', {
+        where: {
+          tipoCilindroId: idCilindro,
+          estadoCilindroId: idEstado,
+        },
+      });
+
+      if (cantidad > total) throw 'Cantidad insuficiente para eliminar';
+
+      const registroEliminado = await inventario_bodegas.create({
+        id,
+        fecha,
+        hora,
+        cantidad: -cantidad,
+        tipoCilindroId: idCilindro,
+        estadoCilindroId: idEstado,
+      });
+      return { message: 'Datos Eliminados', registroEliminado };
+    }
   } catch (error) {
     throw error;
   }
@@ -58,22 +61,53 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
 const getAbastacemientoDB = async () => {
   try {
     const data = await inventario_bodegas.findAll({
-      attributes: ['id', 'fecha', 'hora', 'cantidad'],
+      attributes: ['fecha', [literal('SUM("inventario_bodegas"."cantidad")'), 'totalCantidad']],
       include: [
         {
           model: tipo_cilindros,
-          as: 'tipoCilindro', // El alias usado en el belongsTo
+          as: 'tipoCilindro',
+          attributes: ['id', 'tipo'], // Incluir los atributos necesarios
         },
         {
           model: estado_cilindros,
-          as: 'estadoCilindro', // El alias usado en el belongsTo
+          as: 'estadoCilindro',
+          attributes: ['id', 'tipo'], // Incluir los atributos necesarios
         },
       ],
+      group: ['fecha', 'tipoCilindro.id', 'tipoCilindro.tipo', 'estadoCilindro.id', 'estadoCilindro.tipo'],
     });
+
+    const groupedData = data.reduce((acc, item) => {
+      const fecha = item.fecha;
+      const tipo = item.tipoCilindro.tipo;
+      const estado = item.estadoCilindro.tipo;
+      const totalCantidad = parseInt(item.getDataValue('totalCantidad'), 10);
+
+      if (!acc[fecha]) {
+        acc[fecha] = {};
+      }
+
+      if (!acc[fecha][tipo]) {
+        acc[fecha][tipo] = { tipoCilindro: tipo, estados: {} };
+      }
+
+      if (!acc[fecha][tipo].estados[estado]) {
+        acc[fecha][tipo].estados[estado] = 0;
+      }
+
+      acc[fecha][tipo].estados[estado] += totalCantidad;
+
+      return acc;
+    }, {});
+
+    const result = Object.entries(groupedData).map(([fecha, tipos]) => ({
+      fecha,
+      tipos: Object.values(tipos),
+    }));
 
     return {
       message: 'Accion completada',
-      data,
+      result,
     };
   } catch (error) {
     throw error;

@@ -22,13 +22,15 @@ const crearAbastecimiento = async (req, res) => {
       hora,
       cantidad,
       tipoCilindro: { idCilindro: tipoCilindro.id, nombreCilindro: tipoCilindro.tipo },
-      estadoCilindro: { idEstado: estadoCilindro.id, nombreEstado: estadoCilindro.tipo },
+      estadoCilindro: {
+        idEstado: estadoCilindro.id,
+        nombreEstado: estadoCilindro.tipo,
+      },
       modificar: { idModificar: modificar.id, nombreModificar: modificar.tipo },
     });
 
     res.status(200).json({ data });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };
