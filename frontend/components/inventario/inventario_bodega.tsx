@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getInfo } from '@/redux/slice/abastecimiento/thunks';
 import { RootState } from '@/redux/reducer';
 import { filterByDate } from '@/redux/slice/abastecimiento/abastecimiento';
+import moment from 'moment';
 
 const Tabla = () => {
   const data = useSelector((state: RootState) => state.abastecimiento.filteredData);
-  console.log(data);
   return (
     <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
-      {/* <table className="min-w-full divide-y divide-gray-200 ">
+      <table className="min-w-full divide-y divide-gray-200 ">
         <thead className="bg-blanco">
           <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px">
             <th>Fecha</th>
@@ -23,20 +23,18 @@ const Tabla = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.map((row, index) => (
+          {data?.tipos.map((row, index) => (
             <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
-              <td className="text-14px">{row.fecha}</td>
-              <td className="text-secondary-14px text-center">{row.tipoCilindro.tipo}</td>
-              <td className="text-secondary-14px">{row.estadoCilindro.tipo === 'Lleno' ? row.totalCantidad : 0}</td>
-              <td className="text-secondary-14px">{row.estadoCilindro.tipo === 'Vacío' ? row.totalCantidad : 0}</td>
-              <td className="text-secondary-14px ">{row.estadoCilindro.tipo === 'Fallado' ? row.totalCantidad : 0}</td>
-              <td className="text-secondary-14px text-center">
-                {row.estadoCilindro.tipo === 'Prestado' ? row.totalCantidad : 0}
-              </td>
+              <td className="text-14px">{data?.fecha}</td>
+              <td className="text-secondary-14px text-center">{row.tipoCilindro}</td>
+              <td className="text-secondary-14px">{row.estados?.Lleno || 0}</td>
+              <td className="text-secondary-14px">{row.estados?.Vacío || 0}</td>
+              <td className="text-secondary-14px ">{row.estados?.Fallado || 0}</td>
+              <td className="text-secondary-14px text-center">{row.estados?.Prestado || 0}</td>
             </tr>
           ))}
         </tbody>
-      </table> */}
+      </table>
     </div>
   );
 };
@@ -50,7 +48,10 @@ export default function InventarioBodega() {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
+    const now = moment();
+    const date = moment(now).format('YYYY-MM-DD');
     dispatch(getInfo());
+    dispatch(filterByDate({ date }));
   }, [dispatch]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {

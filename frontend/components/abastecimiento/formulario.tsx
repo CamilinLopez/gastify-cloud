@@ -148,7 +148,7 @@ export default function Formulario() {
                 />
               </div>
               <div className="w-full flex flex-col gap-y-2">
-                <p className="text-16px py-2">Modificar</p>
+                <p className="text-16px py-2">Acciones</p>
                 <SelectInput
                   name="modificar"
                   formAbastecimiento={formAbastecimiento}

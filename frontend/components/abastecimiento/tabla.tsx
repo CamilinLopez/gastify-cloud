@@ -1,5 +1,8 @@
+'use client';
+
 import { TablaAbastecimiento } from '@/types/abastecimieneto';
-import React from 'react';
+import React, { useEffect } from 'react';
+
 
 export default function Tabla() {
   const textTable = ['Tipo de cilindro', 'Stock actual', 'Stock mínimo', 'Alerta'];
@@ -35,9 +38,12 @@ export default function Tabla() {
       Alerta: 'Bajo Stock',
     },
   ];
+
   return (
     <div className="p-4 w-full">
-      <h1 className="text-18px py-6" id='alertas_stock'>Alertas de stock</h1>
+      <h1 className="text-18px py-6" id="alertas_stock">
+        Alertas de stock
+      </h1>
       <div className="overflow-x-auto border-[1px] rounded-xl">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-blanco">
