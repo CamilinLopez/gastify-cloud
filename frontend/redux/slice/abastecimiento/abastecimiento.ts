@@ -1,13 +1,20 @@
-import { FechaInventario, initialStateFormAbastecimiento } from '@/types/abastecimieneto';
+import { initialStateAbastecimiento } from '@/types/abastecimieneto';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { handleFetchAbastecimiento, handleGetAbastecimiento } from './reducer';
+import { handleFetchAbastecimiento, handleGetTablaStock } from './reducer';
 
-const initialState: initialStateFormAbastecimiento = {
-  data: null,
-  filteredData: null,
-  status: 'idle',
+const initialState: initialStateAbastecimiento = {
+  dataResponse: {
+    id: '',
+    fecha: '',
+    hora: '',
+    cantidad: 0,
+    estadoCilindroId: null,
+    tipoCilindroId: null,
+  },
+  tablaResponse: [],
+  messageResponse: '',
   error: null,
-  successMessage: null,
+  status: 'idle',
 };
 
 const abastecimientoSlice = createSlice({
@@ -17,19 +24,11 @@ const abastecimientoSlice = createSlice({
     updateAll(state, action) {
       return { ...state, ...action.payload };
     },
-    filterByDate(state, action: PayloadAction<{ date: string }>) {
-      const { data } = state;
-      const { date } = action.payload;
-      if (data) {
-        const filteredData = data.find((item) => item.fecha === date) || null;
-        state.filteredData = filteredData;
-      }
-    },
   },
   extraReducers: (builder) => {
     handleFetchAbastecimiento(builder);
-    handleGetAbastecimiento(builder);
+    handleGetTablaStock(builder);
   },
 });
-export const { updateAll, filterByDate } = abastecimientoSlice.actions;
+export const { updateAll } = abastecimientoSlice.actions;
 export default abastecimientoSlice.reducer;

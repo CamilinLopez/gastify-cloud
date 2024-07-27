@@ -1,5 +1,5 @@
 const { estado_cilindros, tipo_cilindros, inventario_bodegas } = require('../db/index');
-const { Op, literal } = require('sequelize');
+const { literal } = require('sequelize');
 
 const crearDatosDB = async () => {
   const tipos = [{ tipo: '5kg' }, { tipo: '11kg' }, { tipo: '15kg' }, { tipo: '45kg' }, { tipo: 'H15' }];
@@ -9,6 +9,44 @@ const crearDatosDB = async () => {
     await tipo_cilindros.bulkCreate(tipos);
     await estado_cilindros.bulkCreate(estados);
     return 'Tipos y estados de cilindros creados';
+  } catch (error) {
+    throw error;
+  }
+};
+
+const tomarDatosTablaStockAbastecimiento = async () => {
+  try {
+    const data = await inventario_bodegas.findAll({
+      attributes: ['tipoCilindroId', [literal('SUM("inventario_bodegas"."cantidad")'), 'totalCantidad']],
+      include: [
+        {
+          model: tipo_cilindros,
+          as: 'tipoCilindro',
+          attributes: ['id', 'tipo'],
+        },
+        {
+          model: estado_cilindros,
+          as: 'estadoCilindro',
+          attributes: ['id', 'tipo'],
+          where: { tipo: 'Lleno' },
+        },
+      ],
+      group: [
+        'inventario_bodegas.tipoCilindroId',
+        'tipoCilindro.id',
+        'tipoCilindro.tipo',
+        'estadoCilindro.id',
+        'estadoCilindro.tipo',
+      ],
+    });
+    const getInfo = data.map((item) => ({
+      'Tipo de cilindro': item.tipoCilindro.tipo,
+      'Stock actual': Number(item.getDataValue('totalCantidad')),
+      'Stock mínimo': 20,
+      Alerta: 'Ok',
+    }));
+
+    return getInfo;
   } catch (error) {
     throw error;
   }
@@ -31,19 +69,20 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
   try {
     if (nombreModificar === 'Agregar') {
       const nuevoRegistro = await inventario_bodegas.create(data);
-      return { message: 'Datos creados', nuevoRegistro };
+      const getInfo = await tomarDatosTablaStockAbastecimiento();
+
+      return { message: 'Datos creados', nuevoRegistro, getInfo };
     }
-    if (nombreModificar === 'eliminar') {
+    if (nombreModificar === 'Eliminar') {
       const total = await inventario_bodegas.sum('cantidad', {
         where: {
           tipoCilindroId: idCilindro,
           estadoCilindroId: idEstado,
         },
       });
-
       if (cantidad > total) throw 'Cantidad insuficiente para eliminar';
 
-      const registroEliminado = await inventario_bodegas.create({
+      const nuevoRegistro = await inventario_bodegas.create({
         id,
         fecha,
         hora,
@@ -51,7 +90,9 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
         tipoCilindroId: idCilindro,
         estadoCilindroId: idEstado,
       });
-      return { message: 'Datos Eliminados', registroEliminado };
+      const getInfo = await tomarDatosTablaStockAbastecimiento();
+
+      return { message: 'Datos Eliminados', nuevoRegistro, getInfo };
     }
   } catch (error) {
     throw error;
@@ -118,4 +159,5 @@ module.exports = {
   crearDatosDB,
   crearActualizarInventarioDB,
   getAbastacemientoDB,
+  tomarDatosTablaStockAbastecimiento,
 };

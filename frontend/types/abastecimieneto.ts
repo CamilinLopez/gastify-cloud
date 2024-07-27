@@ -32,8 +32,6 @@ export interface SelectInputType {
   arrayCilindros: { id: number; tipo: string }[];
 }
 
-export interface TiposResponseForm {}
-
 // typados para array de la tabla inventario bodega
 interface EstadoCilindro {
   [key: string]: number; // El nombre del estado (como "Lleno", "Vacío", etc.) y su cantidad
@@ -56,4 +54,21 @@ export interface initialStateFormAbastecimiento {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: null;
   successMessage: string | null;
+}
+
+interface TypeDataResponse {
+  id: string;
+  fecha: string;
+  hora: string;
+  cantidad: number;
+  tipoCilindroId: number | null;
+  estadoCilindroId: number | null;
+}
+
+export interface initialStateAbastecimiento {
+  dataResponse: TypeDataResponse;
+  tablaResponse: TablaAbastecimiento[];
+  messageResponse: string | null;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: null;
 }

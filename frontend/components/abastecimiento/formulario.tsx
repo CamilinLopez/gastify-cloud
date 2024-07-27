@@ -4,12 +4,13 @@ import React, { useState, ChangeEvent } from 'react';
 import { Flechas } from '../svg/svgImages';
 import { updateAll } from '@/redux/slice/abastecimiento/abastecimiento';
 import { AppDispatch } from '@/redux/store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormAbastecimiento, SelectInputType } from '@/types/abastecimieneto';
 import { estadoCilindros, estadoModificar, tipoCilindros } from '@/arraysObjects/dataCilindros';
-import { postInfo } from '@/redux/slice/abastecimiento/thunks';
+import { crearFormulario } from '@/redux/slice/abastecimiento/thunks';
 import moment from 'moment';
 import { generateId } from '@/utils/generateId';
+import { RootState } from '@/redux/reducer';
 
 const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCilindros }: SelectInputType) => {
   //estados
@@ -69,6 +70,8 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
 
 export default function Formulario() {
   const dispatch: AppDispatch = useDispatch();
+  const data = useSelector((state:RootState)=>state.abastecimiento.status)
+  console.log(data)
 
   //estados
   const [formAbastecimiento, setFormAbastecimiento] = useState<FormAbastecimiento>({
@@ -97,7 +100,7 @@ export default function Formulario() {
     const newHora = moment(now).format('HH:mm:ss');
 
     dispatch(
-      postInfo({
+      crearFormulario({
         ...formAbastecimiento,
         id: newId,
         fecha: newFecha,
@@ -105,6 +108,8 @@ export default function Formulario() {
       }),
     );
   };
+
+
 
   return (
     <div className="p-4 w-full">

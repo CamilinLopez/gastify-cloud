@@ -1,14 +1,28 @@
 'use client';
+import moment from 'moment';
 import { useEffect, useState, ChangeEvent } from 'react';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { getInfo } from '@/redux/slice/abastecimiento/thunks';
+import { getTablaBodega } from '@/redux/slice/inventario/thunks';
 import { RootState } from '@/redux/reducer';
-import { filterByDate } from '@/redux/slice/abastecimiento/abastecimiento';
-import moment from 'moment';
+import { filterByDate } from '@/redux/slice/inventario/inventario';
 
 const Tabla = () => {
-  const data = useSelector((state: RootState) => state.abastecimiento.filteredData);
+  const data = useSelector((state: RootState) => state.inventario.tablaBodegaFiteredByDate);
+  // const data = {
+  //   fecha: 'svdfdf',
+  //   tipos: [
+  //     {
+  //       tipoCilindro: 'xfgdf',
+  //       estados: {
+  //         Lleno: 0,
+  //         Vacío: 0,
+  //         Fallado: 0,
+  //         Prestado: 0,
+  //       },
+  //     },
+  //   ],
+  // };
   return (
     <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
       <table className="min-w-full divide-y divide-gray-200 ">
@@ -48,10 +62,14 @@ export default function InventarioBodega() {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    const now = moment();
-    const date = moment(now).format('YYYY-MM-DD');
-    dispatch(getInfo());
-    dispatch(filterByDate({ date }));
+    const fetchData = async () => {
+      await dispatch(getTablaBodega());
+      const now = moment();
+      const date = moment(now).format('YYYY-MM-DD');
+      dispatch(filterByDate({ date }));
+    };
+
+    fetchData();
   }, [dispatch]);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {

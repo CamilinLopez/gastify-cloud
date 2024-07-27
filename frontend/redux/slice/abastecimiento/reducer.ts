@@ -1,38 +1,39 @@
-import { initialStateFormAbastecimiento } from '@/types/abastecimieneto';
-import { postInfo, getInfo } from './thunks';
+import { initialStateAbastecimiento, initialStateFormAbastecimiento } from '@/types/abastecimieneto';
+import { crearFormulario, getTablaStock } from './thunks';
 
 export const handleFetchAbastecimiento = (builder: any) => {
   builder
-    .addCase(postInfo.pending, (state: any) => {
+    .addCase(crearFormulario.pending, (state: any) => {
       state.status = 'loading';
     })
-    .addCase(postInfo.fulfilled, (state: any, action: any) => {
+    .addCase(crearFormulario.fulfilled, (state: initialStateAbastecimiento, action: any) => {
+      state.dataResponse = action.payload.data.nuevoRegistro;
+      state.messageResponse = action.payload.data.message;
+      state.tablaResponse = action.payload.data.getInfo;
       state.status = 'succeeded';
       state.error = null;
-      state.data = action.payload.data.nuevoRegistro;
-      state.successMessage = action.payload.data.message;
     })
-    .addCase(postInfo.rejected, (state: any, action: any) => {
+    .addCase(crearFormulario.rejected, (state: initialStateAbastecimiento, action: any) => {
+      state.status = 'failed';
+      state.messageResponse = null;
+      state.error = action.payload.errors || 'Error desconocido';
+    });
+};
+
+export const handleGetTablaStock = (builder: any) => {
+  builder
+    .addCase(getTablaStock.pending, (state: any) => {
+      state.status = 'loading';
+    })
+    .addCase(getTablaStock.fulfilled, (state: initialStateAbastecimiento, action: any) => {
+      state.tablaResponse = action.payload.data.getInfo;
+      state.status = 'succeeded';
+      state.error = null;
+    })
+    .addCase(getTablaStock.rejected, (state: any, action: any) => {
       state.status = 'failed';
       state.successMessage = null;
       state.error = action.payload.errors || 'Error desconocido';
     });
 };
 
-export const handleGetAbastecimiento = (builder: any) => {
-  builder
-    .addCase(getInfo.pending, (state: any) => {
-      state.status = 'loading';
-    })
-    .addCase(getInfo.fulfilled, (state: initialStateFormAbastecimiento, action: any) => {
-      state.status = 'succeeded';
-      state.error = null;
-      state.successMessage = action.payload.data.message;
-      state.data = action.payload.data.result;
-    })
-    .addCase(getInfo.rejected, (state: any, action: any) => {
-      state.status = 'failed';
-      state.successMessage = null;
-      state.error = action.payload.errors || 'Error desconocido';
-    });
-};

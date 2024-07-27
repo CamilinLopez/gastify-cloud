@@ -3,14 +3,11 @@ import { FormAbastecimiento } from '@/types/abastecimieneto';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
-export const postInfo = createAsyncThunk(
-  'abasatecimiento/guardarInfo',
+export const crearFormulario = createAsyncThunk(
+  'abastecimiento/guardarInfo',
   async (abastecimieneto: FormAbastecimiento, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(
-        'https://localhost:3001/abastecimiento/crearAbastecimiento',
-        abastecimieneto,
-      );
+      const response = await axiosInstance.post('/abastecimiento/crearAbastecimiento', abastecimieneto);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -21,9 +18,9 @@ export const postInfo = createAsyncThunk(
   },
 );
 
-export const getInfo = createAsyncThunk('abascecimiento/getInfo', async (_, { rejectWithValue }) => {
+export const getTablaStock = createAsyncThunk('abastecimiento/getTablaStock', async (_, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get('https://localhost:3001/abastecimiento/getAbastecimiento');
+    const response = await axiosInstance.get('/abastecimiento/getTablaStock');
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -32,3 +29,4 @@ export const getInfo = createAsyncThunk('abascecimiento/getInfo', async (_, { re
     return rejectWithValue('Error inesperado');
   }
 });
+

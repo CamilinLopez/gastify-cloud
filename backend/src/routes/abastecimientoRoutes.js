@@ -1,5 +1,10 @@
 const { Router } = require('express');
-const { inicializarDatos, crearAbastecimiento, getAbastacemiento } = require('../handlers/inventarioHandler');
+const {
+  inicializarDatos,
+  crearAbastecimiento,
+  getAbastacemiento,
+  getTablaStockAbastecimiento,
+} = require('../handlers/abastecimientoHandler');
 const { validateAbastecimiento } = require('../middleware/inventario');
 const { handleValidationErrors } = require('../middleware/manejadorErrores');
 
@@ -12,5 +17,6 @@ abastecimientoRoutes.post(
   crearAbastecimiento,
 );
 abastecimientoRoutes.get('/getAbastecimiento', getAbastacemiento);
+abastecimientoRoutes.get('/getTablaStock', getTablaStockAbastecimiento);
 
 module.exports = abastecimientoRoutes;

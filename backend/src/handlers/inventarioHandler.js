@@ -1,51 +1,14 @@
-const {
-  crearDatosDB,
-  crearActualizarInventarioDB,
-  getAbastacemientoDB,
-} = require('../controllers/inicializarInformacion');
+const { getTablaInventarioBodegaDB } = require("../controllers/inventarioControllers");
 
-const inicializarDatos = async (req, res) => {
+const getTablaInventarioBodegaHandler = async (req, res) => {
   try {
-    const data = await crearDatosDB();
-    res.status(200).json({ message: data });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-const crearAbastecimiento = async (req, res) => {
-  try {
-    const { id, fecha, hora, cantidad, tipoCilindro, estadoCilindro, modificar } = req.body;
-    const data = await crearActualizarInventarioDB({
-      id,
-      fecha,
-      hora,
-      cantidad,
-      tipoCilindro: { idCilindro: tipoCilindro.id, nombreCilindro: tipoCilindro.tipo },
-      estadoCilindro: {
-        idEstado: estadoCilindro.id,
-        nombreEstado: estadoCilindro.tipo,
-      },
-      modificar: { idModificar: modificar.id, nombreModificar: modificar.tipo },
-    });
-
+    const data = await getTablaInventarioBodegaDB();
     res.status(200).json({ data });
   } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
-const getAbastacemiento = async (req, res) => {
-  try {
-    const data = await getAbastacemientoDB();
-    res.status(200).json({ data });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ errors: error });
   }
 };
 
 module.exports = {
-  inicializarDatos,
-  crearAbastecimiento,
-  getAbastacemiento,
+  getTablaInventarioBodegaHandler,
 };
