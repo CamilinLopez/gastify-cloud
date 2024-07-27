@@ -70,8 +70,8 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
 
 export default function Formulario() {
   const dispatch: AppDispatch = useDispatch();
-  const data = useSelector((state:RootState)=>state.abastecimiento.status)
-  console.log(data)
+  const data = useSelector((state: RootState) => state.abastecimiento.status);
+  console.log(data);
 
   //estados
   const [formAbastecimiento, setFormAbastecimiento] = useState<FormAbastecimiento>({
@@ -108,8 +108,6 @@ export default function Formulario() {
       }),
     );
   };
-
-
 
   return (
     <div className="p-4 w-full">

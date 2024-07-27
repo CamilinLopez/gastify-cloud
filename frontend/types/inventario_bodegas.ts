@@ -25,7 +25,6 @@ interface FechaInventario {
 
 export interface initialStateInventario {
   messageResponse: string | null;
-  tablaBodega: FechaInventario[];
   tablaBodegaFiteredByDate: FechaInventario | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: null;

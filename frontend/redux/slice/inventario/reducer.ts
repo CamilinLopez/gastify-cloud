@@ -7,7 +7,7 @@ export const handleGetTablaBodega = (builder: any) => {
       state.status = 'loading';
     })
     .addCase(getTablaBodega.fulfilled, (state: initialStateInventario, action: any) => {
-      state.tablaBodega = action.payload.data.result;
+      state.tablaBodegaFiteredByDate = action.payload.data.result;
       state.status = 'succeeded';
       state.error = null;
       state.messageResponse = action.payload.data.message;

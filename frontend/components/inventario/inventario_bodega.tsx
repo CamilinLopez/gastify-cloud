@@ -5,24 +5,10 @@ import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTablaBodega } from '@/redux/slice/inventario/thunks';
 import { RootState } from '@/redux/reducer';
-import { filterByDate } from '@/redux/slice/inventario/inventario';
 
 const Tabla = () => {
   const data = useSelector((state: RootState) => state.inventario.tablaBodegaFiteredByDate);
-  // const data = {
-  //   fecha: 'svdfdf',
-  //   tipos: [
-  //     {
-  //       tipoCilindro: 'xfgdf',
-  //       estados: {
-  //         Lleno: 0,
-  //         Vacío: 0,
-  //         Fallado: 0,
-  //         Prestado: 0,
-  //       },
-  //     },
-  //   ],
-  // };
+
   return (
     <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
       <table className="min-w-full divide-y divide-gray-200 ">
@@ -63,10 +49,9 @@ export default function InventarioBodega() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(getTablaBodega());
       const now = moment();
       const date = moment(now).format('YYYY-MM-DD');
-      dispatch(filterByDate({ date }));
+      await dispatch(getTablaBodega(date));
     };
 
     fetchData();
@@ -81,7 +66,7 @@ export default function InventarioBodega() {
   const buscar = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const date = form.fecha;
-    dispatch(filterByDate({ date }));
+    dispatch(getTablaBodega(date));
   };
 
   return (

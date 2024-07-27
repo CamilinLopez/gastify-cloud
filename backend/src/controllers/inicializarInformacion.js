@@ -32,7 +32,7 @@ const tomarDatosTablaStockAbastecimiento = async () => {
         },
       ],
       group: [
-        'inventario_bodegas.tipoCilindroId',
+        'tipoCilindroId',
         'tipoCilindro.id',
         'tipoCilindro.tipo',
         'estadoCilindro.id',
