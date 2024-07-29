@@ -4,6 +4,7 @@ const { modelEstadocilindro, modelInventarioBodega, modelTipoCilindro } = requir
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
 const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
+//cambiar urlLocal por urlDocker para ejecutar el proyecto con docker. 
 const database = new Sequelize(`${urlLocal}`, {
   logging: false,
   native: false,
