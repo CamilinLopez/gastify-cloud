@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: protolylab
+      POSTGRES_PASSWORD: azsxdcfv
+      POSTGRES_DB: gastifycloud
+    ports:
+      - "5433:5432"
+
+  server:
+    build: ./backend
+    depends_on:
+      - database
+    links:
+      - database
+    ports:
+      - 3001:3001
+
+    command:
+      [
+        "./wait-for-it.sh",
+        "database:5432",
+        "--",
+        "npm",
+        "start"
+      ]
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/appfront
+    depends_on:
+      - database
+      - server
+    links:
+      - database
+      - server
+    ports:
+      - 3000:3000

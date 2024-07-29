@@ -10,7 +10,6 @@ import { estadoCilindros, estadoModificar, tipoCilindros } from '@/arraysObjects
 import { crearFormulario } from '@/redux/slice/abastecimiento/thunks';
 import moment from 'moment';
 import { generateId } from '@/utils/generateId';
-import { RootState } from '@/redux/reducer';
 
 const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCilindros }: SelectInputType) => {
   //estados
@@ -70,8 +69,6 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
 
 export default function Formulario() {
   const dispatch: AppDispatch = useDispatch();
-  const data = useSelector((state: RootState) => state.abastecimiento.status);
-  console.log(data);
 
   //estados
   const [formAbastecimiento, setFormAbastecimiento] = useState<FormAbastecimiento>({

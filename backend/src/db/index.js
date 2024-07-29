@@ -1,7 +1,10 @@
 const { Sequelize } = require('sequelize');
 const { modelEstadocilindro, modelInventarioBodega, modelTipoCilindro } = require('./models/inventario/index');
 
-const database = new Sequelize('postgres://postgres:camilo1998@localhost:5432/gastifycloud', {
+const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
+const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
+
+const database = new Sequelize(`${urlLocal}`, {
   logging: false,
   native: false,
 });

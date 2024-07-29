@@ -29,7 +29,6 @@ const crearAbastecimiento = async (req, res) => {
       },
       modificar: { idModificar: modificar.id, nombreModificar: modificar.tipo },
     });
-
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
