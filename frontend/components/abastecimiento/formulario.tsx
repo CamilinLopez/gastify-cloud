@@ -1,77 +1,19 @@
 'use client';
 
-import React, { useState, ChangeEvent } from 'react';
-import { Flechas } from '../svg/svgImages';
-import { updateAll } from '@/redux/slice/abastecimiento/abastecimiento';
+import { useState, ChangeEvent, FocusEvent } from 'react';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormAbastecimiento, SelectInputType } from '@/types/abastecimieneto';
+import { FormAbastecimiento } from '@/types/abastecimieneto';
 import { estadoCilindros, estadoModificar, tipoCilindros } from '@/arraysObjects/dataCilindros';
 import { crearFormulario } from '@/redux/slice/abastecimiento/thunks';
 import moment from 'moment';
 import { generateId } from '@/utils/generateId';
 import { RootState } from '@/redux/reducer';
-
-const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCilindros }: SelectInputType) => {
-  //estados
-  const [isOpen, setIsOpen] = useState(false);
-
-  //funciones
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormAbastecimiento({
-      ...formAbastecimiento,
-      [e.target.name]: { tipo: e.target.value },
-    });
-  };
-  const toggleDropdown = () => setIsOpen(!isOpen);
-  const handleOptionClick = (name: string, { id, tipo }: { id: number | string; tipo: string }) => {
-    setFormAbastecimiento({
-      ...formAbastecimiento,
-      [name]: { id, tipo },
-    });
-    setIsOpen(false);
-  };
-  const getName = (name: string) => {
-    if (name === 'estadoCilindro') return formAbastecimiento[name].tipo;
-    if (name === 'tipoCilindro') return formAbastecimiento[name].tipo;
-    if (name === 'modificar') return formAbastecimiento[name]?.tipo;
-  };
-
-  return (
-    <div className="relative w-10/12">
-      <input
-        name={name}
-        value={getName(name)}
-        onChange={handleOnChange}
-        className="p-4 h-14 bg-gris-1 rounded-xl w-full"
-        type="text"
-        placeholder="Seleccionar"
-      />
-      <div
-        onClick={toggleDropdown}
-        className="absolute cursor-pointer right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
-        <Flechas />
-      </div>
-      {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
-          {arrayCilindros.map((option) => (
-            <div
-              key={option.id}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleOptionClick(name, option)}>
-              {option.tipo}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+import SelectInput from './selectInput';
 
 export default function Formulario() {
   const dispatch: AppDispatch = useDispatch();
 
-  //estados
   const [formAbastecimiento, setFormAbastecimiento] = useState<FormAbastecimiento>({
     id: '',
     fecha: '',
@@ -82,14 +24,35 @@ export default function Formulario() {
     modificar: { id: '', tipo: '' },
   });
 
+  const [cantidadError, setCantidadError] = useState(false);
+
   const dataStatus = useSelector((state: RootState) => state.abastecimiento.status);
-  //funciones
+
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === 'cantidad' && Number(value) < 0) {
+      setCantidadError(true);
+      return;
+    }
+
     setFormAbastecimiento({
       ...formAbastecimiento,
       [e.target.name]: e.target.value,
     });
+
+    if (e.target.name === 'cantidad' && e.target.value) {
+      setCantidadError(false);
+    }
   };
+
+  const handleCantidadBlur = (e: FocusEvent<HTMLInputElement>) => {
+    if (!formAbastecimiento.cantidad) {
+      setCantidadError(true);
+    } else {
+      setCantidadError(false);
+    }
+  };
+
   const registrarAbastecimiento = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const now = moment();
@@ -97,6 +60,10 @@ export default function Formulario() {
     const newId = generateId();
     const newFecha = moment(now).format('YYYY-MM-DD');
     const newHora = moment(now).format('HH:mm:ss');
+
+    if (cantidadError) {
+      return;
+    }
 
     dispatch(
       crearFormulario({
@@ -138,18 +105,20 @@ export default function Formulario() {
               </div>
             </div>
 
-            <div className="w-1/2  flex flex-col gap-y-3 ">
+            <div className="w-1/2 flex flex-col gap-y-3 ">
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2">Cantidad recibida</p>
                 <input
                   name="cantidad"
                   value={formAbastecimiento.cantidad}
                   onChange={handleOnChange}
-                  className="p-4 h-14 bg-gris-1 rounded-xl w-10/12"
+                  onBlur={handleCantidadBlur}
+                  className={`p-4 h-14 rounded-xl w-full border ${cantidadError ? 'border-red-500' : 'bg-gris-1'}`}
                   type="number"
                   min="0"
                   placeholder="Ingresar cantidad"
                 />
+                {cantidadError && <p className="text-red-500">*falta agregar cantidad*</p>}
               </div>
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2">Acciones</p>
@@ -162,11 +131,6 @@ export default function Formulario() {
               </div>
             </div>
           </div>
-
-          {/* <div className="w-full">
-            <p className="text-16px py-2">Observaciones</p>
-            <textarea className="w-5/12 h-36 bg-gris-1 rounded-xl" />
-          </div> */}
           <div className="flex flex-col md:flex-row items-center gap-4">
             <button
               onClick={(e) => registrarAbastecimiento(e)}
