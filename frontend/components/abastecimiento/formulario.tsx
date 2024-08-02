@@ -10,6 +10,7 @@ import { estadoCilindros, estadoModificar, tipoCilindros } from '@/arraysObjects
 import { crearFormulario } from '@/redux/slice/abastecimiento/thunks';
 import moment from 'moment';
 import { generateId } from '@/utils/generateId';
+import { RootState } from '@/redux/reducer';
 
 const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCilindros }: SelectInputType) => {
   //estados
@@ -81,6 +82,7 @@ export default function Formulario() {
     modificar: { id: '', tipo: '' },
   });
 
+  const dataStatus = useSelector((state: RootState) => state.abastecimiento.status);
   //funciones
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormAbastecimiento({
@@ -111,6 +113,7 @@ export default function Formulario() {
       <h1 className="text-18px py-6" id="registro_abastecimiento">
         Registro de abastecimiento
       </h1>
+
       <div className="w-full">
         <form className="w-full flex flex-col gap-y-5" action="">
           <div className="w-full flex">
@@ -144,6 +147,7 @@ export default function Formulario() {
                   onChange={handleOnChange}
                   className="p-4 h-14 bg-gris-1 rounded-xl w-10/12"
                   type="number"
+                  min="0"
                   placeholder="Ingresar cantidad"
                 />
               </div>
@@ -163,12 +167,15 @@ export default function Formulario() {
             <p className="text-16px py-2">Observaciones</p>
             <textarea className="w-5/12 h-36 bg-gris-1 rounded-xl" />
           </div> */}
-
-          <button
-            onClick={(e) => registrarAbastecimiento(e)}
-            className="w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">
-            Registrar
-          </button>
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <button
+              onClick={(e) => registrarAbastecimiento(e)}
+              className="w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">
+              Registrar
+            </button>
+            {dataStatus === 'loading' && <p>Cargando...</p>}
+            {dataStatus === 'failed' && <p>❌Datos Incorrectos o no ingresados</p>}
+          </div>
         </form>
       </div>
     </div>

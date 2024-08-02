@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
+import MenuDespegable from '../menuDespegable/menuDespegable';
 
 export default function NavBar() {
   return (
@@ -17,10 +18,10 @@ export default function NavBar() {
           <h1 className="text-18px">Gastify Cloud</h1>
         </div>
         <div className="flex items-center gap-x-8">
-          <div className="flex gap-x-1">
-            <p className="text-14px">Alarmas</p>
-            <p className="text-14px">(3)</p>
+          <div className="relative">
+            <MenuDespegable />
           </div>
+
           <div>
             <button onClick={(e) => e.preventDefault()} className="bg-gris-1 p-[10px] rounded-[12px]">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" viewBox="0 0 18 17" fill="none">
