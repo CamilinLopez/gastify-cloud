@@ -25,4 +25,4 @@ const Conductores = (sequelize) => {
   );
 };
 
-module.export = Conductores;
+module.exports = Conductores;

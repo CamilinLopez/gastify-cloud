@@ -23,17 +23,9 @@ const InventarioCamion = (sequelize) => {
         defaultValue: 0,
       },
       camionId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         references: {
           model: 'camiones',
-          key: 'id',
-        },
-        allowNull: false,
-      },
-      conductorId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'conductores',
           key: 'id',
         },
         allowNull: false,
@@ -57,7 +49,7 @@ const InventarioCamion = (sequelize) => {
     },
     {
       timestamps: false,
-    }
+    },
   );
 };
 

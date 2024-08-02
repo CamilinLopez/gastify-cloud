@@ -4,3 +4,4 @@ module.exports.modelTipoCilindro = require('./tipoCilindro');
 module.exports.modelCamiones = require('./camiones');
 module.exports.modelConductores = require('./conductores');
 module.exports.modelInventarioCamiones = require('./inventarioCamiones');
+module.exports.modelConductorCamiones = require('./conductorCamion');

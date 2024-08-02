@@ -6,6 +6,7 @@ const {
   modelCamiones,
   modelConductores,
   modelInventarioCamiones,
+  modelConductorCamiones,
 } = require('./models/inventario/index');
 
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
@@ -24,14 +25,34 @@ modelTipoCilindro(database);
 modelCamiones(database);
 modelConductores(database);
 modelInventarioCamiones(database);
+modelConductorCamiones(database);
 
 //modelos de seccion inventario
-const { estado_cilindros, inventario_bodegas, tipo_cilindros, camiones, conductores, inventario_camiones } = database.models;
+const { estado_cilindros, inventario_bodegas, tipo_cilindros, camiones, conductores, inventario_camiones, conductor_camiones } =
+  database.models;
 
 //relaciones seccion inventario
+
+//inventario_bodegas / tipo_cilindros N/1
 inventario_bodegas.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro' });
+//inventario_bodegas / estado_cilindros N/1
 inventario_bodegas.belongsTo(estado_cilindros, { foreignKey: 'estadoCilindroId', as: 'estadoCilindro' });
 
+//camiones / inventario_camiones 1/N
+camiones.hasMany(inventario_camiones, { foreignKey: 'camionId' });
+inventario_camiones.belongsTo(camiones, { foreignKey: 'camionId' });
+
+//tipo_cilindros / inventario_camiones 1/N
+tipo_cilindros.hasMany(inventario_camiones, { foreignKey: 'tipoCilindroId' });
+inventario_camiones.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId' });
+
+//estado_cilindros / inventario_camiones 1/N
+estado_cilindros.hasMany(inventario_camiones, { foreignKey: 'estadoCilindroId' });
+inventario_camiones.belongsTo(estado_cilindros, { foreignKey: 'estadoCilindroId' });
+
+//conductores / camiones N/M
+conductores.belongsToMany(camiones, { through: conductor_camiones, foreignKey: 'conductorId' });
+camiones.belongsToMany(conductores, { through: conductor_camiones, foreignKey: 'camionId' });
 
 module.exports = {
   ...database.models,

@@ -6,8 +6,8 @@ export interface TablaAbastecimiento {
 }
 
 export interface typeCilindro {
-  id: string | string;
-  tipo: string;
+  id: string | number;
+  tipo: '5kg' | '11kg' | '15kg' | '45kg' | 'H15' | '';
 }
 
 export interface typeModificar {
@@ -29,7 +29,7 @@ export interface SelectInputType {
   name: 'tipoCilindro' | 'estadoCilindro' | 'modificar';
   formAbastecimiento: FormAbastecimiento;
   setFormAbastecimiento: React.Dispatch<React.SetStateAction<FormAbastecimiento>>;
-  arrayCilindros: { id: number; tipo: string }[];
+  arrayCilindros: { id: number | string; tipo: string }[];
 }
 
 // typados para array de la tabla inventario bodega
