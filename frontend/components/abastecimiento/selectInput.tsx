@@ -68,7 +68,7 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
           </div>
         )}
       </div>
-      {hasError && <p className="text-red-500">*falta Agregar Datos*</p>}
+      {hasError && <p className="text-red-500 text-xs">*falta Agregar Datos*</p>}
     </>
   );
 };

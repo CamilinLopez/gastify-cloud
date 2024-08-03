@@ -118,7 +118,7 @@ export default function Formulario() {
                   min="0"
                   placeholder="Ingresar cantidad"
                 />
-                {cantidadError && <p className="text-red-500">*falta agregar cantidad*</p>}
+                {cantidadError && <p className="text-red-500 text-xs">*falta agregar cantidad*</p>}
               </div>
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2">Acciones</p>
