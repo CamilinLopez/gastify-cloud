@@ -1,7 +1,7 @@
 'use client';
 
 import { InfoInventarioCamiones, Tabla1Props, TipoCilindro } from '@/types/inventario_camiones';
-import { useState } from 'react';
+import { ChangeEvent, FocusEvent, useState } from 'react';
 
 const Tabla1: React.FC<Tabla1Props> = ({ SetIdMovimiento }) => {
   const data: InfoInventarioCamiones[] = [
@@ -188,68 +188,125 @@ const Tabla2 = () => {
 };
 
 export default function InventarioCamiones() {
-  const [idMovimiento, SetIdMovimiento] = useState<string>('');
-  const [showTabla1, SetShowTabla1] = useState<boolean>(true);
+  const [idMovimiento, setIdMovimiento] = useState<string>('');
+  const [showTabla1, setShowTabla1] = useState<boolean>(true);
+
+  const [numeroMovil, setNumeroMovil] = useState<string>('');
+  const [idConductor, setIdConductor] = useState<string>('');
+  const [fecha, setFecha] = useState<string>('');
+  const [hora, setHora] = useState<string>('');
+
+  const [numeroMovilError, setNumeroMovilError] = useState<boolean>(false);
+  const [idConductorError, setIdConductorError] = useState<boolean>(false);
+  const [fechaError, setFechaError] = useState<boolean>(false);
+  const [horaError, setHoraError] = useState<boolean>(false);
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === 'numeroMovil') setNumeroMovil(value);
+    if (name === 'idConductor') setIdConductor(value);
+    if (name === 'fecha') setFecha(value);
+    if (name === 'hora') setHora(value);
+  };
+
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    if (name === 'numeroMovil' && !numeroMovil) setNumeroMovilError(true);
+    if (name === 'idConductor' && !idConductor) setIdConductorError(true);
+    if (name === 'fecha' && !fecha) setFechaError(true);
+    if (name === 'hora' && !hora) setHoraError(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const hasError = !numeroMovil || !idConductor || !fecha || !hora;
+
+    if (!numeroMovil) setNumeroMovilError(true);
+    if (!idConductor) setIdConductorError(true);
+    if (!fecha) setFechaError(true);
+    if (!hora) setHoraError(true);
+
+    if (hasError) return;
+  };
 
   return (
     <div className="p-4 w-full">
-      <h3 className="text-18px py-4 " id="inventario_camiones">
+      <h3 className="text-18px py-4" id="inventario_camiones">
         Inventario En Camiones
       </h3>
 
-      <form className="text-16px max-w-2xl">
+      <form className="text-16px max-w-2xl" onSubmit={handleSubmit}>
         <div className="flex gap-2 flex-wrap">
           <label>
-            <p className="text-16px py-2 ">Número de Movil</p>
+            <p className="text-16px py-2">Número de Movil</p>
             <div>
               <input
-                type="string"
-                className="border pl-4 max-w-60 bg-gris-1 rounded-xl py-3 text-gris-2"
+                type="text"
+                name="numeroMovil"
+                className={`p-4 h-14 rounded-xl w-[15rem]  border ${numeroMovilError ? 'border-red-500' : 'bg-gris-1'}`}
+                value={numeroMovil}
+                onChange={handleOnChange}
+                onBlur={handleBlur}
                 placeholder="Número de Movil"
               />
             </div>
+            {numeroMovilError && <p className="text-red-500 text-xs">*falta Agregar El número de movil*</p>}
           </label>
 
           <label>
-            <p className="text-16px py-2 ">ID condutor</p>
+            <p className="text-16px py-2">ID conductor</p>
             <div>
               <input
-                type="string"
-                className="border pl-4 max-w-60 bg-gris-1 rounded-xl py-3 text-gris-2"
+                type="text"
+                name="idConductor"
+                className={`p-4 h-14 rounded-xl w-[15rem] border ${idConductorError ? 'border-red-500' : 'bg-gris-1'}`}
+                value={idConductor}
+                onChange={handleOnChange}
+                onBlur={handleBlur}
                 placeholder="ID conductor"
               />
             </div>
+            {idConductorError && <p className="text-red-500 text-xs">*falta Agregar El ID del conductor*</p>}
           </label>
 
           <label>
-            <div>
-              <p className="text-16px py-2">Fecha</p>
-              <div>
-                <input
-                  className="border w-60 px-4  max-w-60  bg-gris-1 rounded-xl py-3 text-gris-2 "
-                  type="date"
-                />
-              </div>
-            </div>
-          </label>
-
-          <label>
-            <p className="text-16px py-2 ">Hora</p>
+            <p className="text-16px py-2">Fecha</p>
             <div>
               <input
-                type="string"
-                className="border pl-4 max-w-60 bg-gris-1 rounded-xl py-3 text-gris-2"
+                type="date"
+                name="fecha"
+                className={`p-4 h-14  rounded-xl  w-[15rem] border ${fechaError ? 'border-red-500' : 'bg-gris-1'}`}
+                value={fecha}
+                onChange={handleOnChange}
+                onBlur={handleBlur}
+              />
+            </div>
+            {fechaError && <p className="text-red-500 text-xs">*falta Agregar La Fecha*</p>}
+          </label>
+
+          <label>
+            <p className="text-16px py-2">Hora</p>
+            <div>
+              <input
+                type="text"
+                name="hora"
+                className={`p-4 h-14 rounded-xl w-[15rem] border ${horaError ? 'border-red-500' : 'bg-gris-1'}`}
+                value={hora}
+                onChange={handleOnChange}
+                onBlur={handleBlur}
                 placeholder="Hora"
               />
+              {horaError && <p className="text-red-500 text-xs">*falta Agregar La Hora*</p>}
             </div>
           </label>
         </div>
-        <button className="bg-blue-400 text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold">
+        <button
+          type="submit"
+          className="bg-blue-400 text-white max-w-sm rounded-xl w-full my-4 py-3 md:px-10 font-bold">
           Buscar
         </button>
       </form>
-
-      <div className="py-3">{showTabla1 ? <Tabla1 SetIdMovimiento={SetIdMovimiento} /> : <Tabla2 />}</div>
+      <div className="py-3">{showTabla1 ? <Tabla1 SetIdMovimiento={setIdMovimiento} /> : <Tabla2 />}</div>
     </div>
   );
 }
