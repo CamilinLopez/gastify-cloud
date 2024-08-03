@@ -1,6 +1,6 @@
 'use client';
 import moment from 'moment';
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent, FocusEvent } from 'react';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTablaBodega } from '@/redux/slice/inventario/thunks';
@@ -45,6 +45,9 @@ export default function InventarioBodega() {
     hora: '',
   });
 
+  const [fechaError, setFechaError] = useState(false);
+  const [horaError, setHoraError] = useState(false);
+
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -62,9 +65,36 @@ export default function InventarioBodega() {
       ...form,
       [e.target.name]: e.target.value,
     });
+
+    if (e.target.name === 'fecha' && e.target.value) {
+      setFechaError(false);
+    }
+    if (e.target.name === 'hora' && e.target.value) {
+      setHoraError(false);
+    }
   };
+
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+    if (e.target.name === 'fecha' && !form.fecha) {
+      setFechaError(true);
+    }
+    if (e.target.name === 'hora' && !form.hora) {
+      setHoraError(true);
+    }
+  };
+
   const buscar = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    if (!form.fecha) {
+      setFechaError(true);
+      return;
+    }
+    if (!form.hora) {
+      setHoraError(true);
+      return;
+    }
+
     const date = form.fecha;
     dispatch(getTablaBodega(date));
   };
@@ -86,13 +116,24 @@ export default function InventarioBodega() {
                 name="fecha"
                 value={form.fecha}
                 onChange={handleOnChange}
-                className="p-4 h-14 bg-gris-1 rounded-xl text-gris-2 "
+                onBlur={handleBlur}
+                className={`p-4 h-14 rounded-xl text-gris-2 ${fechaError ? 'border-red-500' : 'bg-gris-1'}`}
                 type="date"
               />
+              {fechaError && <p className="text-red-500">*falta agregar fecha*</p>}
             </div>
             <div className=" flex flex-col w-60">
               <p className="text-16px py-2 ">Hora</p>
-              <input type="text" className="p-4 h-14 bg-gris-1 rounded-xl" placeholder="Hora" />
+              <input
+                name="hora"
+                value={form.hora}
+                onChange={handleOnChange}
+                onBlur={handleBlur}
+                className={`p-4 h-14 rounded-xl ${horaError ? 'border-red-500' : 'bg-gris-1'}`}
+                type="text"
+                placeholder="Hora"
+              />
+              {horaError && <p className="text-red-500">*falta agregar hora*</p>}
             </div>
           </div>
         </div>
