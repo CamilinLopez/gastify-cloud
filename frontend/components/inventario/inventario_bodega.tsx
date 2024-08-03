@@ -120,7 +120,7 @@ export default function InventarioBodega() {
                 className={`p-4 h-14 rounded-xl text-gris-2 ${fechaError ? 'border-red-500' : 'bg-gris-1'}`}
                 type="date"
               />
-              {fechaError && <p className="text-red-500">*falta agregar fecha*</p>}
+              {fechaError && <p className="text-red-500 text-xs">*falta agregar fecha*</p>}
             </div>
             <div className=" flex flex-col w-60">
               <p className="text-16px py-2 ">Hora</p>
@@ -133,7 +133,7 @@ export default function InventarioBodega() {
                 type="text"
                 placeholder="Hora"
               />
-              {horaError && <p className="text-red-500">*falta agregar hora*</p>}
+              {horaError && <p className="text-red-500 text-xs">*falta agregar hora*</p>}
             </div>
           </div>
         </div>
