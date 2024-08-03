@@ -113,7 +113,7 @@ export default function Formulario() {
                   value={formAbastecimiento.cantidad}
                   onChange={handleOnChange}
                   onBlur={handleCantidadBlur}
-                  className={`p-4 h-14 rounded-xl w-full border ${cantidadError ? 'border-red-500' : 'bg-gris-1'}`}
+                  className={`p-4 h-14 rounded-xl max-w-[23rem] w-full border ${cantidadError ? 'border-red-500' : 'bg-gris-1'}`}
                   type="number"
                   min="0"
                   placeholder="Ingresar cantidad"
