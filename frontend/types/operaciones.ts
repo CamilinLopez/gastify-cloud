@@ -11,6 +11,24 @@ export interface TablaProps {
   setEstado: React.Dispatch<React.SetStateAction<TablaState>>;
 }
 
+export interface EstadoCarga {
+  carga: InfoReportesDiarios;
+  setCarga: React.Dispatch<React.SetStateAction<InfoReportesDiarios>>;
+}
+
+export interface TablaReportesDiarias extends TablaProps {
+  tabla: InfoReportesDiarios[];
+  infoCarga: EstadoCarga;
+}
+
+export interface TypeTablaVisualCarga extends TablaProps {
+  carga: InfoReportesDiarios;
+}
+
+export interface TypeTablaDescarga extends TablaProps {
+  datosCarga: InfoReportesDiarios;
+}
+
 export type TypeCilindrosCantidad = { cilindro: typeCilindro; cantidad: number | string };
 export type nameCilindro = {
   '5kg': TypeCilindrosCantidad;
@@ -20,8 +38,8 @@ export type nameCilindro = {
   H15: TypeCilindrosCantidad;
 };
 export interface CargaDatos {
-  numero_movil: string;
-  id_conductor: string;
+  numero_movil: { id: string; placa: string };
+  nombre_conductor: { id: string; nombre: string };
   carga_cilindros: TypeCilindrosCantidad[];
 }
 
@@ -49,9 +67,31 @@ interface TypeResponseTablaCarga {
   cilindrosTerminados: ResposeData;
 }
 
+export type InfoReportesDiarios = {
+  id: string;
+  fecha: string;
+  hora: string;
+  camion: string;
+  conductor: string;
+};
+
+interface TypeTablaReportesDiarios {
+  message: string;
+  result: InfoReportesDiarios[];
+}
+
 export interface InitialStateOperaciones {
+  responseTablaVisualCarga: { message: string; result: DetalleCargas[] };
+  responseTablaReportesDiarios: TypeTablaReportesDiarios;
   responseTablaCarga: TypeResponseTablaCarga;
   messageResponse: string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: ResposeData | null;
+}
+
+export interface DetalleCargas {
+  id: string;
+  carga_id: string;
+  tipo_cilindro: { tipo: string };
+  cantidad: number;
 }

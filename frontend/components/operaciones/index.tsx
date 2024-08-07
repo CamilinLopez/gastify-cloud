@@ -1,12 +1,24 @@
 'use client';
 
-import { DiferentesCilindros, TablaOperacionestype } from '@/types/diferentes_cilindros';
-import { CargaDatos, nameCilindro, TablaCargaProps, TablaProps, TypeCilindrosCantidad } from '@/types/operaciones';
-import { ChangeEvent, useState } from 'react';
+import { DiferentesCilindros } from '@/types/diferentes_cilindros';
+import {
+  CargaDatos,
+  InfoReportesDiarios,
+  nameCilindro,
+  TablaCargaProps,
+  TypeTablaDescarga,
+  TablaReportesDiarias,
+  EstadoCarga,
+  TypeTablaVisualCarga,
+} from '@/types/operaciones';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { tipoCilindros } from '@/arraysObjects/dataCilindros';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { TablaCargaThunk } from '@/redux/slice/operaciones/thunks';
+import { GetTablaReportesDiarios, GetTablaVisualCarga, TablaCargaThunk } from '@/redux/slice/operaciones/thunks';
+import { AutocompletableCamiones, AutocompletableConductores } from './desplegables';
+import { RootState } from '@/redux/reducer';
+import { getTablaConductores, tablaCamion } from '@/redux/slice/inventario/thunks';
 
 const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -99,7 +111,7 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
   );
 };
 
-const TablaDescarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
+const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEstado }) => {
   const data: DiferentesCilindros[] = [
     {
       tipoCilindro: '5kg',
@@ -146,10 +158,10 @@ const TablaDescarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             <tr className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">55hvjnf5g</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">22/06/30</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">hjk658</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">julio lopez</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.id}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.fecha}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.camion}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.conductor}</td>
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
                 <button
                   onClick={(e) => estadoTablas(e)}
@@ -166,7 +178,7 @@ const TablaDescarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
               <th>Cantidad de Fallados</th>
               <th>Cantidad prestados</th>
               <th>Cantidad Vacios</th>
-              <th>Observaciones</th>
+              <th>Cantidad Lenos</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -183,7 +195,7 @@ const TablaDescarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
                   <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="text" className="text-black overflow-hidden" placeholder="Ingrese sus Observaciones" />
+                  <input type="number" className="w-10 text-black overflow-hidden" placeholder="0" />
                 </td>
               </tr>
             ))}
@@ -197,19 +209,22 @@ const TablaDescarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
   );
 };
 
-const TablaOperaciones: React.FC<TablaProps> = ({ estado, setEstado }) => {
-  const info: TablaOperacionestype[] = [
-    {
-      ID: 's56sd4f6s',
-      Fecha: '24/09/30',
-      'Número de Móvil': 'dfg963',
-      'Nombre del Conductor': 'Julio Tobar',
-    },
-  ];
+const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, estado, setEstado }) => {
   const textTable = ['ID', 'Fecha', 'Número de Móvil', 'Nombre del Conductor', 'Acciones'];
+  const dispatch: AppDispatch = useDispatch();
 
-  const estadoTablaDescarga = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const estadoTablaDescarga = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
     e.preventDefault();
+
+    infoCarga.setCarga({
+      ...infoCarga.carga,
+      id: carga.id,
+      fecha: carga.fecha,
+      camion: carga.camion,
+      conductor: carga.conductor,
+      hora: carga.hora,
+    });
+
     setEstado({
       ...estado,
       openTablaOperaciones: false,
@@ -218,8 +233,21 @@ const TablaOperaciones: React.FC<TablaProps> = ({ estado, setEstado }) => {
     });
   };
 
-  const estadoTablacarga = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const estadoTablacarga = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
     e.preventDefault();
+
+    //se hace un get al servidor con el carga_id para obtener el detalle de carga en la tablaVisualcarga
+    dispatch(GetTablaVisualCarga(carga.id));
+
+    infoCarga.setCarga({
+      ...infoCarga.carga,
+      id: carga.id,
+      fecha: carga.fecha,
+      camion: carga.camion,
+      conductor: carga.conductor,
+      hora: carga.hora,
+    });
+
     setEstado({
       ...estado,
       openTablaDescarga: false,
@@ -245,17 +273,17 @@ const TablaOperaciones: React.FC<TablaProps> = ({ estado, setEstado }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {info.map((item, i) => (
-              <tr key={i}>
-                <td className="px-6 py-4 text-secondary-14px ">{item.ID}</td>
-                <td className="px-6 py-4 text-secondary-14px ">{item.Fecha}</td>
-                <td className="px-6 py-4 text-secondary-14px ">{item['Número de Móvil']}</td>
-                <td className="px-6 py-4 text-secondary-14px ">{item['Nombre del Conductor']}</td>
+            {tabla.map((item) => (
+              <tr key={item.id}>
+                <td className="px-6 py-4 text-secondary-14px ">{item.id}</td>
+                <td className="px-6 py-4 text-secondary-14px ">{item.fecha}</td>
+                <td className="px-6 py-4 text-secondary-14px ">{item.camion}</td>
+                <td className="px-6 py-4 text-secondary-14px ">{item.conductor}</td>
                 <td className="px-6 py-4 text-secondary-14px ">
-                  <button onClick={(e) => estadoTablaDescarga(e)} className="text-start underline">
+                  <button onClick={(e) => estadoTablaDescarga(e, item)} className="text-start underline">
                     Abrir Tabla de Descarga
                   </button>
-                  <button onClick={(e) => estadoTablacarga(e)} className="text-start underline">
+                  <button onClick={(e) => estadoTablacarga(e, item)} className="text-start underline">
                     Abrir Tabla de Carga
                   </button>
                 </td>
@@ -268,51 +296,8 @@ const TablaOperaciones: React.FC<TablaProps> = ({ estado, setEstado }) => {
   );
 };
 
-const TablaVisualCarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
-  const data: DiferentesCilindros[] = [
-    {
-      tipoCilindro: '5kg',
-    },
-    {
-      tipoCilindro: '11kg',
-    },
-    {
-      tipoCilindro: '15kg',
-    },
-    {
-      tipoCilindro: '45kg',
-    },
-    {
-      tipoCilindro: 'H15',
-    },
-  ];
-  const infoVisual = [
-    {
-      cilindro: '5kg',
-      cantidad_cargada: 40,
-      Observaciones: 'sdxvs sdvzdxf sxsdv',
-    },
-    {
-      cilindro: '11kg',
-      cantidad_cargada: 50,
-      Observaciones: 'sdxvs sdvzdxf sxsdv',
-    },
-    {
-      cilindro: '15kg',
-      cantidad_cargada: 30,
-      Observaciones: 'sdxvs sdvzdxf sxsdv',
-    },
-    {
-      cilindro: '45kg',
-      cantidad_cargada: 63,
-      Observaciones: 'sdxvs sdvzdxf sxsdv',
-    },
-    {
-      cilindro: 'H15',
-      cantidad_cargada: 52,
-      Observaciones: 'sdxvs sdvzdxf sxsdv',
-    },
-  ];
+const TablaVisualCarga: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado }) => {
+  const infoTablaVisual = useSelector((state: RootState) => state.operaciones.responseTablaVisualCarga.result);
   const estadoTablas = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setEstado({
@@ -322,6 +307,7 @@ const TablaVisualCarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
       openTablaOperaciones: true,
     });
   };
+
   return (
     <>
       <h3 className="text-18px py-4" id="tabla_carga">
@@ -340,10 +326,10 @@ const TablaVisualCarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             <tr className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">55hvjnf5g</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">22/06/30</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">hjk658</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">julio lopez</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.id}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.fecha}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.camion}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.conductor}</td>
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
                 <button
                   onClick={(e) => estadoTablas(e)}
@@ -361,11 +347,11 @@ const TablaVisualCarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {infoVisual.map((row, index) => (
+            {infoTablaVisual.map((row, index) => (
               <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-                <td className="text-secondary-14px text-center">{row.cilindro}</td>
-                <td className="text-secondary-14px text-center">{row.cantidad_cargada}</td>
-                <td className="text-secondary-14px text-center">{row.Observaciones}</td>
+                <td className="text-secondary-14px text-center">{row.tipo_cilindro.tipo}</td>
+                <td className="text-secondary-14px text-center">{row.cantidad}</td>
+                <td className="text-secondary-14px text-center"></td>
               </tr>
             ))}
           </tbody>
@@ -376,76 +362,91 @@ const TablaVisualCarga: React.FC<TablaProps> = ({ estado, setEstado }) => {
 };
 
 export default function SectionsOperacion() {
+  const dispatch: AppDispatch = useDispatch();
+
+  const conductores = useSelector((state: RootState) => state.inventario.sectionConductores.tabla);
+  const camiones = useSelector((state: RootState) => state.inventario.sectionCamiones.tabla);
+  const TablaOperacionesDiarias = useSelector(
+    (state: RootState) => state.operaciones.responseTablaReportesDiarios.result,
+  );
+
+  //este estado controla que tabla se habre.
   const [openTablaOperaciones, setOpenTablaOperaciones] = useState({
     openTablaCarga: false,
     openTablaDescarga: false,
     openTablaOperaciones: true,
   });
+  //formulario de tabla de carga
   const [form, setForm] = useState<CargaDatos>({
-    numero_movil: '',
-    id_conductor: '',
+    numero_movil: { id: '', placa: '' },
+    nombre_conductor: { id: '', nombre: '' },
     carga_cilindros: [],
   });
+  //carga, se mostrara en la tablaDescargas
+  const [carga, setCarga] = useState<InfoReportesDiarios>({
+    id: '',
+    fecha: '',
+    camion: '',
+    conductor: '',
+    hora: '',
+  });
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+  const infoCarga: EstadoCarga = {
+    carga,
+    setCarga,
   };
+
+  useEffect(() => {
+    dispatch(getTablaConductores());
+    dispatch(tablaCamion());
+    dispatch(GetTablaReportesDiarios());
+  }, [dispatch]);
+
   return (
     <div className="p-4 w-full">
       <h3 className="text-18px py-4">Operaciones</h3>
 
       <div className="flex flex-col gap-5 ">
-        {/* <label>
-          <p className="text-16px py-2 ">Fecha de Operación</p>
-          <div>
-            <input
-              type="string"
-              className="border  pl-4 px-20 bg-gris-1  rounded-xl py-3   text-gris-2"
-              placeholder="Fecha de Operación"
-            />
-          </div>
-        </label> */}
-
         <label>
           <p className="text-16px  py-2 ">Número de movil</p>
           <div>
-            <input
+            <AutocompletableCamiones
+              camiones={camiones}
+              form={form}
+              setForm={setForm}
               name="numero_movil"
-              value={form.numero_movil}
-              onChange={handleOnChange}
-              type="text"
-              className="border pl-4 px-20 bg-gris-1 rounded-xl py-3  text-gris-2"
-              placeholder="Número de movil"
+              placeholder="asdf236"
             />
           </div>
         </label>
 
         <label>
-          <p className="text-16px py-2 ">ID conductor</p>
+          <p className="text-16px py-2 ">Nombre conductor</p>
           <div>
-            <input
-              name="id_conductor"
-              value={form.id_conductor}
-              onChange={handleOnChange}
-              type="text"
-              className="border pl-4 px-20  bg-gris-1 rounded-xl py-3  text-gris-2"
-              placeholder="ID conductor"
+            <AutocompletableConductores
+              conductores={conductores}
+              placeholder="Juan Carlos Lopez"
+              name="nombre_conductor"
+              form={form}
+              setForm={setForm}
             />
           </div>
         </label>
       </div>
       <TablaCarga estado={form} setEstado={setForm} />
       {openTablaOperaciones.openTablaDescarga && (
-        <TablaDescarga estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
+        <TablaDescarga datosCarga={carga} estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
       )}
       {openTablaOperaciones.openTablaCarga && (
-        <TablaVisualCarga estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
+        <TablaVisualCarga carga={carga} estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
       )}
       {openTablaOperaciones.openTablaOperaciones && (
-        <TablaOperaciones estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
+        <TablaOperaciones
+          infoCarga={infoCarga}
+          tabla={TablaOperacionesDiarias}
+          estado={openTablaOperaciones}
+          setEstado={setOpenTablaOperaciones}
+        />
       )}
     </div>
   );

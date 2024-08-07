@@ -6,7 +6,8 @@ const {
   modelCamiones,
   modelConductores,
   modelInventarioCamiones,
-  modelConductorCamiones,
+  modelCarga,
+  modelDetallesCarga,
 } = require('./models/inventario/index');
 
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
@@ -25,13 +26,21 @@ modelTipoCilindro(database);
 modelCamiones(database);
 modelConductores(database);
 modelInventarioCamiones(database);
-modelConductorCamiones(database);
+modelCarga(database);
+modelDetallesCarga(database);
 
 //modelos de seccion inventario
-const { estado_cilindros, inventario_bodegas, tipo_cilindros, camiones, conductores, inventario_camiones, conductor_camiones } =
-  database.models;
+const {
+  estado_cilindros,
+  inventario_bodegas,
+  tipo_cilindros,
+  camiones,
+  conductores,
+  inventario_camiones,
+  cargas,
+  detalle_cargas,
+} = database.models;
 
-//relaciones seccion inventario
 
 //inventario_bodegas / tipo_cilindros N/1
 inventario_bodegas.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro' });
@@ -46,13 +55,21 @@ inventario_camiones.belongsTo(camiones, { foreignKey: 'camionId' });
 tipo_cilindros.hasMany(inventario_camiones, { foreignKey: 'tipoCilindroId' });
 inventario_camiones.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId' });
 
-//estado_cilindros / inventario_camiones 1/N
-estado_cilindros.hasMany(inventario_camiones, { foreignKey: 'estadoCilindroId' });
-inventario_camiones.belongsTo(estado_cilindros, { foreignKey: 'estadoCilindroId' });
+//conductores / carga 1/N
+conductores.hasMany(cargas, { foreignKey: 'conductor_id' });
+cargas.belongsTo(conductores, { foreignKey: 'conductor_id' });
 
-//conductores / camiones N/M
-conductores.belongsToMany(camiones, { through: conductor_camiones, foreignKey: 'conductorId' });
-camiones.belongsToMany(conductores, { through: conductor_camiones, foreignKey: 'camionId' });
+// Un Camion puede tener muchas Cargas
+camiones.hasMany(cargas, { foreignKey: 'camion_id' });
+cargas.belongsTo(camiones, { foreignKey: 'camion_id' });
+
+// Un TipoCilindro puede estar en muchas DetalleCarga
+tipo_cilindros.hasMany(detalle_cargas, { foreignKey: 'tipoCilindroId' });
+detalle_cargas.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId' });
+
+// Un EstadoCilindro puede estar en muchas DetalleCarga
+estado_cilindros.hasMany(detalle_cargas, { foreignKey: 'estadoCilindroId' });
+detalle_cargas.belongsTo(estado_cilindros, { foreignKey: 'estadoCilindroId' });
 
 module.exports = {
   ...database.models,

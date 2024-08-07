@@ -1,34 +1,36 @@
 const { DataTypes } = require('sequelize');
 
-const CamionesCamion = (sequelize) => {
+const Carga = (sequelize) => {
   sequelize.define(
-    'conductor_camiones',
+    'cargas',
     {
       id: {
         type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
       },
-      conductorId: {
-        type: DataTypes.STRING,
-        references: {
-          model: 'conductores',
-          key: 'id',
-        },
+      fecha: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
       },
-      camionId: {
+      hora: {
+        type: DataTypes.TIME,
+        allowNull: false,
+      },
+      camion_id: {
         type: DataTypes.STRING,
         references: {
           model: 'camiones',
           key: 'id',
         },
-      },
-      fecha: {
-        type: DataTypes.DATE,
         allowNull: false,
       },
-      hora: {
-        type: DataTypes.TIME,
+      conductor_id: {
+        type: DataTypes.STRING,
+        references: {
+          model: 'conductores',
+          key: 'id',
+        },
         allowNull: false,
       },
     },
@@ -38,4 +40,4 @@ const CamionesCamion = (sequelize) => {
   );
 };
 
-module.exports = CamionesCamion;
+module.exports = Carga;

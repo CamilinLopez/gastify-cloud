@@ -2,7 +2,6 @@
 
 import React, { useState, ChangeEvent } from 'react';
 import { Flechas } from '../svg/svgImages';
-import { updateAll } from '@/redux/slice/abastecimiento/abastecimiento';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormAbastecimiento, SelectInputType } from '@/types/abastecimieneto';

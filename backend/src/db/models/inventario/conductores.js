@@ -18,6 +18,14 @@ const Conductores = (sequelize) => {
         allowNull: false,
         unique: true,
       },
+      fecha: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
+      hora: {
+        type: DataTypes.TIME,
+        allowNull: false,
+      },
     },
     {
       timestamps: false,

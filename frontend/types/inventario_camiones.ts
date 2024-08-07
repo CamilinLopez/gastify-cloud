@@ -15,14 +15,21 @@ export interface TipoCilindro {
   Prestados: number;
 }
 
-export type Tabla1Props = {
-  SetIdMovimiento: (id: string) => void;
-};
+export interface EstadosTablas {
+  showTabla1: boolean;
+  showTabla2: boolean;
+}
+
+export interface TypeShowTalbas {
+  estado: EstadosTablas;
+  setEstado: React.Dispatch<React.SetStateAction<EstadosTablas>>;
+}
 
 export interface DatosCamiones {
-  'Fecha de Registro': string;
-  'Marca del Camión': string;
-  'Modelo del Camión': string;
-  'Capacidad de Carga (kg)': number;
-  'Placa del Camión': string;
+  id: string;
+  fecha?: string;
+  marca: string;
+  modelo: string;
+  capacidad_carga: number;
+  placa: string;
 }
