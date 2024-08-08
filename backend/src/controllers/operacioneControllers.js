@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const {
   inventario_camiones,
   inventario_bodegas,

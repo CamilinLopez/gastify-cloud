@@ -95,3 +95,14 @@ export interface DetalleCargas {
   tipo_cilindro: { tipo: string };
   cantidad: number;
 }
+
+export interface EstadoCilindro {
+  id: string;
+  cantidad: number;
+}
+
+export interface Formulario {
+  [tipo: string]: {
+    [estado: string]: EstadoCilindro;
+  };
+}

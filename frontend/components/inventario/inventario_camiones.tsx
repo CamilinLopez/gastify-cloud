@@ -97,6 +97,7 @@ const Tabla2: React.FC<TypeShowTalbas> = ({ estado, setEstado }) => {
       Prestados: 96,
     },
   ];
+  // const detalleTable = useSelector((state:RootState)=>state.operaciones.)
 
   const cambioTablas = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

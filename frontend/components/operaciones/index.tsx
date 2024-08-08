@@ -1,6 +1,5 @@
 'use client';
 
-import { DiferentesCilindros } from '@/types/diferentes_cilindros';
 import {
   CargaDatos,
   InfoReportesDiarios,
@@ -10,6 +9,7 @@ import {
   TablaReportesDiarias,
   EstadoCarga,
   TypeTablaVisualCarga,
+  Formulario,
 } from '@/types/operaciones';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { tipoCilindros } from '@/arraysObjects/dataCilindros';
@@ -58,7 +58,8 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
       },
     }));
     const data = { ...estado, carga_cilindros: infoCilindrosArray };
-    dispatch(TablaCargaThunk(data));
+    dispatch(TablaCargaThunk(data)); //envia la informacion para registrarla
+    dispatch(GetTablaReportesDiarios()); //trae la informacion cada vez que se registra, esto para mstrarla en la tabla reportes diarios
   };
 
   return (
@@ -112,24 +113,38 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
 };
 
 const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEstado }) => {
-  const data: DiferentesCilindros[] = [
-    {
-      tipoCilindro: '5kg',
+  const [form, setForm] = useState<Formulario>({
+    '5kg': {
+      Fallados: { id: '', cantidad: 0 },
+      Prestados: { id: '', cantidad: 0 },
+      Vacios: { id: '', cantidad: 0 },
+      Llenos: { id: '', cantidad: 0 },
     },
-    {
-      tipoCilindro: '11kg',
+    '11kg': {
+      Fallados: { id: '', cantidad: 0 },
+      Prestados: { id: '', cantidad: 0 },
+      Vacios: { id: '', cantidad: 0 },
+      Llenos: { id: '', cantidad: 0 },
     },
-    {
-      tipoCilindro: '15kg',
+    '15kg': {
+      Fallados: { id: '', cantidad: 0 },
+      Prestados: { id: '', cantidad: 0 },
+      Vacios: { id: '', cantidad: 0 },
+      Llenos: { id: '', cantidad: 0 },
     },
-    {
-      tipoCilindro: '45kg',
+    '45kg': {
+      Fallados: { id: '', cantidad: 0 },
+      Prestados: { id: '', cantidad: 0 },
+      Vacios: { id: '', cantidad: 0 },
+      Llenos: { id: '', cantidad: 0 },
     },
-    {
-      tipoCilindro: 'H15',
+    H15: {
+      Fallados: { id: '', cantidad: 0 },
+      Prestados: { id: '', cantidad: 0 },
+      Vacios: { id: '', cantidad: 0 },
+      Llenos: { id: '', cantidad: 0 },
     },
-  ];
-
+  });
   const estadoTablas = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setEstado({
@@ -138,6 +153,21 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
       openTablaOperaciones: true,
       openTablaCarga: false,
     });
+  };
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>, estado: string, id: string) => {
+    const { name, value } = e.target;
+
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: {
+        ...prevForm[name],
+        [estado]: {
+          ...prevForm[name][estado],
+          cantidad: parseInt(value, 10) || 0,
+          id,
+        },
+      },
+    }));
   };
 
   return (
@@ -178,24 +208,52 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
               <th>Cantidad de Fallados</th>
               <th>Cantidad prestados</th>
               <th>Cantidad Vacios</th>
-              <th>Cantidad Lenos</th>
+              <th>Cantidad Llenos</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {data.map((row, index) => (
-              <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
-                <td className="text-secondary-14px text-center">{row.tipoCilindro}</td>
+            {tipoCilindros.map((row) => (
+              <tr key={row.id} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
+                <td className="text-secondary-14px text-center">{row.tipo}</td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
+                  <input
+                    name={row.tipo}
+                    value={form[row.tipo].Fallados.cantidad}
+                    onChange={(e) => handleOnChange(e, 'Fallados', String(row.id))}
+                    type="number"
+                    className="w-10  text-black overflow-hidden"
+                    placeholder="0"
+                  />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
+                  <input
+                    name={row.tipo}
+                    value={form[row.tipo].Prestados.cantidad}
+                    onChange={(e) => handleOnChange(e, 'Prestados', String(row.id))}
+                    type="number"
+                    className="w-10  text-black overflow-hidden"
+                    placeholder="0"
+                  />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-10  text-black overflow-hidden" placeholder="0" />
+                  <input
+                    name={row.tipo}
+                    value={form[row.tipo].Vacios.cantidad}
+                    onChange={(e) => handleOnChange(e, 'Vacios', String(row.id))}
+                    type="number"
+                    className="w-10  text-black overflow-hidden"
+                    placeholder="0"
+                  />
                 </td>
                 <td className="text-secondary-14px text-center">
-                  <input type="number" className="w-10 text-black overflow-hidden" placeholder="0" />
+                  <input
+                    name={row.tipo}
+                    value={form[row.tipo].Llenos.cantidad}
+                    onChange={(e) => handleOnChange(e, 'Llenos', String(row.id))}
+                    type="number"
+                    className="w-10 text-black overflow-hidden"
+                    placeholder="0"
+                  />
                 </td>
               </tr>
             ))}
@@ -212,6 +270,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
 const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, estado, setEstado }) => {
   const textTable = ['ID', 'Fecha', 'Número de Móvil', 'Nombre del Conductor', 'Acciones'];
   const dispatch: AppDispatch = useDispatch();
+  const tabla1 = useSelector((state: RootState) => state.operaciones.responseTablaReportesDiarios.result);
 
   const estadoTablaDescarga = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
     e.preventDefault();
@@ -273,7 +332,7 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {tabla.map((item) => (
+            {tabla1?.map((item) => (
               <tr key={item.id}>
                 <td className="px-6 py-4 text-secondary-14px ">{item.id}</td>
                 <td className="px-6 py-4 text-secondary-14px ">{item.fecha}</td>

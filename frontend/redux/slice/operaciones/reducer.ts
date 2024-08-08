@@ -8,7 +8,7 @@ export const handleFetchTablaCarga = (builder: any) => {
     })
     .addCase(TablaCargaThunk.fulfilled, (state: InitialStateOperaciones, action: any) => {
       state.messageResponse = action.payload.data.message;
-      state.responseTablaReportesDiarios = action.payload.data.result;
+      state.responseTablaReportesDiarios = action.payload.data;
       state.status = 'succeeded';
       state.error = null;
     })
