@@ -1,7 +1,13 @@
 'use client';
 
-import { InfoInventarioCamiones, TipoCilindro, TypeShowTalbas } from '@/types/inventario_camiones';
-import { ChangeEvent, FocusEvent, useState } from 'react';
+import { ChangeEvent, FocusEvent } from 'react';
+import { RootState } from '@/redux/reducer';
+import { GetTablaReportesDiarios, GetTablaVisualCarga } from '@/redux/slice/operaciones/thunks';
+import { AppDispatch } from '@/redux/store';
+import { EstadosTablas, InfoInventarioCamiones, TipoCilindro, TypeShowTalbas } from '@/types/inventario_camiones';
+import { InfoReportesDiarios } from '@/types/operaciones';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Tabla1: React.FC<TypeShowTalbas> = ({ estado, setEstado }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -194,6 +200,15 @@ export default function InventarioCamiones() {
 
     if (hasError) return;
   };
+  const [showTablas, SetShowTablas] = useState<EstadosTablas>({
+    showTabla1: true,
+    showTabla2: false,
+  });
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(GetTablaReportesDiarios());
+  }, [dispatch]);
 
   return (
     <div className="p-4 w-full">
@@ -238,6 +253,16 @@ export default function InventarioCamiones() {
           <label>
             <p className="text-16px py-2">Fecha</p>
             <div>
+              <p className="text-16px py-2">Fecha</p>
+              <div>
+                <input className="border w-60 px-4  max-w-60  bg-gris-1 rounded-xl py-3 text-gris-2 " type="date" />
+              </div>
+            </div>
+          </label>
+
+          <label>
+            <p className="text-16px py-2 ">Hora</p>
+            <div>
               <input
                 type="date"
                 name="fecha"
@@ -272,7 +297,11 @@ export default function InventarioCamiones() {
           Buscar
         </button>
       </form>
-      <div className="py-3">{showTabla1 ? <Tabla1 SetIdMovimiento={setIdMovimiento} /> : <Tabla2 />}</div>
+
+      <div className="py-3">
+        {showTablas.showTabla1 === true && <Tabla1 setEstado={SetShowTablas} estado={showTablas} />}
+        {showTablas.showTabla2 === true && <Tabla2 setEstado={SetShowTablas} estado={showTablas} />}
+      </div>
     </div>
   );
 }
