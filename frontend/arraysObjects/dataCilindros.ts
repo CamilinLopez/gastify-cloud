@@ -1,4 +1,7 @@
-export const tipoCilindros = [
+import { typeCilindro } from '@/types/abastecimieneto';
+type Cilindro = { id: number; tipo: '5kg' | '11kg' | '15kg' | '45kg' | 'H15' };
+
+export const tipoCilindros: Cilindro[] = [
   { id: 1, tipo: '5kg' },
   { id: 2, tipo: '11kg' },
   { id: 3, tipo: '15kg' },

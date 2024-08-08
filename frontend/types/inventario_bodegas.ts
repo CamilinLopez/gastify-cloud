@@ -1,3 +1,5 @@
+import { DatosCamiones } from './inventario_camiones';
+
 export interface InfoInventarioBodega {
   fecha: string;
   hora: string;
@@ -23,9 +25,33 @@ interface FechaInventario {
   tipos: TipoCilindro[]; // Array de tipos de cilindros y sus estados
 }
 
+export type tablaConductores = {
+  id: string;
+  fecha: string;
+  nombre: string;
+  licencia: string;
+};
+
+interface ResponseConductores {
+  message: string;
+  tabla: tablaConductores[];
+}
+
+interface ResponseCamiones {
+  message: string;
+  tabla: DatosCamiones[];
+}
+
+interface TypeError {
+  message: string;
+  result: DatosCamiones;
+}
+
 export interface initialStateInventario {
+  sectionCamiones: ResponseCamiones;
+  sectionConductores: ResponseConductores;
   messageResponse: string | null;
   tablaBodegaFiteredByDate: FechaInventario | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: null;
+  error: TypeError | null;
 }
