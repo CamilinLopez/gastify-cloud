@@ -30,9 +30,35 @@ const crearUsuarios = async (data) => {
   }
 };
 
+
+
+const crearUsuarioPasswordDB = async () => {
+  try {
+    const usuariosData = await usuarios.findAll()
+    return usuariosData
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
 const obtenerTodosUsuarios = async () => {
   try {
-    return await usuarios.findAll();
+    const usuariosData = await usuarios.findAll({
+      attributes: { exclude: ['rolId','password','empresaId'] }, 
+      include: [
+        {
+          model: roles,
+          as: 'rol', // Alias for the relationship
+          attributes: ['nombre'], // Select specific fields if needed
+        },
+      ],
+    });
+
+    return usuariosData
+
   } catch (error) {
     throw error;
   }
@@ -41,4 +67,5 @@ const obtenerTodosUsuarios = async () => {
 module.exports = {
   crearUsuarios,
   obtenerTodosUsuarios,
+  crearUsuarioPasswordDB
 };

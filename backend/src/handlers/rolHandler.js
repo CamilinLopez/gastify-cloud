@@ -8,12 +8,11 @@ const {
 
 const crearRol = async (req, res) => {
   try {
-    const { nombre } = req.body;
-    const data = await crearRoles({nombre});
+    const data = await crearRoles();
 
     res.status(200).json({ data });
   } catch (error) {
-    res.status(400).json({ errors: error });
+    res.status(400).json({ errors: error.message });
   }
 };
 

@@ -1,9 +1,15 @@
 const { roles, permisos, roles_permisos } = require('../db/index');
 
-const crearRoles = async (data) => {
+const crearRoles = async () => {
   
   try {
-    return await roles.create(data);
+    const role = [
+      { nombre: 'Administrador' },
+      { nombre: 'Supervisor' },
+      { nombre: 'Bodeguero' },
+    ];
+    await roles.bulkCreate(role);
+    return 'roles creados exitosamente';
   } catch (error) {
     throw error;
   }

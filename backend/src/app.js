@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const routes = require('./routes');
+const passport = require('passport'); 
+require('./middleware/auth');
 
 const server = express();
 const corsOptions = {
@@ -16,6 +18,8 @@ server.use(cors(corsOptions));
 server.use(morgan('dev'));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+
+server.use(passport.initialize());
 
 server.use('/', routes);
 

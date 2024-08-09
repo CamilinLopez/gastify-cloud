@@ -10,10 +10,6 @@ const Usuario = (sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
-      nombre: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -22,8 +18,13 @@ const Usuario = (sequelize) => {
           isEmail: true,
         },
       },
-      contraseña: {
+      password: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      verificado:{
+        type:DataTypes.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
       },
       fecha_creacion: {
@@ -37,6 +38,7 @@ const Usuario = (sequelize) => {
           model: 'empresas', // Nombre de la tabla de empresas
           key: 'id',
         },
+        allowNull: false,
       },
       rolId: { // Relación muchos a uno con Rol
         type: DataTypes.INTEGER,

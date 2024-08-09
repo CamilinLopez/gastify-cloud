@@ -1,6 +1,7 @@
 const {
   crearUsuarios,
-  
+  crearUsuarioPasswordDB,
+  obtenerTodosUsuarios
 } = require('../controllers/usuariosControllers');
 
 
@@ -17,9 +18,19 @@ const crearUsuario = async (req, res) => {
   }
 };
 
-const obtenerEmpresas = async (req, res) => {
+const ingresarPassword = async (req, res) => {
   try {
-    const data = await obtenerTodosEmpresas();
+    const data = await crearUsuarioPasswordDB();
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ errors: error });
+  }
+};
+
+const todosUsuarios = async (req, res) => {
+  try {
+    const data = await obtenerTodosUsuarios();
 
     res.status(200).json({ data });
   } catch (error) {
@@ -33,5 +44,6 @@ const obtenerEmpresas = async (req, res) => {
 
 module.exports = {
   crearUsuario,
-  obtenerEmpresas
+  ingresarPassword,
+  todosUsuarios
 };

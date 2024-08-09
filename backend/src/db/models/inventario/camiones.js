@@ -32,4 +32,4 @@ const Camiones = (sequelize) => {
   );
 };
 
-module.export = Camiones;
+module.exports = Camiones;
