@@ -9,6 +9,10 @@ const Camiones = (sequelize) => {
         primaryKey: true,
         allowNull: false,
       },
+      fecha: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+      },
       marca: {
         type: DataTypes.STRING,
         allowNull: false,

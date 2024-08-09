@@ -1,54 +1,22 @@
 'use client';
 
-import { InfoInventarioCamiones, Tabla1Props, TipoCilindro } from '@/types/inventario_camiones';
-import { useState } from 'react';
+import { RootState } from '@/redux/reducer';
+import { GetTablaReportesDiarios, GetTablaVisualCarga } from '@/redux/slice/operaciones/thunks';
+import { AppDispatch } from '@/redux/store';
+import { EstadosTablas, InfoInventarioCamiones, TipoCilindro, TypeShowTalbas } from '@/types/inventario_camiones';
+import { InfoReportesDiarios } from '@/types/operaciones';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-const Tabla1: React.FC<Tabla1Props> = ({ SetIdMovimiento }) => {
-  const data: InfoInventarioCamiones[] = [
-    {
-      'ID Movimiento': '155746',
-      fecha: '01-01-2023',
-      hora: '10:00',
-      numeroMovil: 123,
-      IDdelConductor: 100,
-      Accion: 'Abrir',
-    },
-    {
-      'ID Movimiento': '1557832',
-      fecha: '02-01-2023',
-      hora: '10:00',
-      numeroMovil: 456,
-      IDdelConductor: 150,
-      Accion: 'Abrir',
-    },
-    {
-      'ID Movimiento': '1554532',
-      fecha: '03-01-2023',
-      hora: '10:00',
-      numeroMovil: 789,
-      IDdelConductor: 120,
-      Accion: 'Abrir',
-    },
-    {
-      'ID Movimiento': '1554589',
-      fecha: '04-01-2023',
-      hora: '10:00',
-      numeroMovil: 12,
-      IDdelConductor: 130,
-      Accion: 'Abrir',
-    },
-    {
-      'ID Movimiento': '154236',
-      fecha: '05-01-2023',
-      hora: '10:00',
-      numeroMovil: 345,
-      IDdelConductor: 140,
-      Accion: 'Abrir',
-    },
-  ];
+const Tabla1: React.FC<TypeShowTalbas> = ({ estado, setEstado }) => {
+  const dispatch: AppDispatch = useDispatch();
 
-  const getIDMovimiento = (id: string) => {
-    SetIdMovimiento(id);
+  const tabla = useSelector((state: RootState) => state.operaciones.responseTablaReportesDiarios.result);
+
+  const cambioTablas = (e: React.MouseEvent<HTMLButtonElement>, detalleTabla: InfoReportesDiarios) => {
+    e.preventDefault();
+    dispatch(GetTablaVisualCarga(detalleTabla.id));
+    setEstado({ ...estado, showTabla1: false, showTabla2: true });
   };
 
   return (
@@ -65,18 +33,18 @@ const Tabla1: React.FC<Tabla1Props> = ({ SetIdMovimiento }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {data.map((row, index) => (
+          {tabla.map((row, index) => (
             <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
-              <td className="text-14px">{row['ID Movimiento']}</td>
+              <td className="text-14px">{row.id}</td>
               <td className="text-14px">{row.fecha}</td>
               <td className="text-14px">{row.hora}</td>
-              <td className="text-secondary-14px text-center">{row.numeroMovil}</td>
-              <td className="text-secondary-14px text-center">{row.IDdelConductor}</td>
+              <td className="text-secondary-14px text-center">{row.camion}</td>
+              <td className="text-secondary-14px text-center">{row.conductor}</td>
               <td className="text-secondary-14px text-center">
                 <button
-                  onClick={() => getIDMovimiento(row['ID Movimiento'])}
+                  onClick={(e) => cambioTablas(e, row)}
                   className="bg-azul rounded-xl font-Inter font-[500] text-blanco py-1 px-2">
-                  {row.Accion}
+                  Abrir
                 </button>
               </td>
             </tr>
@@ -87,7 +55,7 @@ const Tabla1: React.FC<Tabla1Props> = ({ SetIdMovimiento }) => {
   );
 };
 
-const Tabla2 = () => {
+const Tabla2: React.FC<TypeShowTalbas> = ({ estado, setEstado }) => {
   const data: InfoInventarioCamiones[] = [
     {
       'ID Movimiento': '155746',
@@ -129,8 +97,12 @@ const Tabla2 = () => {
       Prestados: 96,
     },
   ];
+  // const detalleTable = useSelector((state:RootState)=>state.operaciones.)
 
-  const getIDMovimiento = (id: string) => {};
+  const cambioTablas = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setEstado({ ...estado, showTabla1: true, showTabla2: false });
+  };
   return (
     <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
       <table className="min-w-full divide-y divide-gray-200 ">
@@ -154,9 +126,9 @@ const Tabla2 = () => {
               <td className="text-secondary-14px text-center">{row.IDdelConductor}</td>
               <td className="text-secondary-14px text-center">
                 <button
-                  onClick={() => getIDMovimiento(row['ID Movimiento'])}
+                  onClick={(e) => cambioTablas(e)}
                   className="bg-azul rounded-xl font-Inter font-[500] text-blanco py-1 px-2">
-                  {row.Accion}
+                  Cerrar
                 </button>
               </td>
             </tr>
@@ -188,8 +160,15 @@ const Tabla2 = () => {
 };
 
 export default function InventarioCamiones() {
-  const [idMovimiento, SetIdMovimiento] = useState<string>('');
-  const [showTabla1, SetShowTabla1] = useState<boolean>(true);
+  const [showTablas, SetShowTablas] = useState<EstadosTablas>({
+    showTabla1: true,
+    showTabla2: false,
+  });
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(GetTablaReportesDiarios());
+  }, [dispatch]);
 
   return (
     <div className="p-4 w-full">
@@ -225,10 +204,7 @@ export default function InventarioCamiones() {
             <div>
               <p className="text-16px py-2">Fecha</p>
               <div>
-                <input
-                  className="border w-60 px-4  max-w-60  bg-gris-1 rounded-xl py-3 text-gris-2 "
-                  type="date"
-                />
+                <input className="border w-60 px-4  max-w-60  bg-gris-1 rounded-xl py-3 text-gris-2 " type="date" />
               </div>
             </div>
           </label>
@@ -249,7 +225,10 @@ export default function InventarioCamiones() {
         </button>
       </form>
 
-      <div className="py-3">{showTabla1 ? <Tabla1 SetIdMovimiento={SetIdMovimiento} /> : <Tabla2 />}</div>
+      <div className="py-3">
+        {showTablas.showTabla1 === true && <Tabla1 setEstado={SetShowTablas} estado={showTablas} />}
+        {showTablas.showTabla2 === true && <Tabla2 setEstado={SetShowTablas} estado={showTablas} />}
+      </div>
     </div>
   );
 }
