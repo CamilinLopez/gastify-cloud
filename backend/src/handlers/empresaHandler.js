@@ -64,12 +64,12 @@ const invitarUsuario = async (req, res, next) => {
 const verificarToken = async (req, res, next) => {
   const { token } = req.body;
   console.log(token);
-  let decoded 
+  let decoded;
   try {
     decoded = verifyToken(token, SECRET_KEY);
 
-    res.status(200).json({ 
-      token
+    res.status(200).json({
+      token,
     });
   } catch (error) {
     if (error.message.includes('expired')) {
