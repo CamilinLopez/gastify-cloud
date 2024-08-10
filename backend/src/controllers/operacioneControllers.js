@@ -7,6 +7,8 @@ const {
   conductores,
   camiones,
   tipo_cilindros,
+  estado_cilindros,
+  descarga_camiones,
 } = require('../db/index');
 const { generateId, generarFechaActual, generarHoraActual } = require('../utils/generadorId');
 
@@ -24,25 +26,20 @@ async function obtenerCantidadTotalBodega(tipoCilindroId, estadoCilindroId) {
 const TablaReportesDiarios = async () => {
   try {
     const data = await cargas.findAll({
+      attributes: ['fecha', 'hora', 'id'],
       include: [
         {
           model: conductores,
-          attributes: ['nombre'],
+          attributes: ['nombre', 'id'],
         },
         {
           model: camiones,
-          attributes: ['placa'],
+          attributes: ['placa', 'id'],
         },
       ],
     });
-    const data1 = data.map((item) => ({
-      id: item.id,
-      fecha: item.fecha,
-      hora: item.hora,
-      camion: item.camione.placa,
-      conductor: item.conductore.nombre,
-    }));
-    return { message: 'Accion comleta', result: data1 };
+
+    return { message: 'Accion comleta', result: data };
   } catch (error) {
     console.log(error);
     throw error;
@@ -142,8 +139,54 @@ const getTeblaVisualCargaDB = async (carga_id) => {
   }
 };
 
+const crearTablaDescargaDB = async (carga_id, conductor, camion, tablaDescarga) => {
+  const idDescarga = generateId();
+  try {
+    for (const descarga of tablaDescarga) {
+      await descarga_camiones.create({
+        id: generateId(),
+        fecha: generarFechaActual(),
+        hora: generarHoraActual(),
+        carga_id,
+        camion_id: camion.id,
+        conductor_id: conductor.id,
+        cantidad: Number(descarga.cantidad === '' ? 0 : descarga.cantidad),
+        tipo_cilindros: Number(descarga.tipoCilindroId),
+        estado_cilindros: Number(descarga.estadoCilindroId),
+      });
+    }
+    return { message: 'Accion completa', result: [] };
+  } catch (error) {
+    console.log(error, 'mamama');
+    throw error;
+  }
+};
+
+const obtenerTablaDescargaDB = async (carga_id) => {
+  try {
+    const data = await descarga_camiones.findAll({
+      attributes: ['id', 'fecha', 'hora', 'carga_id', 'camion_id', 'conductor_id', 'cantidad'],
+      where: { carga_id },
+      include: [
+        {
+          model: tipo_cilindros,
+        },
+        {
+          model: estado_cilindros,
+        },
+      ],
+    });
+    if (data.length > 0) return { message: 'Accion completa', result: data };
+    else return { message: 'No se ha realizado la descarga aun', result: [] };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   transfereciaCilindros,
   TablaReportesDiarios,
   getTeblaVisualCargaDB,
+  crearTablaDescargaDB,
+  obtenerTablaDescargaDB,
 };

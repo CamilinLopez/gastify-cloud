@@ -37,23 +37,7 @@ const DescargaCamiones = (sequelize) => {
       conductor_id: {
         type: DataTypes.STRING,
         references: {
-          model: 'camiones',
-          key: 'id',
-        },
-        allowNull: false,
-      },
-      tipoCilindroId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'tipo_cilindros',
-          key: 'id',
-        },
-        allowNull: false,
-      },
-      estadoCilindroId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'estado_cilindros',
+          model: 'conductores',
           key: 'id',
         },
         allowNull: false,

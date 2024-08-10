@@ -10,6 +10,7 @@ import {
   EstadoCarga,
   TypeTablaVisualCarga,
   Formulario,
+  cargaDatosTablaDescarga,
 } from '@/types/operaciones';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { tipoCilindros } from '@/arraysObjects/dataCilindros';
@@ -19,6 +20,7 @@ import { GetTablaReportesDiarios, GetTablaVisualCarga, TablaCargaThunk } from '@
 import { AutocompletableCamiones, AutocompletableConductores } from './desplegables';
 import { RootState } from '@/redux/reducer';
 import { getTablaConductores, tablaCamion } from '@/redux/slice/inventario/thunks';
+import { RegistrarTablaDescarga } from '@/redux/slice/operaciones/thunks';
 
 const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -115,36 +117,39 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
 const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEstado }) => {
   const [form, setForm] = useState<Formulario>({
     '5kg': {
-      Fallados: { id: '', cantidad: 0 },
-      Prestados: { id: '', cantidad: 0 },
-      Vacios: { id: '', cantidad: 0 },
-      Llenos: { id: '', cantidad: 0 },
+      Fallados: { estadoCilindroId: '3', tipoCilindroId: '1', cantidad: '' },
+      Prestados: { estadoCilindroId: '4', tipoCilindroId: '1', cantidad: '' },
+      Vacios: { estadoCilindroId: '2', tipoCilindroId: '1', cantidad: '' },
+      Llenos: { estadoCilindroId: '1', tipoCilindroId: '1', cantidad: '' },
     },
     '11kg': {
-      Fallados: { id: '', cantidad: 0 },
-      Prestados: { id: '', cantidad: 0 },
-      Vacios: { id: '', cantidad: 0 },
-      Llenos: { id: '', cantidad: 0 },
+      Fallados: { estadoCilindroId: '3', tipoCilindroId: '2', cantidad: '' },
+      Prestados: { estadoCilindroId: '4', tipoCilindroId: '2', cantidad: '' },
+      Vacios: { estadoCilindroId: '2', tipoCilindroId: '2', cantidad: '' },
+      Llenos: { estadoCilindroId: '1', tipoCilindroId: '2', cantidad: '' },
     },
     '15kg': {
-      Fallados: { id: '', cantidad: 0 },
-      Prestados: { id: '', cantidad: 0 },
-      Vacios: { id: '', cantidad: 0 },
-      Llenos: { id: '', cantidad: 0 },
+      Fallados: { estadoCilindroId: '3', tipoCilindroId: '3', cantidad: '' },
+      Prestados: { estadoCilindroId: '4', tipoCilindroId: '3', cantidad: '' },
+      Vacios: { estadoCilindroId: '2', tipoCilindroId: '3', cantidad: '' },
+      Llenos: { estadoCilindroId: '1', tipoCilindroId: '3', cantidad: '' },
     },
     '45kg': {
-      Fallados: { id: '', cantidad: 0 },
-      Prestados: { id: '', cantidad: 0 },
-      Vacios: { id: '', cantidad: 0 },
-      Llenos: { id: '', cantidad: 0 },
+      Fallados: { estadoCilindroId: '3', tipoCilindroId: '4', cantidad: '' },
+      Prestados: { estadoCilindroId: '4', tipoCilindroId: '4', cantidad: '' },
+      Vacios: { estadoCilindroId: '2', tipoCilindroId: '4', cantidad: '' },
+      Llenos: { estadoCilindroId: '1', tipoCilindroId: '4', cantidad: '' },
     },
     H15: {
-      Fallados: { id: '', cantidad: 0 },
-      Prestados: { id: '', cantidad: 0 },
-      Vacios: { id: '', cantidad: 0 },
-      Llenos: { id: '', cantidad: 0 },
+      Fallados: { estadoCilindroId: '3', tipoCilindroId: '5', cantidad: '' },
+      Prestados: { estadoCilindroId: '4', tipoCilindroId: '5', cantidad: '' },
+      Vacios: { estadoCilindroId: '2', tipoCilindroId: '5', cantidad: '' },
+      Llenos: { estadoCilindroId: '1', tipoCilindroId: '5', cantidad: '' },
     },
   });
+  const dispatch: AppDispatch = useDispatch();
+
+
   const estadoTablas = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setEstado({
@@ -154,21 +159,39 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
       openTablaCarga: false,
     });
   };
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>, estado: string, id: string) => {
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>, estado: { id: string; tipo: string }) => {
     const { name, value } = e.target;
-
     setForm((prevForm) => ({
       ...prevForm,
       [name]: {
         ...prevForm[name],
-        [estado]: {
-          ...prevForm[name][estado],
-          cantidad: parseInt(value, 10) || 0,
-          id,
+        [estado.tipo]: {
+          ...prevForm[name][estado.tipo],
+          cantidad: Number(value),
         },
       },
     }));
   };
+  const registra = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const array = Object.entries(form).flatMap(([tipoCilindro, estados]) =>
+      Object.entries(estados).map(([estadoCilindro, { estadoCilindroId, tipoCilindroId, cantidad }]) => ({
+        tipoCilindro,
+        estadoCilindro,
+        estadoCilindroId,
+        tipoCilindroId,
+        cantidad,
+      })),
+    );
+    const data: cargaDatosTablaDescarga = {
+      carga_id: datosCarga.id,
+      conductor: datosCarga.conductore,
+      camion: datosCarga.camione,
+      tablaDescarga: array,
+    };
+    dispatch(RegistrarTablaDescarga(data));
+  };
+
 
   return (
     <>
@@ -190,8 +213,10 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
             <tr className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.id}</td>
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.fecha}</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.camion}</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.conductor}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{datosCarga.camione.placa}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
+                {datosCarga.conductore.nombre}
+              </td>
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
                 <button
                   onClick={(e) => estadoTablas(e)}
@@ -219,7 +244,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
                   <input
                     name={row.tipo}
                     value={form[row.tipo].Fallados.cantidad}
-                    onChange={(e) => handleOnChange(e, 'Fallados', String(row.id))}
+                    onChange={(e) => handleOnChange(e, { id: '3', tipo: 'Fallados' })}
                     type="number"
                     className="w-10  text-black overflow-hidden"
                     placeholder="0"
@@ -229,7 +254,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
                   <input
                     name={row.tipo}
                     value={form[row.tipo].Prestados.cantidad}
-                    onChange={(e) => handleOnChange(e, 'Prestados', String(row.id))}
+                    onChange={(e) => handleOnChange(e, { id: '4', tipo: 'Prestados' })}
                     type="number"
                     className="w-10  text-black overflow-hidden"
                     placeholder="0"
@@ -239,7 +264,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
                   <input
                     name={row.tipo}
                     value={form[row.tipo].Vacios.cantidad}
-                    onChange={(e) => handleOnChange(e, 'Vacios', String(row.id))}
+                    onChange={(e) => handleOnChange(e, { id: '2', tipo: 'Vacios' })}
                     type="number"
                     className="w-10  text-black overflow-hidden"
                     placeholder="0"
@@ -249,7 +274,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
                   <input
                     name={row.tipo}
                     value={form[row.tipo].Llenos.cantidad}
-                    onChange={(e) => handleOnChange(e, 'Llenos', String(row.id))}
+                    onChange={(e) => handleOnChange(e, { id: '1', tipo: 'Llenos' })}
                     type="number"
                     className="w-10 text-black overflow-hidden"
                     placeholder="0"
@@ -260,7 +285,9 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
           </tbody>
         </table>
       </div>
-      <button className="bg-blue-400  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold">
+      <button
+        onClick={(e) => registra(e)}
+        className="bg-blue-400  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold">
         Registrar
       </button>
     </>
@@ -279,8 +306,8 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
       ...infoCarga.carga,
       id: carga.id,
       fecha: carga.fecha,
-      camion: carga.camion,
-      conductor: carga.conductor,
+      camione: carga.camione,
+      conductore: carga.conductore,
       hora: carga.hora,
     });
 
@@ -302,8 +329,8 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
       ...infoCarga.carga,
       id: carga.id,
       fecha: carga.fecha,
-      camion: carga.camion,
-      conductor: carga.conductor,
+      camione: carga.camione,
+      conductore: carga.conductore,
       hora: carga.hora,
     });
 
@@ -336,8 +363,8 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
               <tr key={item.id}>
                 <td className="px-6 py-4 text-secondary-14px ">{item.id}</td>
                 <td className="px-6 py-4 text-secondary-14px ">{item.fecha}</td>
-                <td className="px-6 py-4 text-secondary-14px ">{item.camion}</td>
-                <td className="px-6 py-4 text-secondary-14px ">{item.conductor}</td>
+                <td className="px-6 py-4 text-secondary-14px ">{item.camione.placa}</td>
+                <td className="px-6 py-4 text-secondary-14px ">{item.conductore.nombre}</td>
                 <td className="px-6 py-4 text-secondary-14px ">
                   <button onClick={(e) => estadoTablaDescarga(e, item)} className="text-start underline">
                     Abrir Tabla de Descarga
@@ -387,8 +414,8 @@ const TablaVisualCarga: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEs
             <tr className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.id}</td>
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.fecha}</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.camion}</td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.conductor}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.camione.placa}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.conductore.nombre}</td>
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
                 <button
                   onClick={(e) => estadoTablas(e)}
@@ -445,8 +472,8 @@ export default function SectionsOperacion() {
   const [carga, setCarga] = useState<InfoReportesDiarios>({
     id: '',
     fecha: '',
-    camion: '',
-    conductor: '',
+    camione: { id: '', placa: '' },
+    conductore: { id: '', nombre: '' },
     hora: '',
   });
 

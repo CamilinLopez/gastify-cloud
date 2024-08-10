@@ -71,8 +71,8 @@ export type InfoReportesDiarios = {
   id: string;
   fecha: string;
   hora: string;
-  camion: string;
-  conductor: string;
+  camione: { id: string; placa: string };
+  conductore: { id: string; nombre: string };
 };
 
 interface TypeTablaReportesDiarios {
@@ -81,6 +81,7 @@ interface TypeTablaReportesDiarios {
 }
 
 export interface InitialStateOperaciones {
+  responseTablaDescarga: { message: string; result: [] };
   responseTablaVisualCarga: { message: string; result: DetalleCargas[] };
   responseTablaReportesDiarios: TypeTablaReportesDiarios;
   responseTablaCarga: TypeResponseTablaCarga;
@@ -97,12 +98,28 @@ export interface DetalleCargas {
 }
 
 export interface EstadoCilindro {
-  id: string;
-  cantidad: number;
+  estadoCilindroId: string;
+  tipoCilindroId: string;
+  cantidad: number | string;
 }
 
 export interface Formulario {
   [tipo: string]: {
     [estado: string]: EstadoCilindro;
   };
+}
+
+export interface infoTablaDescarga {
+  tipoCilindro: string;
+  estadoCilindro: string;
+  estadoCilindroId: string;
+  tipoCilindroId: string;
+  cantidad: number | string;
+}
+
+export interface cargaDatosTablaDescarga {
+  carga_id: string;
+  camion: { id: string; placa: string };
+  conductor: { id: string; nombre: string };
+  tablaDescarga: infoTablaDescarga[];
 }

@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/config/axios';
-import { CargaDatos } from '@/types/operaciones';
+import { CargaDatos, cargaDatosTablaDescarga, Formulario } from '@/types/operaciones';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -38,6 +38,21 @@ export const GetTablaVisualCarga = createAsyncThunk(
   async (carga_id: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get('/operaciones/getTablaVisualCarga', { params: { carga_id } });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido');
+      }
+      return rejectWithValue('Error inesperado');
+    }
+  },
+);
+
+export const RegistrarTablaDescarga = createAsyncThunk(
+  'operaciones/postTablaDescarga',
+  async (formTabla: cargaDatosTablaDescarga, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/operaciones/crearTablaDescarga', formTabla);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
