@@ -5,7 +5,7 @@ const routes = require('./routes');
 
 const server = express();
 const corsOptions = {
-  origin: 'http://localhost:3000', // Tu dominio
+  origin: 'https://gastify-cloud-nine.vercel.app', // Tu dominio
   credentials: true, // Habilita el envío de cookies y encabezados de autenticación
   allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
   exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Encabezados expuestos
