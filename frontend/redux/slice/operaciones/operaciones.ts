@@ -4,6 +4,7 @@ import {
   handleGetTablaReportesDiarios,
   handleGetTablaVisualCarga,
   handlePostTablaDescatga,
+  handleGetTablaDescatga,
 } from './reducer';
 import { InitialStateOperaciones } from '@/types/operaciones';
 
@@ -42,6 +43,7 @@ const operacionesSlice = createSlice({
     handleGetTablaReportesDiarios(builder);
     handleGetTablaVisualCarga(builder);
     handlePostTablaDescatga(builder);
+    handleGetTablaDescatga(builder);
   },
 });
 export const {} = operacionesSlice.actions;

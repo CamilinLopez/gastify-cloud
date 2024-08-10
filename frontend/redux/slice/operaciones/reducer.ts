@@ -1,5 +1,11 @@
 import { InitialStateOperaciones } from '@/types/operaciones';
-import { TablaCargaThunk, GetTablaReportesDiarios, GetTablaVisualCarga,RegistrarTablaDescarga } from './thunks';
+import {
+  TablaCargaThunk,
+  GetTablaReportesDiarios,
+  GetTablaVisualCarga,
+  RegistrarTablaDescarga,
+  GEtTablaDescarga,
+} from './thunks';
 
 export const handleFetchTablaCarga = (builder: any) => {
   builder
@@ -64,6 +70,23 @@ export const handlePostTablaDescatga = (builder: any) => {
       state.error = null;
     })
     .addCase(RegistrarTablaDescarga.rejected, (state: InitialStateOperaciones, action: any) => {
+      state.status = 'failed';
+      state.messageResponse = null;
+      state.error = action.payload.errors || 'Error desconocido';
+    });
+};
+
+export const handleGetTablaDescatga = (builder: any) => {
+  builder
+    .addCase(GEtTablaDescarga.pending, (state: InitialStateOperaciones) => {
+      state.status = 'loading';
+    })
+    .addCase(GEtTablaDescarga.fulfilled, (state: InitialStateOperaciones, action: any) => {
+      state.responseTablaDescarga = action.payload.data;
+      state.status = 'succeeded';
+      state.error = null;
+    })
+    .addCase(GEtTablaDescarga.rejected, (state: InitialStateOperaciones, action: any) => {
       state.status = 'failed';
       state.messageResponse = null;
       state.error = action.payload.errors || 'Error desconocido';

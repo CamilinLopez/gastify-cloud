@@ -16,7 +16,12 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { tipoCilindros } from '@/arraysObjects/dataCilindros';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { GetTablaReportesDiarios, GetTablaVisualCarga, TablaCargaThunk } from '@/redux/slice/operaciones/thunks';
+import {
+  GEtTablaDescarga,
+  GetTablaReportesDiarios,
+  GetTablaVisualCarga,
+  TablaCargaThunk,
+} from '@/redux/slice/operaciones/thunks';
 import { AutocompletableCamiones, AutocompletableConductores } from './desplegables';
 import { RootState } from '@/redux/reducer';
 import { getTablaConductores, tablaCamion } from '@/redux/slice/inventario/thunks';
@@ -147,8 +152,19 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
       Llenos: { estadoCilindroId: '1', tipoCilindroId: '5', cantidad: '' },
     },
   });
+  const [registrar, setRegistrar] = useState(false);
+
   const dispatch: AppDispatch = useDispatch();
 
+  const tablaDescarga = useSelector((state: RootState) => state.operaciones.responseTablaDescarga.result);
+
+  useEffect(() => {
+    if (tablaDescarga.length > 0) {
+      setRegistrar(true);
+    } else {
+      setRegistrar(false);
+    }
+  }, [tablaDescarga]);
 
   const estadoTablas = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -172,26 +188,34 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
       },
     }));
   };
-  const registra = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const registra = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const array = Object.entries(form).flatMap(([tipoCilindro, estados]) =>
-      Object.entries(estados).map(([estadoCilindro, { estadoCilindroId, tipoCilindroId, cantidad }]) => ({
-        tipoCilindro,
-        estadoCilindro,
-        estadoCilindroId,
-        tipoCilindroId,
-        cantidad,
-      })),
-    );
-    const data: cargaDatosTablaDescarga = {
-      carga_id: datosCarga.id,
-      conductor: datosCarga.conductore,
-      camion: datosCarga.camione,
-      tablaDescarga: array,
-    };
-    dispatch(RegistrarTablaDescarga(data));
-  };
 
+    if (registrar === false) {
+      console.log('hola desde registrar', registrar);
+
+      setRegistrar(true); //si se registra informacion cambia de estado para que no pueda modificar
+
+      const array = Object.entries(form).flatMap(([tipoCilindro, estados]) =>
+        Object.entries(estados).map(([estadoCilindro, { estadoCilindroId, tipoCilindroId, cantidad }]) => ({
+          tipoCilindro,
+          estadoCilindro,
+          estadoCilindroId,
+          tipoCilindroId,
+          cantidad,
+        })),
+      );
+      const data: cargaDatosTablaDescarga = {
+        carga_id: datosCarga.id,
+        conductor: datosCarga.conductore,
+        camion: datosCarga.camione,
+        tablaDescarga: array,
+      };
+      await dispatch(RegistrarTablaDescarga(data));
+    }
+
+    await dispatch(GEtTablaDescarga(datosCarga.id)); //llamar a la base de datos para saber si hay cargas asociadas al id en la tabla descarga_camiones
+  };
 
   return (
     <>
@@ -237,57 +261,67 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {tipoCilindros.map((row) => (
-              <tr key={row.id} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
-                <td className="text-secondary-14px text-center">{row.tipo}</td>
-                <td className="text-secondary-14px text-center">
-                  <input
-                    name={row.tipo}
-                    value={form[row.tipo].Fallados.cantidad}
-                    onChange={(e) => handleOnChange(e, { id: '3', tipo: 'Fallados' })}
-                    type="number"
-                    className="w-10  text-black overflow-hidden"
-                    placeholder="0"
-                  />
-                </td>
-                <td className="text-secondary-14px text-center">
-                  <input
-                    name={row.tipo}
-                    value={form[row.tipo].Prestados.cantidad}
-                    onChange={(e) => handleOnChange(e, { id: '4', tipo: 'Prestados' })}
-                    type="number"
-                    className="w-10  text-black overflow-hidden"
-                    placeholder="0"
-                  />
-                </td>
-                <td className="text-secondary-14px text-center">
-                  <input
-                    name={row.tipo}
-                    value={form[row.tipo].Vacios.cantidad}
-                    onChange={(e) => handleOnChange(e, { id: '2', tipo: 'Vacios' })}
-                    type="number"
-                    className="w-10  text-black overflow-hidden"
-                    placeholder="0"
-                  />
-                </td>
-                <td className="text-secondary-14px text-center">
-                  <input
-                    name={row.tipo}
-                    value={form[row.tipo].Llenos.cantidad}
-                    onChange={(e) => handleOnChange(e, { id: '1', tipo: 'Llenos' })}
-                    type="number"
-                    className="w-10 text-black overflow-hidden"
-                    placeholder="0"
-                  />
-                </td>
-              </tr>
-            ))}
+            {registrar === false
+              ? tipoCilindros.map((row) => (
+                  <tr key={row.id} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
+                    <td className="text-secondary-14px text-center">{row.tipo}</td>
+                    <td className="text-secondary-14px text-center">
+                      <input
+                        name={row.tipo}
+                        value={form[row.tipo].Fallados.cantidad}
+                        onChange={(e) => handleOnChange(e, { id: '3', tipo: 'Fallados' })}
+                        type="number"
+                        className="w-10  text-black overflow-hidden"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td className="text-secondary-14px text-center">
+                      <input
+                        name={row.tipo}
+                        value={form[row.tipo].Prestados.cantidad}
+                        onChange={(e) => handleOnChange(e, { id: '4', tipo: 'Prestados' })}
+                        type="number"
+                        className="w-10  text-black overflow-hidden"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td className="text-secondary-14px text-center">
+                      <input
+                        name={row.tipo}
+                        value={form[row.tipo].Vacios.cantidad}
+                        onChange={(e) => handleOnChange(e, { id: '2', tipo: 'Vacios' })}
+                        type="number"
+                        className="w-10  text-black overflow-hidden"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td className="text-secondary-14px text-center">
+                      <input
+                        name={row.tipo}
+                        value={form[row.tipo].Llenos.cantidad}
+                        onChange={(e) => handleOnChange(e, { id: '1', tipo: 'Llenos' })}
+                        type="number"
+                        className="w-10 text-black overflow-hidden"
+                        placeholder="0"
+                      />
+                    </td>
+                  </tr>
+                ))
+              : tablaDescarga?.map((info, i) => (
+                  <tr key={i} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
+                    <td className="text-secondary-14px text-center"> {info.tipo}</td>
+                    <td className='"text-secondary-14px text-center"'>{info.fallados}</td>
+                    <td className='"text-secondary-14px text-center"'>{info.prestados}</td>
+                    <td className='"text-secondary-14px text-center"'>{info.vacíos}</td>
+                    <td className='"text-secondary-14px text-center"'>{info.llenos}</td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
       <button
         onClick={(e) => registra(e)}
-        className="bg-blue-400  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold">
+        className={`${!registrar ? 'block' : 'hidden'} bg-blue-400  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold`}>
         Registrar
       </button>
     </>
@@ -301,6 +335,9 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
 
   const estadoTablaDescarga = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
     e.preventDefault();
+
+    //llamar a la base de datos para saber si hay cargas asociadas al id en la tabla descarga_camiones
+    dispatch(GEtTablaDescarga(carga.id));
 
     infoCarga.setCarga({
       ...infoCarga.carga,

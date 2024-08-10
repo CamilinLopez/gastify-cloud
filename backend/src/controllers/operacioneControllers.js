@@ -170,13 +170,49 @@ const obtenerTablaDescargaDB = async (carga_id) => {
       include: [
         {
           model: tipo_cilindros,
+          attributes: ['tipo', 'id'],
         },
         {
           model: estado_cilindros,
         },
       ],
     });
-    if (data.length > 0) return { message: 'Accion completa', result: data };
+
+    // Agrupación por tipo_cilindro y conteo de estados
+    const datosAgrupados = data.reduce((acc, registro) => {
+      const tipoNombre = registro.tipo_cilindro.tipo;
+      const estado = registro.estado_cilindro.tipo;
+      const cantidad = registro.cantidad;
+
+      // Si no existe una entrada para este tipo de cilindro, créala
+      if (!acc[tipoNombre]) {
+        acc[tipoNombre] = {
+          tipo: tipoNombre,
+          fallados: 0,
+          llenos: 0,
+          vacíos: 0,
+          prestados: 0,
+        };
+      }
+
+      // Acumulación de la cantidad según el estado
+      if (estado === 'Fallado') {
+        acc[tipoNombre].fallados += cantidad;
+      } else if (estado === 'Lleno') {
+        acc[tipoNombre].llenos += cantidad;
+      } else if (estado === 'Vacío') {
+        acc[tipoNombre].vacíos += cantidad;
+      } else if (estado === 'Prestado') {
+        acc[tipoNombre].prestados += cantidad;
+      }
+
+      return acc;
+    }, {});
+
+    // Convertir el objeto a un array
+    const datosAgrupadosArray = Object.values(datosAgrupados);
+
+    if (data.length > 0) return { message: 'Accion completa', result: datosAgrupadosArray };
     else return { message: 'No se ha realizado la descarga aun', result: [] };
   } catch (error) {
     throw error;

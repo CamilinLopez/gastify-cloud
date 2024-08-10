@@ -62,3 +62,18 @@ export const RegistrarTablaDescarga = createAsyncThunk(
     }
   },
 );
+
+export const GEtTablaDescarga = createAsyncThunk(
+  'operaciones/getTablaDescarga',
+  async (carga_id: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/operaciones/getTablaDescarga', { params: { carga_id } });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido');
+      }
+      return rejectWithValue('Error inesperado');
+    }
+  },
+);

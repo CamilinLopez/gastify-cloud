@@ -81,7 +81,7 @@ interface TypeTablaReportesDiarios {
 }
 
 export interface InitialStateOperaciones {
-  responseTablaDescarga: { message: string; result: [] };
+  responseTablaDescarga: { message: string; result: ResponseTablaDescarga[] };
   responseTablaVisualCarga: { message: string; result: DetalleCargas[] };
   responseTablaReportesDiarios: TypeTablaReportesDiarios;
   responseTablaCarga: TypeResponseTablaCarga;
@@ -122,4 +122,12 @@ export interface cargaDatosTablaDescarga {
   camion: { id: string; placa: string };
   conductor: { id: string; nombre: string };
   tablaDescarga: infoTablaDescarga[];
+}
+
+export interface ResponseTablaDescarga {
+  tipo: string;
+  fallados: number;
+  llenos: number;
+  vacíos: number;
+  prestados: number;
 }

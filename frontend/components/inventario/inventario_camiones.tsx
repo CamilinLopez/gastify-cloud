@@ -38,8 +38,8 @@ const Tabla1: React.FC<TypeShowTalbas> = ({ estado, setEstado }) => {
               <td className="text-14px">{row.id}</td>
               <td className="text-14px">{row.fecha}</td>
               <td className="text-14px">{row.hora}</td>
-              <td className="text-secondary-14px text-center">{row.camion}</td>
-              <td className="text-secondary-14px text-center">{row.conductor}</td>
+              <td className="text-secondary-14px text-center">{row.camione.placa}</td>
+              <td className="text-secondary-14px text-center">{row.conductore.nombre}</td>
               <td className="text-secondary-14px text-center">
                 <button
                   onClick={(e) => cambioTablas(e, row)}
