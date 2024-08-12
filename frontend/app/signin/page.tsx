@@ -22,6 +22,7 @@ const Form = () => {
   };
 
   if (status === 'succeeded') {
+    console.log("hola dentro de if status")
     router.push('/dashboard/inicio');
   }
 
