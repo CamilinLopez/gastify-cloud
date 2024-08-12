@@ -7,7 +7,7 @@ require('./middleware/auth');
 
 const server = express();
 const corsOptions = {
-  origin: 'http://gastify-cloud-seven.vercel.app', //'http://localhost:3000', // Tu dominio
+  origin: 'https://gastify-cloud-mu.vercel.app', //'http://localhost:3000', // Tu dominio
   credentials: true, // Habilita el envío de cookies y encabezados de autenticación
   allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
   exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Encabezados expuestos
