@@ -1,13 +1,12 @@
-'use client'
+'use client';
 import Navbar from '@/components/inviteUser/navbar';
 import React, { useEffect, useState } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { LoginThunk } from '@/redux/slice/usuarios/thunks';
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch } from '@/redux/store';
 import { useRouter } from 'next/navigation';
-
 
 const Form = () => {
   const router = useRouter();
@@ -17,25 +16,26 @@ const Form = () => {
   const dispatch: AppDispatch = useDispatch();
   const { status, error, messageResponse, user } = useSelector((state: RootState) => state.usuarios);
 
-  const handleSubmit = (e :React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(LoginThunk({ email, password }));
   };
 
-useEffect(() => {
-  if (status === 'succeeded') {
-    router.push('/dashboard/inicio');
-  }
-}, [status, router]);
+  useEffect(() => {
+    console.log(status);
+    if (status === 'succeeded') {
+      router.push('/dashboard/inicio');
+    }
+  }, [status, router]);
 
   return (
     <form className="w-1/3 flex flex-col gap-y-3" onSubmit={handleSubmit}>
       <div>
         <p className="text-16px">E-mail</p>
-        <input 
-          className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24" 
-          type="email" 
-          placeholder="you@example.com" 
+        <input
+          className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
+          type="email"
+          placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -43,10 +43,10 @@ useEffect(() => {
       </div>
       <div>
         <p className="text-16px">Password</p>
-        <input 
-          className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24" 
-          type="password" 
-          placeholder="******" 
+        <input
+          className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
+          type="password"
+          placeholder="******"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -56,10 +56,7 @@ useEffect(() => {
         <input type="checkbox" />
         <p>Remember me</p>
       </div>
-      <button 
-        type="submit" 
-        className="bg-azul rounded-xl font-Inter font-[500] text-blanco px-4 py-2"
-      >
+      <button type="submit" className="bg-azul rounded-xl font-Inter font-[500] text-blanco px-4 py-2">
         Iniciar sesión
       </button>
     </form>
