@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 
-const InventarioCamion = (sequelize) => {
+const DescargaCamiones = (sequelize) => {
   sequelize.define(
-    'inventario_camiones',
+    'descarga_camiones',
     {
       id: {
         type: DataTypes.STRING,
@@ -18,12 +18,23 @@ const InventarioCamion = (sequelize) => {
         type: DataTypes.TIME,
         allowNull: false,
       },
-      cantidad: {
-        type: DataTypes.INTEGER,
+      carga_id: {
+        type: DataTypes.STRING,
+        references: {
+          model: 'cargas',
+          key: 'id',
+        },
         allowNull: false,
-        defaultValue: 0,
       },
-      camionId: {
+      camion_id: {
+        type: DataTypes.STRING,
+        references: {
+          model: 'camiones',
+          key: 'id',
+        },
+        allowNull: false,
+      },
+      conductor_id: {
         type: DataTypes.STRING,
         references: {
           model: 'camiones',
@@ -47,6 +58,10 @@ const InventarioCamion = (sequelize) => {
         },
         allowNull: false,
       },
+      cantidad: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       timestamps: false,
@@ -54,4 +69,4 @@ const InventarioCamion = (sequelize) => {
   );
 };
 
-module.exports = InventarioCamion;
+module.exports = DescargaCamiones;

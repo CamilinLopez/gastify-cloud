@@ -1,5 +1,6 @@
-const { estado_cilindros, tipo_cilindros, inventario_bodegas } = require('../db/index');
-const { literal, Op } = require('sequelize');
+const { estado_cilindros, tipo_cilindros, inventario_bodegas, conductores, camiones } = require('../db/index');
+const { literal, Op, where } = require('sequelize');
+const { generateId, generarFechaActual, generarHoraActual } = require('../utils/generadorId');
 
 const getTablaInventarioBodegaDB = async (fecha) => {
   try {
@@ -58,6 +59,90 @@ const getTablaInventarioBodegaDB = async (fecha) => {
   }
 };
 
+const registrarConductorDB = async (nombreConductor, licencia) => {
+  try {
+    const data = await conductores.create({
+      id: generateId(),
+      nombre: nombreConductor,
+      licencia,
+      fecha: generarFechaActual(),
+      hora: generarHoraActual(),
+    });
+    const tabla = await conductores.findAll();
+    return { message: 'Conductor creado', result: tabla };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getTablaConductores = async () => {
+  try {
+    const data = await conductores.findAll();
+    return { message: 'Accion exitosa', result: data };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const registrarCamionesDB = async (marca, modelo, placa, capacidad_carga) => {
+  try {
+    const [camion, created] = await camiones.findOrCreate({
+      where: { placa },
+      defaults: { id: generateId(), fecha: generarFechaActual(), marca, modelo, placa, capacidad_carga },
+    });
+
+    const dataTabla = await camiones.findAll();
+
+    if (created)
+      return {
+        message: `El vehículo de patente ${placa} fue creado exitosamente.`,
+        result: dataTabla,
+      };
+    throw { message: `El vehículo de patente ${placa} ya existe.`, result: camion };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const tomarTablaCamionesDB = async () => {
+  try {
+    const data = await camiones.findAll();
+    return { message: 'Acción completa.', result: data };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteCamionesDB = async (id) => {
+  try {
+    const data = await camiones.destroy({
+      where: { id },
+    });
+    const tabla = await camiones.findAll();
+    if (data) return { message: 'Eliminado correctamente.', result: tabla };
+    else throw { message: 'Vehículo no encontrado.', result: id };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deleteConductoresDB = async (id) => {
+  try {
+    const data = await conductores.destroy({ where: { id } });
+    const tabla = await conductores.findAll();
+    if (data) return { message: 'Eliminado correctamente.', result: tabla };
+    else throw { message: 'Conductor no encontrado', result: id };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getTablaInventarioBodegaDB,
+  registrarConductorDB,
+  getTablaConductores,
+  registrarCamionesDB,
+  tomarTablaCamionesDB,
+  deleteCamionesDB,
+  deleteConductoresDB,
 };

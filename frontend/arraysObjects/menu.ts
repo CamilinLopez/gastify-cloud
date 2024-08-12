@@ -21,6 +21,10 @@ export const RoutesMenu: Routes[] = [
         name: 'Registro de camiones',
         path: '/dashboard/inventario/registro_camiones',
       },
+      {
+        name: 'Registro de conductores',
+        path: '/dashboard/inventario/registro_conductores',
+      },
     ],
   },
   {

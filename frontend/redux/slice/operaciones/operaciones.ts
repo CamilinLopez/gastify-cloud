@@ -1,8 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { handleFetchTablaCarga } from './reducer';
+import { handleFetchTablaCarga, handleGetTablaReportesDiarios, handleGetTablaVisualCarga } from './reducer';
 import { InitialStateOperaciones } from '@/types/operaciones';
 
 const initialState: InitialStateOperaciones = {
+  responseTablaVisualCarga: {
+    message: '',
+    result: [],
+  },
+  responseTablaReportesDiarios: {
+    message: '',
+    result: [],
+  },
   responseTablaCarga: {
     movil: '',
     conductorId: '',
@@ -22,6 +30,8 @@ const operacionesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     handleFetchTablaCarga(builder);
+    handleGetTablaReportesDiarios(builder);
+    handleGetTablaVisualCarga(builder);
   },
 });
 export const {} = operacionesSlice.actions;

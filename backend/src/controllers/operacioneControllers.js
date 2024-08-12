@@ -1,4 +1,13 @@
-const { estado_cilindros, tipo_cilindros, inventario_bodegas, database, conductor_camiones } = require('../db/index');
+const {
+  inventario_camiones,
+  inventario_bodegas,
+  database,
+  cargas,
+  detalle_cargas,
+  conductores,
+  camiones,
+  tipo_cilindros,
+} = require('../db/index');
 const { generateId, generarFechaActual, generarHoraActual } = require('../utils/generadorId');
 
 async function obtenerCantidadTotalBodega(tipoCilindroId, estadoCilindroId) {
@@ -12,84 +21,104 @@ async function obtenerCantidadTotalBodega(tipoCilindroId, estadoCilindroId) {
   return resultado[0].get('totalCantidad');
 }
 
+const TablaReportesDiarios = async () => {
+  try {
+    const data = await cargas.findAll({
+      include: [
+        {
+          model: conductores,
+          attributes: ['nombre'],
+        },
+        {
+          model: camiones,
+          attributes: ['placa'],
+        },
+      ],
+    });
+    const data1 = data.map((item) => ({
+      id: item.id,
+      fecha: item.fecha,
+      hora: item.hora,
+      camion: item.camione.placa,
+      conductor: item.conductore.nombre,
+    }));
+    return { message: 'Accion comleta', result: data1 };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros) => {
   //iniciar transaccion
   const transaction = await database.transaction();
-  const arrayCantidadRechasada = [];
-  const arrayCantidadTransferencia = [];
+  const cilindrosAceptados = [];
+  const cilindrosRechasados = [];
+  const fecha = generarFechaActual();
+  const hora = generarHoraActual();
 
   try {
-    await conductor_camiones.create(
-      {
-        id: generateId(),
-        conductorId: id_conductor,
-        camionId: numero_movil,
-        fecha: generarFechaActual(),
-        hora: generarHoraActual(),
-      },
-      { transaction },
-    );
-
     for (const carga of carga_cilindros) {
-      const idTipoCilindro = Number(carga.cilindro.id);
-      const EstadoCilindro = { id: 1, tipo: 'Lleno' };
-      const cantidadTotalBodega = await obtenerCantidadTotalBodega(idTipoCilindro, EstadoCilindro.id);
-      if (cantidadTotalBodega >= Number(carga.cantidad)) {
-        arrayCantidadTransferencia.push({
-          cantidadBodega: Number(cantidadTotalBodega),
-          cantidadCarga: Number(carga.cantidad),
-          tipoCilindro: carga.cilindro,
-        });
-      }
-      if (cantidadTotalBodega < Number(carga.cantidad)) {
-        arrayCantidadRechasada.push({
-          cantidadBodega: cantidadTotalBodega === null ? 0 : Number(cantidadTotalBodega),
-          cantidadCarga: Number(carga.cantidad),
-          tipoCilindro: carga.cilindro,
-        });
-      }
+      const cantidadBodega = await obtenerCantidadTotalBodega(carga.cilindro.id, 1);
+      if (cantidadBodega >= carga.cantidad)
+        cilindrosAceptados.push({ cantidadBodega, cantidadCarga: carga.cantidad, tipoClinindroId: carga.cilindro.id });
+      if (cantidadBodega < carga.cantidad)
+        cilindrosRechasados.push({ cantidadBodega, cantidadCarga: carga.cantidad, tipoCilindroId: carga.cilindro.id });
     }
 
-    //si hay stock en bodega para la cantidad de tipos de cilindros se accede a este if
-    if (arrayCantidadTransferencia.length) {
-      for (const transferencia of arrayCantidadTransferencia) {
-        //eliminar o restar la cantidad de cilindros por tipo en bodega
+    if (cilindrosAceptados.length > 0) {
+      const carga = await cargas.create(
+        {
+          id: generateId(),
+          fecha: generarFechaActual(),
+          hora: generarHoraActual(),
+          camion_id: String(numero_movil),
+          conductor_id: id_conductor,
+        },
+        { transaction },
+      );
+
+      for (const detalleCarga of cilindrosAceptados) {
+        await detalle_cargas.create(
+          {
+            id: generateId(),
+            carga_id: carga.id,
+            tipoCilindroId: Number(detalleCarga.tipoClinindroId),
+            estadoCilindroId: 1, //solo cilindros llenos. El id para cilindros llenos es 1
+            cantidad: detalleCarga.cantidadCarga,
+          },
+          { transaction },
+        );
         await inventario_bodegas.create(
           {
             id: generateId(),
-            fecha: generarFechaActual(),
-            hora: generarHoraActual,
-            cantidad: -transferencia.cantidadCarga,
-            tipoCilindroId: transferencia.tipoCilindro.id,
-            estadoCilindroId: 1, // solo cilindros llenos que son de id 1
+            fecha,
+            hora,
+            cantidad: -Number(detalleCarga.cantidadCarga),
+            tipoCilindroId: Number(detalleCarga.tipoClinindroId),
+            estadoCilindroId: 1,
           },
           { transaction },
         );
-        // transferir la catidad de cilindros al camion solo cilindros llenos
         await inventario_camiones.create(
           {
             id: generateId(),
-            fecha: generarFechaActual(),
-            hora: generarHoraActual(),
-            cantidad: transferencia.cantidadCarga,
+            fecha,
+            hora,
+            cantidad: Number(detalleCarga.cantidadCarga),
             camionId: numero_movil,
-            tipoCilindroId: transferencia.tipoCilindro.id,
-            estadoCilindroId: 1, // solo cilindros llenos que son de id 1
+            tipoCilindroId: Number(detalleCarga.tipoClinindroId),
+            estadoCilindroId: 1,
           },
           { transaction },
         );
       }
-
-      await transaction.commit(); // se confirma la transferencia de cilindros al camion
-
-      return {
-        message: 'Transferencia exitosamente',
-        result: { numero_movil, id_conductor, cilindrosTerminados: arrayCantidadRechasada },
-      };
+      await transaction.commit();
+      const tabla = await TablaReportesDiarios();
+      return { message: 'Transferencia exitosamente', result: tabla.result };
     }
-    //si no hay estock para algunos tipos de cilindros accede a este if
-    if (arrayCantidadRechasada.length && arrayCantidadTransferencia.length === 0) {
-      throw { message: 'Cantidad insuficiente en bodega', result: arrayCantidadRechasada };
+    if (cilindrosRechasados.length > 0 && cilindrosAceptados.length === 0) {
+      throw { message: 'Cantidad insuficiente en bodega', result: cilindrosRechasados };
     }
   } catch (error) {
     await transaction.rollback();
@@ -97,6 +126,24 @@ const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros
   }
 };
 
+const getTeblaVisualCargaDB = async (carga_id) => {
+  try {
+    const totalCargas = await detalle_cargas.findAll({
+      attributes: ['id', 'carga_id', 'cantidad'],
+      where: { carga_id },
+      include: { model: tipo_cilindros, attributes: ['tipo'] },
+    });
+
+    if (totalCargas.length > 0) {
+      return { message: 'Accion comleta', result: totalCargas };
+    } else throw { message: 'No hay cargas', result: [] };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   transfereciaCilindros,
+  TablaReportesDiarios,
+  getTeblaVisualCargaDB,
 };

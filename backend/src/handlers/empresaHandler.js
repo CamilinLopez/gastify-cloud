@@ -64,7 +64,7 @@ const invitarUsuario = async (req, res, next) => {
 const verificarToken = async (req, res, next) => {
   const { token } = req.body;
   console.log(token);
-  let decoded 
+  let decoded;
   try {
     decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });
     
@@ -72,7 +72,6 @@ const verificarToken = async (req, res, next) => {
 
     res.status(200).json({ 
       token: newToken.authentication,
-
     });
   } catch (error) {
     res.status(400).json({ errors: error.message });
