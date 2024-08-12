@@ -192,8 +192,6 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
     e.preventDefault();
 
     if (registrar === false) {
-      console.log('hola desde registrar', registrar);
-
       setRegistrar(true); //si se registra informacion cambia de estado para que no pueda modificar
 
       const array = Object.entries(form).flatMap(([tipoCilindro, estados]) =>

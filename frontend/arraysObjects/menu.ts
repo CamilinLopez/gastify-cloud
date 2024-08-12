@@ -13,10 +13,10 @@ export const RoutesMenu: Routes[] = [
         name: 'Inventario de Bodega',
         path: '/dashboard/inventario/inventario_bodega',
       },
-      {
-        name: 'Inventario En Camiones',
-        path: '/dashboard/inventario/inventario_camiones',
-      },
+      // {
+      //   name: 'Inventario En Camiones',
+      //   path: '/dashboard/inventario/inventario_camiones',
+      // },
       {
         name: 'Registro de camiones',
         path: '/dashboard/inventario/registro_camiones',
