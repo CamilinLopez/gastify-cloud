@@ -24,8 +24,9 @@ export const SendInviteThunk = createAsyncThunk(
   async (userData: any, { rejectWithValue }) => {
     try {
       const token = Cookies.get('token'); 
-      userData.empresa= token
-      const response = await axiosInstance.post<any>('/empresa/post-empresa-invitar-usuario', userData);
+      userData = {...userData, empresa:token}
+      const response = await axiosInstance.post('/empresa/post-empresa-invitar-usuario', userData);
+      console.log(response)
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -53,7 +54,7 @@ export const GetsUsersThunk = createAsyncThunk(
 
 export const LoginThunk = createAsyncThunk(
   'usuarios/login',
-  async (userData: UserCredentials, { rejectWithValue }) => {
+  async (userData: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('/empresa/signin', userData);
       return response.data;

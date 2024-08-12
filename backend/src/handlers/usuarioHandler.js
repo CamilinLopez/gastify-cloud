@@ -20,6 +20,7 @@ const crearUsuario = async (req, res) => {
 
 const ingresarPassword = async (req, res) => {
   try {
+    console.log(req.body,'password')
     const data = await crearUsuarioPasswordDB();
 
     res.status(200).json({ data });

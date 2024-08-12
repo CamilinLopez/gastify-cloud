@@ -39,9 +39,9 @@ const signinEmpresa = async (req, res, next) => {
 
       req.login(user, { session: false }, async (err) => {
         if (err) return next(err);
-        const body = { id: user.id, email: user.email };
+        const body = { id: user.id, };
 
-        const token = jwt.sign({ user: body }, SECRET_KEY);
+        const token = jwt.sign(body, SECRET_KEY);
         return res.json({ token });
       });
     } catch (e) {
@@ -66,25 +66,17 @@ const verificarToken = async (req, res, next) => {
   console.log(token);
   let decoded 
   try {
-    decoded = verifyToken(token, SECRET_KEY);
+    decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });
+    
+    const newToken = generateToken({ id: decoded.id }, SECRET_KEY);
 
     res.status(200).json({ 
-      token
+      token: newToken.authentication,
+
     });
   } catch (error) {
-    if (error.message.includes('expired')) {
-      const newToken = generateToken({ id: decoded.id }, SECRET_KEY);
-
-      res.status(200).json({
-        token: newToken.authentication,
-      });
-    } else {
-      // Other errors, such as invalid signature
-      res.status(401).json({
-        token: 'Invalid token',
-      });
+    res.status(400).json({ errors: error.message });
     }
-  }
 };
 
 module.exports = {

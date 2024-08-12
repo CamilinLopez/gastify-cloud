@@ -19,6 +19,9 @@ export default function Menu() {
     }
   };
 
+  
+  // hidden?? block
+
   return (
     <div className="bg-blanco p-4 flex flex-col h-full justify-between">
       <div className="flex flex-col gap-y-1">

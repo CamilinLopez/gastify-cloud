@@ -1,6 +1,7 @@
 const sendMailer = require("../lib/mailer")
 //funcion para enviando de link
 const sendMailerVerificationLink = async(email, link, empresa) => {
+	const verificationLink = `${link}?email=${encodeURIComponent(email)}`;
 
 	try {
 		await sendMailer({
@@ -17,9 +18,8 @@ const sendMailerVerificationLink = async(email, link, empresa) => {
 				<div style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
 					<p>Hola,</p>
 					<p>El email: ${empresa.email} le a invitado a ser parte del equipo de trabajo, para verificar su email ${email}, por favor, haz clic en el siguiente botón:</p>
-					<a href="${link}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: #ffffff; background-color: #007bff; text-decoration: none; border-radius: 5px;">Verificar Email</a>
-					<p>O copia y pega el siguiente enlace en tu navegador:</p>
-					<p style="color: #007bff; word-break: break-all;">${link}</p>
+					<a href="${verificationLink}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: #ffffff; background-color: #007bff; text-decoration: none; border-radius: 5px;">Verificar Email</a>
+					
 					<p>Gracias por tu colaboración.</p>
 					<p>Saludos cordiales,<br><strong>Gastify</strong></p>
 				</div>

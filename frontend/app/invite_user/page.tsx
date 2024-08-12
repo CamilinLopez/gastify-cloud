@@ -1,8 +1,44 @@
+'use client'
 import Navbar from '@/components/inviteUser/navbar';
-import React from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 export default function InviteUser() {
-  const usuario = 'Camilo lopez calvache';
+  const router = useRouter();
+  const [usuario, setUsuario] = useState('');
+
+  
+useEffect(() => {
+    if (typeof window !== 'undefined') {
+
+      const searchParams = new URLSearchParams(window.location.search);
+        const email = searchParams.get('email');
+
+        if (email) {
+          // Intentar obtener el usuario del almacenamiento local
+          const storedUsuario = localStorage.getItem('usuario');
+
+          if (storedUsuario && storedUsuario == email) {
+            setUsuario(storedUsuario);
+          } else{
+            setUsuario(email);
+            localStorage.setItem('usuario', email); // Guardar en localStorage
+          }
+
+          // Remover el parámetro email de la URL
+          // searchParams.delete('email');
+          // const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+          // router.replace(newUrl);
+        } else {
+          const storedUsuario = localStorage.getItem('usuario');
+          setUsuario(storedUsuario ?? 'acepte de nuevo la invitación');
+        }
+    }
+  }, [router]);
+
+
+
+
 
   return (
     <div className="flex flex-col gap-y-10">

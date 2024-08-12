@@ -44,7 +44,8 @@ passport.use('signin', new LocalStrategy({
     if(!isValid){
       return done(null, false, {message: 'Contraseña incorrecta'});
     }
-    done(null, empresa , {message: 'login success'});
+    
+    done(null, empresa );
   }catch(error){
     return done(error);
   }

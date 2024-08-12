@@ -6,12 +6,12 @@ const { SECRET_KEY, WEBS_URL } = require('../config/env')
 const invateUser = async (data) => {
   try {    
     
-     const empresaData = verifyToken(data.empresa, SECRET_KEY);
+     const empresaData = verifyToken(data.empresa, SECRET_KEY,{ ignoreExpiration: true });
     
     if (!empresaData) {
       throw new Error('Token de empresa inválido o expirado.');
     }
-
+console.log(empresaData)
     const empresa = await empresas.findOne({ where: { id: empresaData.id } });
 
     if (!empresa) {
@@ -22,6 +22,7 @@ const invateUser = async (data) => {
     data = {...data, empresaId:empresaData.id }
     const usuario = await usuarios.create(data);
     
+
     const usuarioData = await usuarios.findOne({
       where: { id: usuario.id }, 
       attributes: { exclude: ['rolId', 'password', 'empresaId'] }, 
@@ -50,6 +51,7 @@ const invateUser = async (data) => {
      return { message: 'Email enviado',authentication, usuarioData };
 
   } catch (error) {
+    console.log(error)
     throw error;
   }
 };

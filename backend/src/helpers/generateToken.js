@@ -43,10 +43,10 @@ const getUnitMultiplier = (unit) => {
   }
 };
 
-const verifyToken = (token, secret) => {
+const verifyToken = (token, secret, ignoreExpiration) => {
   try {
     // Verify the token using the secret key.
-    const decoded = jwt.verify(token, secret);
+    const decoded = jwt.verify(token, secret, ignoreExpiration);
 
     // Return the decoded payload.
     return decoded;

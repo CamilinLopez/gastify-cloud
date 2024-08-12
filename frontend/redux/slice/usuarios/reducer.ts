@@ -17,8 +17,8 @@ export const handleFetchRegistroLogin = (builder: any) => {
       // Establece el token en las cookies usando js-cookie
       Cookies.set('token', action.payload.token, {
         expires: 7, // La cookie expirará en 7 días
-        secure: true, // Solo en HTTPS
-        sameSite: 'strict', // Misma política de sitio
+        secure: true, // Solo en HTTPS defaul true
+        sameSite: 'none', // Misma política de sitio
       });
     })
     .addCase(RegistroThunk.rejected, (state: InitialStateUsuarios, action: any) => {
@@ -33,10 +33,19 @@ export const handleFetchRegistroLogin = (builder: any) => {
       state.status = 'loading';
     })
     .addCase(LoginThunk.fulfilled, (state: InitialStateUsuarios, action: any) => {
-      state.user = action.payload.user;
+      state.user = action.payload.token;
       state.messageResponse = action.payload.message;
       state.status = 'succeeded';
       state.error = null;
+
+
+      // Establece el token en las cookies usando js-cookie
+      Cookies.set('token', action.payload.token, {
+        expires: 7, // La cookie expirará en 7 días
+        secure: true, // Solo en HTTPS defaul true
+        sameSite: 'none', // Misma política de sitio
+      });
+      
     })
     .addCase(LoginThunk.rejected, (state: InitialStateUsuarios, action: any) => {
       state.status = 'failed';
