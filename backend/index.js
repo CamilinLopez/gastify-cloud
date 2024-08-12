@@ -25,14 +25,6 @@ const initializeDatabase = async () => {
     //   console.log('> Server started on https://localhost:3001');
     // });
     server.listen(3001, () => console.log('listening on por 3001'));
-    // https.createServer(httpsOptions, server).listen(3001, () => {
-    //   console.log('> Server started on https://localhost:3001');
-    // });
-
-// Crear el servidor HTTP
-http.createServer(server).listen(3001, () => {
-  console.log('> Server started on http://localhost:3001');
-});
 
     // server.listen(3001, () => console.log('listening on por 3001'));
   } catch (error) {
