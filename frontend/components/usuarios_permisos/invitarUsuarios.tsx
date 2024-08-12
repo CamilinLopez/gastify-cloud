@@ -94,14 +94,13 @@ const Form = () => {
             {status == 'loading' ? 'Enviando...' : 'Enviar invitación'}
           </button>
         </div>
-        {status === 'failed' && <p className="text-red-500">{error}</p>}
+        {/* {status === 'failed' && <p className="text-red-500">{error}</p>} */}
       </form>
     </div>
   );
 };
 
 export default function InvitarUsuarios() {
-
   const dispatch = useDispatch<AppDispatch>();
   const { data, status, error } = useSelector((state: RootState) => state.getsUsuarios);
 
@@ -121,11 +120,11 @@ export default function InvitarUsuarios() {
   const textTable = ['correo electrónico', 'Rol', 'Estado de invitación', 'Acciones'];
 
   const [currentPage, setCurrentPage] = React.useState<number>(1);
-const itemsPerPage = 5; 
+  const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
-const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -140,76 +139,71 @@ const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
       <div className="flex flex-col gap-y-6">
         <Form />
         <div className="overflow-x-auto border-[1px] rounded-xl">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-blanco">
-            <tr>
-              {textTable.map((item) => (
-                <th key={item} className="px-6 py-3 text-left text-xs text-14px">
-                  {item}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {status === 'loading' ? (
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-blanco">
               <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
-                  Cargando datos...
-                </td>
+                {textTable.map((item) => (
+                  <th key={item} className="px-6 py-3 text-left text-xs text-14px">
+                    {item}
+                  </th>
+                ))}
               </tr>
-            ) : status === 'failed' ? (
-              <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-red-500">
-                  {error}
-                </td>
-              </tr>
-            ) : currentData.length > 0 ? (
-              currentData.map((item, i) => (
-                <tr key={i}>
-                  <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
-                    {item.email}
-                  </td>
-                  <td className="px-6 py-4 text-secondary-14px">{item.rol.nombre}</td>
-                  <td className="px-6 py-4 text-secondary-14px">
-                    {item.verificado === false ? 'pendiente' : 'aceptado'}
-                  </td>
-                  <td className="px-6 py-4 text-secondary-14px">
-                    <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">
-                      {item.verificado === false ? 'Cancelar Invitación' : ''}
-                    </button>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {status === 'loading' ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
+                    Cargando datos...
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
-                  No hay datos disponibles
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : status === 'failed' ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-4 text-center text-red-500">
+                    {error}
+                  </td>
+                </tr>
+              ) : currentData.length > 0 ? (
+                currentData.map((item, i) => (
+                  <tr key={i}>
+                    <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{item.email}</td>
+                    <td className="px-6 py-4 text-secondary-14px">{item.rol.nombre}</td>
+                    <td className="px-6 py-4 text-secondary-14px">
+                      {item.verificado === false ? 'pendiente' : 'aceptado'}
+                    </td>
+                    <td className="px-6 py-4 text-secondary-14px">
+                      <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">
+                        {item.verificado === false ? 'Cancelar Invitación' : ''}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
+                    No hay datos disponibles
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
           <div className="flex justify-between py-4">
-          <button
-            className="bg-gray-300 px-4 py-2 rounded-lg"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Anterior
-          </button>
-          <span className="text-gray-700">
-            Página {currentPage} de {Math.ceil(data.length / itemsPerPage)}
-          </span>
-          <button
-            className="bg-gray-300 px-4 py-2 rounded-lg"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
-          >
-            Siguiente
-          </button>
-        </div>
-
+            <button
+              className="bg-gray-300 px-4 py-2 rounded-lg"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}>
+              Anterior
+            </button>
+            <span className="text-gray-700">
+              Página {currentPage} de {Math.ceil(data.length / itemsPerPage)}
+            </span>
+            <button
+              className="bg-gray-300 px-4 py-2 rounded-lg"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === Math.ceil(data.length / itemsPerPage)}>
+              Siguiente
+            </button>
+          </div>
         </div>
       </div>
     </div>

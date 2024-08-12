@@ -81,7 +81,7 @@ const Form = () => {
       >
         {status === 'loading' ? 'Cargando...' : 'Continuar'}
       </button >
-      {status === 'failed' && error && <p className="text-red-500">{error}</p>}
+      {/* {status === 'failed' && error && <p className="text-red-500">{error}</p>} */}
     </form>
   );
 };
