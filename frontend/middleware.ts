@@ -2,43 +2,38 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import Cookies from 'js-cookie';
 
-
 // Uso de Fetch con Agente Personalizado
 export async function middleware(request: NextRequest) {
   const jwt = request.cookies.get('token');
 
-  if (!jwt) {
-    return NextResponse.redirect(new URL('/signin', request.url));
-  }
-
   try {
-    const response = await fetch('http://localhost:3001/empresa/verificar-token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: jwt.value }),
+    if (request.nextUrl.pathname.startsWith('/dashboard')) {
       
-    });
-
-    
-
-    const data = await response.json();
-
-    if (response.status == 200) {
-      Cookies.set('token', data.token, {
-        expires: 7, // La cookie expirará en 7 días
-        secure: true, // Solo en HTTPS defaul true
-        sameSite: 'none', // Misma política de sitio
+      if (!jwt) return NextResponse.redirect(new URL('/signin', request.url));
+      const response = await fetch('http://localhost:3001/empresa/verificar-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: jwt.value }),
       });
-  
-      return NextResponse.next();
+
+      const data = await response.json();
+
+      if (response.status == 200) {
+        Cookies.set('token', data.token, {
+          expires: 7, // La cookie expirará en 7 días
+          secure: true, // Solo en HTTPS defaul true
+          sameSite: 'none', // Misma política de sitio
+        });
+
+        return NextResponse.next();
+      }
+      Cookies.remove('token');
+      return NextResponse.redirect(new URL('/signin', request.url));
     }
-     Cookies.remove('token')
-     return NextResponse.redirect(new URL('/signin', request.url));
-    
   } catch (error) {
-    Cookies.remove('token')
+    Cookies.remove('token');
     console.error('Error verifying JWT token:', error);
     return NextResponse.redirect(new URL('/signin', request.url));
   }
@@ -47,10 +42,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: ['/dashboard/:path*', '/', '/((?!registrar|signin|api|_next|public).*)'],
 };
-
-
-
-
 
 // import { NextResponse } from 'next/server';
 // import type { NextRequest } from 'next/server';
@@ -71,7 +62,6 @@ export const config = {
 //   },
 //   body: JSON.stringify({ token: jwt.value }),
 // });
-
 
 //     const data = await fetchResponse.json();
 
@@ -99,7 +89,6 @@ export const config = {
 //   }
 // }
 
-
 // export const config = {
 //   matcher: [
 //     '/((?!registrar|signin).*)',  // Excluye las rutas /registrar y /signin
@@ -107,4 +96,3 @@ export const config = {
 //     '/',                          // Incluye la ruta raíz
 //   ],
 // };
-
