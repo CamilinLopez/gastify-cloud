@@ -21,6 +21,10 @@ const Form = () => {
     dispatch(LoginThunk({ email, password }));
   };
 
+  if (status === 'succeeded') {
+    router.push('/dashboard/inicio');
+  }
+
   useEffect(() => {
     console.log(status);
     if (status === 'succeeded') {
