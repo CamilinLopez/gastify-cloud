@@ -11,6 +11,9 @@ const {
   modelDescarga,
 } = require('./models/inventario/index');
 
+const {modelPermisos,modelRoles,modelRolesPermisos} = require('./models/roles/index');
+const {modelEmpresa,modelUsuario} = require('./models/empresa/index');
+
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
 const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
@@ -45,6 +48,13 @@ modelInventarioCamiones(database);
 modelCarga(database);
 modelDetallesCarga(database);
 modelDescarga(database);
+
+modelRoles(database);
+modelPermisos(database);
+modelRolesPermisos(database);
+
+modelEmpresa(database);
+modelUsuario(database);
 
 //modelos de seccion inventario
 const {
@@ -107,6 +117,46 @@ descarga_camiones.belongsTo(tipo_cilindros, { foreignKey: 'tipo_cilindros' });
 //estado_cilindros / descarga_camiones 1/n
 estado_cilindros.hasMany(descarga_camiones, { foreignKey: 'estado_cilindros' });
 descarga_camiones.belongsTo(estado_cilindros, { foreignKey: 'estado_cilindros' });
+
+// Modelos de roles y permisos
+const { roles, permisos, roles_permisos } = database.models;
+
+// Relaciones de roles y permisos
+roles.belongsToMany(permisos, {
+  through: roles_permisos,   // Tabla intermedia
+  foreignKey: 'rolId',      // Clave foránea en RolePermission
+  otherKey: 'permisoId',  // Clave foránea en RolePermission
+  as: 'permisos'          // Alias para acceder a los permisos desde el rol
+});
+
+permisos.belongsToMany(roles, {
+  through: roles_permisos,   // Tabla intermedia
+  foreignKey: 'permisoId',// Clave foránea en RolePermission
+  otherKey: 'rolId',        // Clave foránea en RolePermission
+  as: 'roles'                // Alias para acceder a los roles desde el permiso
+});
+
+// Modelos de empresas 
+const { empresas, usuarios } = database.models;
+
+// Relaciones de empresas y usuarios
+empresas.hasMany(usuarios, { foreignKey: 'empresaId', as: 'usuarios' });
+usuarios.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresa' });
+
+// Relaciones de usuarios y roles
+
+usuarios.belongsTo(roles, {
+  foreignKey: 'rolId',
+  as: 'rol',
+});
+
+roles.hasMany(usuarios, {
+  foreignKey: 'rolId',
+  as: 'usuarios',
+});
+
+// console.log(Object.keys(database.models));
+
 
 module.exports = {
   ...database.models,

@@ -6,4 +6,8 @@ export const axiosInstance = axios.create({
   // httpsAgent: new https.Agent({
   //   rejectUnauthorized: false,
   // }),
+  baseURL: 'http://localhost:3001',
+  httpsAgent: new https.Agent({
+    // rejectUnauthorized: false,
+  }),
 });
