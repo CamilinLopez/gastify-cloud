@@ -12,6 +12,7 @@ export interface UserResponse {
     email: string;
     // Puedes agregar otros campos de usuario si es necesario, como ID, nombre, etc.
   };
+  dashboard:string
   // Agrega campos adicionales si es necesario, como tokens de autenticación
 }
 
@@ -43,4 +44,10 @@ export interface UsersState {
   messageResponse: string;
   error: string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+}
+
+export interface UsersSetPasswordState {
+  email: string;
+  password:string;
+  empresa:string;
 }

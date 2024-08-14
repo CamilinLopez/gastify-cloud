@@ -1,7 +1,7 @@
 const sendMailer = require("../lib/mailer")
 //funcion para enviando de link
 const sendMailerVerificationLink = async(email, link, empresa) => {
-	const verificationLink = `${link}?email=${encodeURIComponent(email)}`;
+	const verificationLink = `${link}?email=${encodeURIComponent(email)}&empresa=${encodeURIComponent(empresa.id)}`;
 
 	try {
 		await sendMailer({

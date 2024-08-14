@@ -28,22 +28,30 @@ const Form = () => {
     });
   };
 
- const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async(e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (formValues.password !== formValues.confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
+  if (formValues.password !== formValues.confirmPassword) {
+    alert('Las contraseñas no coinciden');
+    return;
+  }
 
-    dispatch(RegistroThunk({ email: formValues.email, password: formValues.password }));
-  };
+  const registro = await dispatch(RegistroThunk({ email: formValues.email, password: formValues.password }));
 
-  useEffect(() => {
-    if (status === 'succeeded') {
-      router.push('/dashboard/inicio');
-    }
-  }, [status, router]);
+if (registro.payload?.dashboard && typeof registro.payload.dashboard === 'string') {
+  window.location.href = registro.payload.dashboard;
+}
+
+
+};
+
+
+
+  // useEffect(() => {
+  //   if (status === 'succeeded') {
+  //     router.push('/dashboard/inicio');
+  //   }
+  // }, [status, router]);
 
   return (
     <form className="w-full flex flex-col gap-y-10" onSubmit={handleSubmit}>
@@ -81,7 +89,7 @@ const Form = () => {
       >
         {status === 'loading' ? 'Cargando...' : 'Continuar'}
       </button >
-      {status === 'failed' && error && <p className="text-red-500">{error}</p>}
+      {status === 'failed' && error && <p className="text-red-500">{error?.toString()}</p>}
     </form>
   );
 };

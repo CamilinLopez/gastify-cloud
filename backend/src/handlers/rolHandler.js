@@ -1,7 +1,7 @@
 const {
   crearRoles,
   obtenerTodosRoles,
-  asignarPermisoRoles, 
+   obtenerTodosPermisos
 } = require('../controllers/rolesControllers');
 
 
@@ -27,6 +27,16 @@ const obtenerRoles = async (req, res) => {
   }
 };
 
+const obtenerPermisos = async (req, res) => {
+  try {
+    const data = await obtenerTodosPermisos();
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ errors: error });
+  }
+};
+
 const asignarPermisoRol = async (req, res) => {
   try {
     const { rolId, permisoId } = req.body;
@@ -43,5 +53,6 @@ const asignarPermisoRol = async (req, res) => {
 module.exports = {
   crearRol,
   obtenerRoles,
-  asignarPermisoRol
+  asignarPermisoRol,
+  obtenerPermisos
 };

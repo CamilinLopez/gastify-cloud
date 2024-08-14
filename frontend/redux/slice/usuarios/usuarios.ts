@@ -6,7 +6,8 @@ import { InitialStateUsuarios, User, UsersState } from '@/types/usuarios';
 const initialState: InitialStateUsuarios = {
   user: {
     message:'',
-    user:{id:'',email:''}
+    user:{id:'',email:''},
+    dashboard:'',
   },
   messageResponse: '',
   error: null,

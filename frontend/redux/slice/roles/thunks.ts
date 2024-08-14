@@ -18,3 +18,18 @@ export const RolesThunk = createAsyncThunk(
   },
 );
 
+
+export const PermisosThunk = createAsyncThunk(
+  'roles/getsPermisos',
+  async ( _ ,{rejectWithValue}) => {
+    try {
+      const response = await axiosInstance.get<RolesResponse>('/roles/get-permisos');
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido');
+      }
+      return rejectWithValue('Error inesperado');
+    }
+  },
+);

@@ -2,7 +2,6 @@ const { Router } = require('express');
 const pruebaRouters = require('./pruebaRouter');
 const abastecimientoRoutes = require('./abastecimientoRoutes');
 const inventarioRoutes = require('./inventarioRoutes');
-const permisosRoutes = require('./permisosRoutes');
 const rolesRoutes = require('./rolesRoutes');
 const empresaRoutes = require('./empresaRoutes');
 const usuariosRoutes = require('./usuariosRoutes');
@@ -15,8 +14,7 @@ routes.use('/prueba', pruebaRouters);
 routes.use('/abastecimiento', abastecimientoRoutes);
 //rutas para la seccion inventario
 routes.use('/inventario', inventarioRoutes);
-//rutas para la seccion permisos
-routes.use('/permisos', permisosRoutes);
+
 //rutas para la seccion roles
 routes.use('/roles', rolesRoutes);
 //rutas para la seccion empresa

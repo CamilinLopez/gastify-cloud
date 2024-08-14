@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const passport = require('passport');
 const { crearEmpresa, signinEmpresa, invitarUsuario, verificarToken } = require('../handlers/empresaHandler')
+
 const empresaRoutes = Router();
 
 empresaRoutes.post('/registrar', crearEmpresa);

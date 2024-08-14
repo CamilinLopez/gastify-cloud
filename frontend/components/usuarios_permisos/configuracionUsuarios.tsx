@@ -1,28 +1,63 @@
-import React from 'react';
+'use client'
+import React, { useEffect } from 'react';
 import { Flechas } from '../svg/svgImages';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { PermisosThunk } from '@/redux/slice/roles/thunks';
+
+
 const PrintCheckbox = () => {
-  const textCheckbox = [
-    'inicio',
-    'inventario',
-    'operaciones diarias',
-    'reportes',
-    'abastecimiento',
-    'usuarios y permisos',
-  ];
+  const dispatch = useDispatch<AppDispatch>();
+  const { permisos, status, error } = useSelector((state: RootState) => state.permisos);
+
+  useEffect(() => {
+    // Fetch permisos data when component mounts
+    const fetchData = async () => {
+      try {
+        await dispatch(PermisosThunk());
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+
 
   return (
     <div className="w-full">
-      {textCheckbox.map((item) => (
-        <div key={item} className="flex gap-x-2 my-3">
-          <input type="checkbox" />
-          <p className="text-16px">{item}</p>
-        </div>
-      ))}
-      <button className="w-5/12  h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">Guardar Cambios</button>
+{permisos.map((item) => (
+  <div key={item.id} className="flex gap-x-2 my-3">
+    <input type="checkbox" id={`permiso-${item.id}`} />
+    <label htmlFor={`permiso-${item.id}`} className="text-16px">
+      {item.nombre}
+    </label>
+  </div>
+))}
+
+{status === 'failed' && <p className="text-red-500">{error?.toString()}</p>}
+
+      <button className="w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">
+        Guardar Cambios
+      </button>
     </div>
   );
 };
+  
+  //  return (
+  //   <div className="w-full">
+  //     {permisos.map((item) => (
+  //       <div key={item.id} className="flex gap-x-2 my-3">
+  //         <input type="checkbox" />
+  //         <p className="text-16px">{item.nombre}</p>
+  //       </div>
+  //     ))}
+  //     <button className="w-5/12  h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">Guardar Cambios</button>
+  //   </div>
+  // );
+
 
 export default function ConfiguracionUsuarios() {
   return (

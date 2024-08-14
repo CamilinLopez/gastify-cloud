@@ -18,6 +18,17 @@ const Form = () => {
     rolId: '',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleFormSubmit = async (event:React.FormEvent) => {
+    event.preventDefault();
+    setIsSubmitting(true); // Cambia el estado para mostrar "Enviando..."
+
+    await handleSubmit();
+    
+    setIsSubmitting(false); // Restablece el estado después de enviar
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,16 +49,33 @@ const Form = () => {
     });
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // console.log(formValues); // Solo para mostrar el resultado
+  const [message, setMessage] = useState<string | null>(null);
 
-    dispatch(SendInviteThunk(formValues));
+  const handleSubmit = async() => {
+    // event.preventDefault();
+
+    const send = await dispatch(SendInviteThunk(formValues));
+
+    if (send.payload.message) {
+      setMessage(send.payload.message);
+    }
   };
+
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage(null);
+      }, 3000); // 3 segundos
+
+      return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta antes de que el tiempo haya pasado
+    }
+  }, [message]);
 
   return (
     <div className="w-full">
-      <form className="w-full" onSubmit={handleSubmit}>
+       {message && <div className="text-center text-cyan-700">{message}</div>}
+      <form className="w-full" onSubmit={handleFormSubmit}>
         <div className="w-full flex items-end">
           <div className="w-8/12">
             <p className="text-16px py-2">correo electrónico</p>
@@ -74,7 +102,7 @@ const Form = () => {
                 <option value="" disabled>
                   {roles.length > 0 ? 'Seleccionar' : 'Cargando roles...'}
                 </option>
-                {roles.map((role) => (
+                {roles.map((role:any) => (
                   <option key={role.id} value={role.id}>
                     {role.nombre}
                   </option>
@@ -89,12 +117,13 @@ const Form = () => {
 
           <button
             type="submit"
-            className="w-1/4 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco"
-            disabled={status == 'loading'}>
-            {status == 'loading' ? 'Enviando...' : 'Enviar invitación'}
+            className="w-full sm:w-1/4 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco"
+            disabled={status === 'loading' || isSubmitting}
+          >
+            {status === 'loading' || isSubmitting ? 'Enviando...' : 'Enviar invitación'}
           </button>
         </div>
-        {status === 'failed' && <p className="text-red-500">{error}</p>}
+        {status === 'failed' && <p className="text-red-500">{error?.toString()}</p>}
       </form>
     </div>
   );

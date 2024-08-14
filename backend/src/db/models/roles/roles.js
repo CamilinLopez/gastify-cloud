@@ -12,6 +12,7 @@ const Roles = (sequelize) => {
       },
       nombre: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
     },

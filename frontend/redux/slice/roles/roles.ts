@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { handleFetchRegistroLogin } from './reducer';
+import { rolesReducer } from './reducer';
 import { RolesState } from '@/types/roles';
 
 const initialState: RolesState = {
@@ -14,7 +14,7 @@ const rolesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    handleFetchRegistroLogin(builder);
+    rolesReducer(builder);
   },
 });
 export const {} = rolesSlice.actions;

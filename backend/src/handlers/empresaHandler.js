@@ -1,6 +1,6 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const { SECRET_KEY } = require('../config/env');
+const { SECRET_KEY, PAGE_URL } = require('../config/env');
 const { invateUser } = require('../controllers/empresasControllers');
 const { verifyToken, generateToken } = require('../helpers/generateToken');
 
@@ -22,6 +22,7 @@ const crearEmpresa = async (req, res, next) => {
         message: 'Registro exitoso',
         empresa,
         token,
+        dashboard: `${PAGE_URL}/dashboard/inicio`
       });
     })(req, res, next);
   } catch (error) {
@@ -39,10 +40,12 @@ const signinEmpresa = async (req, res, next) => {
 
       req.login(user, { session: false }, async (err) => {
         if (err) return next(err);
-        const body = { id: user.id, };
+        const body = { id: user.id };
 
         const token = jwt.sign(body, SECRET_KEY);
-        return res.json({ token });
+
+        // return res.redirect(`${PAGE_URL}/dashboard/inicio`);
+        return res.json({ dashboard: `${PAGE_URL}/dashboard/inicio`, token });
       });
     } catch (e) {
       return next(e);
@@ -67,15 +70,15 @@ const verificarToken = async (req, res, next) => {
   let decoded;
   try {
     decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });
-    
+
     const newToken = generateToken({ id: decoded.id }, SECRET_KEY);
 
-    res.status(200).json({ 
+    res.status(200).json({
       token: newToken.authentication,
     });
   } catch (error) {
     res.status(400).json({ errors: error.message });
-    }
+  }
 };
 
 module.exports = {

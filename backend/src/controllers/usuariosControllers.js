@@ -32,10 +32,19 @@ const crearUsuarios = async (data) => {
 
 
 
-const crearUsuarioPasswordDB = async () => {
+const crearUsuarioPasswordDB = async ({email, password, empresa}) => {
   try {
-    const usuariosData = await usuarios.findAll()
-    return usuariosData
+    const usuario = await usuarios.findOne({where:{email, empresaId:empresa}}) 
+
+    if (!usuario) {
+      throw new Error('Usuario no encontrado');
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Actualizar la contraseña del usuario
+    usuario.password = hashedPassword;
+    usuario.save()
+    return usuario
 
   } catch (error) {
     throw error;

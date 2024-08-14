@@ -1,14 +1,14 @@
 import { axiosInstance } from '@/config/axios';
-import { UserCredentials, UserResponse } from '@/types/usuarios';
+import { UserCredentials } from '@/types/usuarios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import Cookies from 'js-cookie'; 
 
-export const RegistroThunk = createAsyncThunk<UserResponse, UserCredentials>(
+export const RegistroThunk = createAsyncThunk(
   'usuarios/registro',
   async (userData: UserCredentials, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post<UserResponse>('/empresa/registrar', userData);
+      const response = await axiosInstance.post('/empresa/registrar', userData);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -26,7 +26,6 @@ export const SendInviteThunk = createAsyncThunk(
       const token = Cookies.get('token'); 
       userData = {...userData, empresa:token}
       const response = await axiosInstance.post('/empresa/post-empresa-invitar-usuario', userData);
-      console.log(response)
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -57,6 +56,22 @@ export const LoginThunk = createAsyncThunk(
   async (userData: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('/empresa/signin', userData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido');
+      }
+      return rejectWithValue('Error inesperado');
+    }
+  }
+);
+
+
+export const UserSetPasswordThunk = createAsyncThunk(
+  'usuarios/set_password',
+  async (userData: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/usuario/post-usuario-crear-password', userData);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

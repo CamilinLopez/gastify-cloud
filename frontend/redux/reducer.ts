@@ -5,6 +5,8 @@ import operacionesReducer from './slice/operaciones/operaciones';
 import usuarios from './slice/usuarios/usuarios';
 
 import rolesReducer from './slice/roles/roles';
+import permisosReducer from './slice/roles/permisos'
+import usuarioPasswordReducer from './slice/usuarios/usuario-set-password'
 
 const rootReducer = combineReducers({
   abastecimiento: abastecimientoReducer,
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
   usuarios:usuarios.usuarios,
   getsUsuarios:usuarios.usuariosGets,
   roles:rolesReducer,
+  permisos:permisosReducer,
+  setPassword:usuarioPasswordReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

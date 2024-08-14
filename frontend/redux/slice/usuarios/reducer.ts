@@ -1,14 +1,14 @@
 import Cookies from 'js-cookie';
 import { InitialStateUsuarios } from '@/types/usuarios';
-import { RegistroThunk, LoginThunk, SendInviteThunk, GetsUsersThunk } from './thunks';
+import { RegistroThunk, LoginThunk, SendInviteThunk, GetsUsersThunk, UserSetPasswordThunk } from './thunks';
 
 export const handleFetchRegistroLogin = (builder: any) => {
   builder
   // registrar
-    .addCase(RegistroThunk.pending, (state: InitialStateUsuarios) => {
+    .addCase(RegistroThunk.pending, (state: any) => {
       state.status = 'loading';
     })
-    .addCase(RegistroThunk.fulfilled, (state: InitialStateUsuarios, action: any) => {
+    .addCase(RegistroThunk.fulfilled, (state: any, action: any) => {
       state.user = action.payload.empresa;
       state.messageResponse = action.payload.message;
       state.status = 'succeeded';
@@ -21,7 +21,7 @@ export const handleFetchRegistroLogin = (builder: any) => {
         sameSite: 'none', // Misma política de sitio
       });
     })
-    .addCase(RegistroThunk.rejected, (state: InitialStateUsuarios, action: any) => {
+    .addCase(RegistroThunk.rejected, (state: any, action: any) => {
       state.status = 'failed';
       state.messageResponse = null;
       state.error = action.payload.message || 'Error desconocido';
@@ -109,3 +109,23 @@ export const handleFetchUsuarios = (builder: any) => {
       state.error = action.payload.errors || 'Error desconocido';
     });
 };
+
+export const handleFetchUsuarioSetPassword = (builder: any) => {
+  builder
+
+    .addCase(UserSetPasswordThunk.pending, (state: any) => {
+      state.status = 'loading';
+    })
+    .addCase(UserSetPasswordThunk.fulfilled, (state: any, action: any) => {
+      state.data = action.payload.data;
+      state.messageResponse = action.payload.message;
+      state.status = 'succeeded';
+      state.error = null;
+    })
+    .addCase(UserSetPasswordThunk.rejected, (state: any, action: any) => {
+      state.status = 'failed';
+      state.messageResponse = null;
+      state.error = action.payload.errors || 'Error desconocido';
+    });
+};
+

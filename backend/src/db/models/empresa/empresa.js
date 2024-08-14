@@ -32,7 +32,16 @@ const Empresa = (sequelize) => {
         allowNull: false,
         defaultValue: DataTypes.NOW,
       },
+      rolId: { // Relación muchos a uno con Rol
+        type: DataTypes.INTEGER,
+        allowNull: true,  // Permitir valores nulos
+        references: {
+          model: 'roles', // Nombre de la tabla de roles
+          key: 'id',
+        },
+      },
     },
+
     {
       timestamps: false,
     }

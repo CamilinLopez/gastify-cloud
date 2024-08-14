@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 const Usuario = (sequelize) => {
-  sequelize.define(
+  const UsuarioModel = sequelize.define(
     'usuarios',
     {
       id: {
@@ -13,7 +13,6 @@ const Usuario = (sequelize) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
           isEmail: true,
         },
@@ -53,8 +52,20 @@ const Usuario = (sequelize) => {
       timestamps: false,
     },
   );
+
+
+// Método para verificar la contraseña
+UsuarioModel.prototype.comparePassword = async function (password) {
+  return bcrypt.compare(password, this.password);
 };
 
+// Excluir campos sensibles del JSON
+UsuarioModel.prototype.toJSON = function () {
+  const values = { ...this.get() };
+  delete values.password;
+  return values;
+};
+
+return UsuarioModel;};
+
 module.exports = Usuario;
-
-

@@ -4,7 +4,7 @@ const {
   obtenerTodosUsuarios
 } = require('../controllers/usuariosControllers');
 
-
+const { PAGE_URL } = require('../config/env')
 
 const crearUsuario = async (req, res) => {
   try {
@@ -20,10 +20,10 @@ const crearUsuario = async (req, res) => {
 
 const ingresarPassword = async (req, res) => {
   try {
-    console.log(req.body,'password')
-    const data = await crearUsuarioPasswordDB();
+    const {email, password, empresa}= req.body;
+    const data = await crearUsuarioPasswordDB({email, password, empresa});
 
-    res.status(200).json({ data });
+    res.status(200).json({ usuario:data, dashboard:`${PAGE_URL}/dashboard/inicio` });
   } catch (error) {
     res.status(400).json({ errors: error });
   }

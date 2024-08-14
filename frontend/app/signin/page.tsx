@@ -6,27 +6,24 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store';
 import { LoginThunk } from '@/redux/slice/usuarios/thunks';
 import { AppDispatch } from "@/redux/store";
-import { useRouter } from 'next/navigation';
 
 
 const Form = () => {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const dispatch: AppDispatch = useDispatch();
   const { status, error, messageResponse, user } = useSelector((state: RootState) => state.usuarios);
 
-  const handleSubmit = (e :React.FormEvent) => {
+  const handleSubmit = async(e :React.FormEvent) => {
     e.preventDefault();
-    dispatch(LoginThunk({ email, password }));
+    const login = await dispatch(LoginThunk({ email, password }));
+    if (login.payload.dashboard && login.payload.token) {
+      window.location.href =login.payload.dashboard
+    }
   };
 
-useEffect(() => {
-  if (status === 'succeeded') {
-    router.push('/dashboard/inicio');
-  }
-}, [status, router]);
+
 
   return (
     <form className="w-1/3 flex flex-col gap-y-3" onSubmit={handleSubmit}>

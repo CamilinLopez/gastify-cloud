@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import Cookies from 'js-cookie';
 
-// Uso de Fetch con Agente Personalizado
 export async function middleware(request: NextRequest) {
   const jwt = request.cookies.get('token');
+
+  
 
   try {
     if (request.nextUrl.pathname.startsWith('/dashboard')) {

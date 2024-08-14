@@ -1,24 +1,43 @@
 const { roles, permisos, roles_permisos } = require('../db/index');
 
 const crearRoles = async () => {
-  
   try {
-    const role = [
-      { nombre: 'Administrador' },
-      { nombre: 'Supervisor' },
-      { nombre: 'Bodeguero' },
+    const role = [{ nombre: 'Administrador' }, { nombre: 'Supervisor' }, { nombre: 'Bodeguero' }];
+
+    const permission = [
+      { nombre: 'inicio' },
+      { nombre: 'inventario' },
+      { nombre: 'operaciones diarias' },
+      { nombre: 'reportes' },
+      { nombre: 'abastecimiento' },
+      { nombre: 'usuarios y permisos' },
     ];
+
     await roles.bulkCreate(role);
-    return 'roles creados exitosamente';
+    await permisos.bulkCreate(permission);
+
+    // Buscar el rol de Administrador
+    const adminRole = await roles.findOne({ where: { nombre: 'Administrador' } });
+
+    if (!adminRole) {
+      throw new Error('Rol de Administrador no encontrado');
+    }
+
+    // Obtener todos los permisos
+    const allPermissions = await permisos.findAll();
+
+    // Asignar todos los permisos al rol de Administrador
+    await adminRole.addPermisos(allPermissions);
+
+    return 'Roles y permisos creados exitosamente, y permisos asignados al Administrador';
   } catch (error) {
     throw error;
   }
 };
 
 const obtenerTodosRoles = async () => {
-  
   try {
-     return await roles.findAll({
+    return await roles.findAll({
       include: {
         model: permisos,
         as: 'permisos', // Usa el alias definido
@@ -33,43 +52,21 @@ const obtenerTodosRoles = async () => {
   }
 };
 
-const asignarPermisoRoles = async ({ rolId, permisoId }) => {
+const obtenerTodosPermisos = async () => {
   try {
-     // Buscar el rol por ID
-     const rol = await roles.findByPk(rolId);
-     if (!rol) {
-      throw new Error('Rol no encontrado');
-    }
- 
-     // Buscar el permiso por ID
-     const permiso = await permisos.findByPk(permisoId);
-     if (!permiso) {
-      throw new Error('Permiso no encontrado');
-    }
- 
-     // Asignar el permiso al rol
-     await rol.addPermiso(permiso);
- 
-     // Recargar el rol con los permisos actuales
-    await rol.reload({
-      include: {
-        model: permisos,
-        as: 'permisos', // Asegúrate de usar el alias definido
-        attributes: ['id', 'nombre'],
+    return await permisos.findAll({
+      attributes: ['nombre', 'id'], // Opcional: limita los atributos del permiso
+      through: {
+        attributes: [], // Excluye los atributos de la tabla intermedia
       },
     });
-
-
-     // Responder con éxito
-     return { message: 'Permiso asignado correctamente al rol',rol };
   } catch (error) {
-    throw new Error(`Error al asignar el permiso: ${error.message}`);
+    throw error;
   }
 };
-
 
 module.exports = {
   crearRoles,
   obtenerTodosRoles,
-  asignarPermisoRoles
+  obtenerTodosPermisos,
 };
