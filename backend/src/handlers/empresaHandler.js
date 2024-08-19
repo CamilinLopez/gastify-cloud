@@ -67,7 +67,7 @@ const invitarUsuario = async (req, res, next) => {
 
 const verificarToken = async (req, res, next) => {
   const { token } = req.body;
-  console.log(token);
+  console.log(token, 'hola desde verificar token');
   let decoded;
   try {
     decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });
