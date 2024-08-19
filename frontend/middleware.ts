@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 export async function middleware(request: NextRequest) {
   const jwt = request.cookies.get('token');
-
+  console.log(jwt, 'hola desde middleware');
   try {
     if (request.nextUrl.pathname.startsWith('/dashboard')) {
       if (!jwt) return NextResponse.redirect(new URL('/signin', request.url));
