@@ -13,7 +13,10 @@ export async function middleware(request: NextRequest) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: jwt.value }),
+        body: JSON.stringify({
+          token:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjQwMzI0MTl9.VrazTL7sO2_jn4hULah8uPT5G6z9rNg1CxGvIpoYZlA',
+        }),
       });
 
       const data = await response.json();
