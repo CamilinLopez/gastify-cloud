@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   try {
     if (request.nextUrl.pathname.startsWith('/dashboard')) {
       if (!jwt) return NextResponse.redirect(new URL('/signin', request.url));
-      const response = await fetch('https://gastify-cloud.onrender.com/verificar-token', {
+      const response = await fetch('https://gastify-cloud.onrender.com/empresa/verificar-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
