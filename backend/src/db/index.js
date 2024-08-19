@@ -12,32 +12,32 @@ const {
   modelVentas,
 } = require('./models/inventario/index');
 
-const {modelPermisos,modelRoles,modelRolesPermisos} = require('./models/roles/index');
-const {modelEmpresa,modelUsuario} = require('./models/empresa/index');
+const { modelPermisos, modelRoles, modelRolesPermisos } = require('./models/roles/index');
+const { modelEmpresa, modelUsuario } = require('./models/empresa/index');
 
 const urlLocal = 'postgres://postgres:1010@localhost:5432/gastifycloud';
 const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
-const database = new Sequelize(`${urlLocal}`, {
-  logging: false,
-  native: false,
-});
-
-// const database = new Sequelize(
-//   'postgresql://camilo:OuuPgcQhp4Wk3y35CxUayjpurImBeNf9@dpg-cqrmr70gph6c73a22ih0-a.oregon-postgres.render.com/gastifycloud',
-//   {
-//     dialect: 'postgres',
-//     logging: false,
-//     native: false,
-//     dialectOptions: {
-//       ssl: {
-//         require: true,
-//         rejectUnauthorized: false,
-//       },
-//     },
-//   },
-// );
+// const database = new Sequelize(`${urlLocal}`, {
+//   logging: false,
+//   native: false,
+// });
+//
+const database = new Sequelize(
+  'postgresql://camilo:a68LZdADLnNeW6PZj8BzIaKk3WytTnVm@dpg-cr197jtds78s739qho60-a.oregon-postgres.render.com/gastifycloud_00um',
+  {
+    dialect: 'postgres',
+    logging: false,
+    native: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+  },
+);
 
 //llamar modelos
 modelEstadocilindro(database);
@@ -137,20 +137,20 @@ const { roles, permisos, roles_permisos } = database.models;
 
 // Relaciones de roles y permisos
 roles.belongsToMany(permisos, {
-  through: roles_permisos,   // Tabla intermedia
-  foreignKey: 'rolId',      // Clave foránea en RolePermission
-  otherKey: 'permisoId',  // Clave foránea en RolePermission
-  as: 'permisos'          // Alias para acceder a los permisos desde el rol
+  through: roles_permisos, // Tabla intermedia
+  foreignKey: 'rolId', // Clave foránea en RolePermission
+  otherKey: 'permisoId', // Clave foránea en RolePermission
+  as: 'permisos', // Alias para acceder a los permisos desde el rol
 });
 
 permisos.belongsToMany(roles, {
-  through: roles_permisos,   // Tabla intermedia
-  foreignKey: 'permisoId',// Clave foránea en RolePermission
-  otherKey: 'rolId',        // Clave foránea en RolePermission
-  as: 'roles'                // Alias para acceder a los roles desde el permiso
+  through: roles_permisos, // Tabla intermedia
+  foreignKey: 'permisoId', // Clave foránea en RolePermission
+  otherKey: 'rolId', // Clave foránea en RolePermission
+  as: 'roles', // Alias para acceder a los roles desde el permiso
 });
 
-// Modelos de empresas 
+// Modelos de empresas
 const { empresas, usuarios } = database.models;
 
 // Relaciones de empresas y usuarios
@@ -170,7 +170,6 @@ roles.hasMany(usuarios, {
 });
 
 // console.log(Object.keys(database.models));
-
 
 module.exports = {
   ...database.models,
