@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 export async function middleware(request: NextRequest) {
   const jwt = request.cookies.get('token');
-  console.log(jwt, 'hola desde middleware');
+  console.log(jwt, 'hola desde middleware actualizado');
   try {
     if (request.nextUrl.pathname.startsWith('/dashboard')) {
       if (!jwt) return NextResponse.redirect(new URL('/signin', request.url));
@@ -13,10 +13,7 @@ export async function middleware(request: NextRequest) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjQwMzMxMzR9.plx99eSWMNwTsAbn2TV3ekIfb5uytyIjckve80oRy_Y',
-        }),
+        body: JSON.stringify({ token: jwt.value }),
       });
 
       const data = await response.json();
@@ -36,7 +33,6 @@ export async function middleware(request: NextRequest) {
     }
   } catch (error) {
     Cookies.remove('token');
-    console.error('Error verifying JWT token:', error);
     setTimeout(() => {
       console.log('Esto se muestra después de 3 segundos.');
     }, 15000);
