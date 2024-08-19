@@ -5,6 +5,8 @@ import {
   GetTablaVisualCarga,
   RegistrarTablaDescarga,
   GEtTablaDescarga,
+  PostTablaVentas,
+  GetTablaVentas,
 } from './thunks';
 
 export const handleFetchTablaCarga = (builder: any) => {
@@ -87,6 +89,40 @@ export const handleGetTablaDescatga = (builder: any) => {
       state.error = null;
     })
     .addCase(GEtTablaDescarga.rejected, (state: InitialStateOperaciones, action: any) => {
+      state.status = 'failed';
+      state.messageResponse = null;
+      state.error = action.payload.errors || 'Error desconocido';
+    });
+};
+
+export const handlePostTablaVentas = (builder: any) => {
+  builder
+    .addCase(PostTablaVentas.pending, (state: InitialStateOperaciones) => {
+      state.status = 'loading';
+    })
+    .addCase(PostTablaVentas.fulfilled, (state: InitialStateOperaciones, action: any) => {
+      state.responseTablaDescarga = action.payload.data;
+      state.status = 'succeeded';
+      state.error = null;
+    })
+    .addCase(PostTablaVentas.rejected, (state: InitialStateOperaciones, action: any) => {
+      state.status = 'failed';
+      state.messageResponse = null;
+      state.error = action.payload.errors || 'Error desconocido';
+    });
+};
+
+export const handleGetTablaVentas = (builder: any) => {
+  builder
+    .addCase(GetTablaVentas.pending, (state: InitialStateOperaciones) => {
+      state.status = 'loading';
+    })
+    .addCase(GetTablaVentas.fulfilled, (state: InitialStateOperaciones, action: any) => {
+      state.responseTablaVentas = action.payload.data;
+      state.status = 'succeeded';
+      state.error = null;
+    })
+    .addCase(GetTablaVentas.rejected, (state: InitialStateOperaciones, action: any) => {
       state.status = 'failed';
       state.messageResponse = null;
       state.error = action.payload.errors || 'Error desconocido';

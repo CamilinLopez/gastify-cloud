@@ -5,10 +5,16 @@ import {
   handleGetTablaVisualCarga,
   handlePostTablaDescatga,
   handleGetTablaDescatga,
+  handlePostTablaVentas,
+  handleGetTablaVentas,
 } from './reducer';
 import { InitialStateOperaciones } from '@/types/operaciones';
 
 const initialState: InitialStateOperaciones = {
+  responseTablaVentas: {
+    message: '',
+    result: [],
+  },
   responseTablaDescarga: {
     message: '',
     result: [],
@@ -44,6 +50,8 @@ const operacionesSlice = createSlice({
     handleGetTablaVisualCarga(builder);
     handlePostTablaDescatga(builder);
     handleGetTablaDescatga(builder);
+    handlePostTablaVentas(builder);
+    handleGetTablaVentas(builder);
   },
 });
 export const {} = operacionesSlice.actions;

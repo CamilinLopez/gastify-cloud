@@ -1,8 +1,5 @@
 'use client';
-
-import { data } from '@/arraysObjects/resumen_ventas';
-import { DataItem } from '@/types/resumen_ventas';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -16,25 +13,42 @@ import {
 } from 'chart.js';
 import { ChartOptions } from 'chart.js';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import { AppDispatch } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { getVentasPorDia, getVentasPorMes } from '@/redux/slice/inicio/thunks';
+import { RootState } from '@/redux/reducer';
 
-const CilindrosPorDia = ({ data }: { data: DataItem[] }) => {
-  const maxValue = Math.max(...data.map((item) => item.kg));
-  const cilindrosVendidos = 30;
+const CilindrosPorDia = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const ventasToday = useSelector((state: RootState) => state.inicio.responseVentaPorDia);
+  const array = ventasToday.result;
+  const today = ventasToday.today;
+
+  const maxValue = Math.max(...array?.map((item) => Number(item.totalCantidad)));
+
+  useEffect(() => {
+    dispatch(getVentasPorDia());
+  }, [dispatch]);
+
   return (
     <div className="w-full">
       <div className="flex flex-col gap-y-3">
         <p className="text-16px">Cantidad de cilindros vendidos en este día</p>
-        <p className="text-32px">{cilindrosVendidos}</p>
+        <p className="text-32px">{today}</p>
       </div>
       <div className="flex h-40 items-end gap-x-3 w-full">
-        {data.map((item) => (
-          <div key={item.name} className="flex flex-col gap-y-2 w-2/3">
+        {array.map((item, index) => (
+          <div key={index} className="flex flex-col gap-y-2 w-2/3">
             <div
               className="border-t-[2px] border-gris-2 bg-gris-1"
               style={{
-                height: `${(item.kg / maxValue) * 100}px`,
+                height: `${(Number(item.totalCantidad) / maxValue) * 100}px`,
               }}></div>
-            <p className="text-13px">{item.name}</p>
+            <div className="flex items-center">
+              <p className="text-13px">{item.tipoCilindro.tipo}</p>
+              <p>-</p>
+              <p className="text-13px">{item.totalCantidad}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -43,11 +57,14 @@ const CilindrosPorDia = ({ data }: { data: DataItem[] }) => {
 };
 
 const SalesChart = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const tabla = useSelector((state: RootState) => state.inicio.responseVentaPorMes.result);
+
   const options: ChartOptions<'line'> = {
     responsive: true,
     plugins: {
       legend: {
-        display: false,
+        display: true,
       },
       title: {
         display: false,
@@ -78,15 +95,13 @@ const SalesChart = () => {
 
   const data1 = {
     labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    datasets: [
-      {
-        data: [100, 80, 60, 40, 80, 100, 60, 90, 25, 36, 74, 69],
-        borderColor: '#637887',
-        borderWidth: 3,
-        fill: false,
-      },
-    ],
+    datasets: tabla,
   };
+
+  useEffect(() => {
+    dispatch(getVentasPorMes());
+  }, [dispatch]);
+
   return (
     <div className="w-full flex flex-col gap-y-5">
       <div className="text-16px">Ventas mensuales</div>
@@ -104,7 +119,7 @@ export default function Resumen_ventas() {
         </h1>
       </div>
       <div className="py-6 w-full flex flex-col gap-y-10">
-        <CilindrosPorDia data={data} />
+        <CilindrosPorDia />
         <SalesChart />
       </div>
     </div>

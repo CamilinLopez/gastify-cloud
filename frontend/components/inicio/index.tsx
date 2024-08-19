@@ -9,8 +9,8 @@ export default function SectionsInicio() {
     <div className="w-full">
       <ResumenInventario />
       <Resumen_ventas />
-      <Actividades_recientes />
-      <Rendimiento_conductores />
+      {/* <Actividades_recientes />
+      <Rendimiento_conductores /> */}
     </div>
   );
 }

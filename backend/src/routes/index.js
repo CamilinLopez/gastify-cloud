@@ -3,6 +3,8 @@ const pruebaRouters = require('./pruebaRouter');
 const abastecimientoRoutes = require('./abastecimientoRoutes');
 const inventarioRoutes = require('./inventarioRoutes');
 const operacionesRoutes = require('./operacionesRoutes');
+const reportesRoutes = require('./reportes');
+const inicioRoutes = require('./inicio');
 
 const routes = Router();
 
@@ -14,4 +16,9 @@ routes.use('/abastecimiento', abastecimientoRoutes);
 routes.use('/inventario', inventarioRoutes);
 //rutas para la seccion operaciones
 routes.use('/operaciones', operacionesRoutes);
+//rutas para la seccion de reportes
+routes.use('/reportes', reportesRoutes);
+//rutas para la seccion de reportes
+routes.use('/inicio', inicioRoutes);
+
 module.exports = routes;

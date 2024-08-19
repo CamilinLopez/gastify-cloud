@@ -8,3 +8,14 @@ export interface TablaReportes {
   H15: number;
   'Total kilos vendidos': number;
 }
+
+export interface InitialStateReportes {
+  responseTablaReportes: { message: string; result: TablaReportes[] };
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: null;
+}
+
+export interface BuscarReportesForm {
+  fecha: string;
+  conductor: { id: string; nombre: string };
+}

@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/config/axios';
-import { CargaDatos, cargaDatosTablaDescarga, Formulario } from '@/types/operaciones';
+import { CargaDatos, cargaDatosTablaDescarga, cargaDatosVentas, Formulario } from '@/types/operaciones';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -68,6 +68,36 @@ export const GEtTablaDescarga = createAsyncThunk(
   async (carga_id: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get('/operaciones/getTablaDescarga', { params: { carga_id } });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido');
+      }
+      return rejectWithValue('Error inesperado');
+    }
+  },
+);
+
+export const PostTablaVentas = createAsyncThunk(
+  'operaciones/postTablaVentas',
+  async (tablaVentas: cargaDatosVentas, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/operaciones/postTablaVentas', tablaVentas);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido');
+      }
+      return rejectWithValue('Error inesperado');
+    }
+  },
+);
+
+export const GetTablaVentas = createAsyncThunk(
+  'operaciones/getTablaVentas',
+  async (carga_id: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/operaciones/getTablaVentas', { params: { carga_id } });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

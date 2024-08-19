@@ -4,6 +4,8 @@ const {
   getTeblaVisualCargaDB,
   crearTablaDescargaDB,
   obtenerTablaDescargaDB,
+  crearVentasDB,
+  obtenerTablaVentas,
 } = require('../controllers/operacioneControllers');
 
 const realizarOperacionHandler = async (req, res) => {
@@ -56,10 +58,34 @@ const getTablaDescargaHandler = async (req, res) => {
   }
 };
 
+const postTablaVentasHandlres = async (req, res) => {
+  const { camion, carga_id, conductor, tabla } = req.body;
+  try {
+    const data = await crearVentasDB(camion, carga_id, conductor, tabla);
+    res.status(200).json({ data });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ errors: { error } });
+  }
+};
+
+const getTablaVentas = async (req, res) => {
+  const { carga_id } = req.query;
+  console.log(carga_id, "mama no fuuu")
+  try {
+    const data = await obtenerTablaVentas(carga_id);
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ errors: error });
+  }
+};
+
 module.exports = {
   realizarOperacionHandler,
   getTablaReportesDiariosHandler,
   getTablaVisualCargasHandler,
   postTablaDescargaHalndler,
   getTablaDescargaHandler,
+  postTablaVentasHandlres,
+  getTablaVentas,
 };

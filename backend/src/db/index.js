@@ -9,31 +9,32 @@ const {
   modelCarga,
   modelDetallesCarga,
   modelDescarga,
+  modelVentas,
 } = require('./models/inventario/index');
 
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
 const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
-// const database = new Sequelize(`${urlLocal}`, {
-//   logging: false,
-//   native: false,
-// });
+const database = new Sequelize(`${urlLocal}`, {
+  logging: false,
+  native: false,
+});
 
-const database = new Sequelize(
-  'postgresql://camilo:OuuPgcQhp4Wk3y35CxUayjpurImBeNf9@dpg-cqrmr70gph6c73a22ih0-a.oregon-postgres.render.com/gastifycloud',
-  {
-    dialect: 'postgres',
-    logging: false,
-    native: false,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  },
-);
+// const database = new Sequelize(
+//   'postgresql://camilo:OuuPgcQhp4Wk3y35CxUayjpurImBeNf9@dpg-cqrmr70gph6c73a22ih0-a.oregon-postgres.render.com/gastifycloud',
+//   {
+//     dialect: 'postgres',
+//     logging: false,
+//     native: false,
+//     dialectOptions: {
+//       ssl: {
+//         require: true,
+//         rejectUnauthorized: false,
+//       },
+//     },
+//   },
+// );
 
 //llamar modelos
 modelEstadocilindro(database);
@@ -45,6 +46,7 @@ modelInventarioCamiones(database);
 modelCarga(database);
 modelDetallesCarga(database);
 modelDescarga(database);
+modelVentas(database);
 
 //modelos de seccion inventario
 const {
@@ -57,6 +59,7 @@ const {
   cargas,
   detalle_cargas,
   descarga_camiones,
+  ventas,
 } = database.models;
 
 //inventario_bodegas / tipo_cilindros N/1
@@ -107,6 +110,18 @@ descarga_camiones.belongsTo(tipo_cilindros, { foreignKey: 'tipo_cilindros' });
 //estado_cilindros / descarga_camiones 1/n
 estado_cilindros.hasMany(descarga_camiones, { foreignKey: 'estado_cilindros' });
 descarga_camiones.belongsTo(estado_cilindros, { foreignKey: 'estado_cilindros' });
+
+camiones.hasMany(ventas, { foreignKey: 'camion_id', as: 'ventas' });
+ventas.belongsTo(camiones, { foreignKey: 'camion_id', as: 'camion' });
+
+conductores.hasMany(ventas, { foreignKey: 'conductor_id', as: 'conductor' });
+ventas.belongsTo(conductores, { foreignKey: 'conductor_id', as: 'conductor' });
+
+cargas.hasMany(ventas, { foreignKey: 'carga_id', as: 'ventas' });
+ventas.belongsTo(cargas, { foreignKey: 'carga_id', as: 'carga' });
+
+tipo_cilindros.hasMany(ventas, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro' });
+ventas.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro' });
 
 module.exports = {
   ...database.models,

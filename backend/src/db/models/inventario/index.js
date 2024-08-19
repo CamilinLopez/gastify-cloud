@@ -7,3 +7,4 @@ module.exports.modelInventarioCamiones = require('./inventarioCamiones');
 module.exports.modelCarga = require('./carga');
 module.exports.modelDetallesCarga = require('./detalleCarga');
 module.exports.modelDescarga = require('./descargaCamiones');
+module.exports.modelVentas = require('./ventas');

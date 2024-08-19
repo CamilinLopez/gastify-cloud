@@ -9,6 +9,7 @@ const {
   tipo_cilindros,
   estado_cilindros,
   descarga_camiones,
+  ventas,
 } = require('../db/index');
 const { generateId, generarFechaActual, generarHoraActual } = require('../utils/generadorId');
 
@@ -154,6 +155,15 @@ const crearTablaDescargaDB = async (carga_id, conductor, camion, tablaDescarga) 
         tipo_cilindros: Number(descarga.tipoCilindroId),
         estado_cilindros: Number(descarga.estadoCilindroId),
       });
+
+      await inventario_bodegas.create({
+        id: generateId(),
+        fecha: generarFechaActual(),
+        hora: generarHoraActual(),
+        cantidad: Number(descarga.cantidad === '' ? 0 : descarga.cantidad),
+        tipoCilindroId: Number(descarga.tipoCilindroId),
+        estadoCilindroId: Number(descarga.estadoCilindroId),
+      });
     }
     return { message: 'Accion completa', result: [] };
   } catch (error) {
@@ -219,10 +229,54 @@ const obtenerTablaDescargaDB = async (carga_id) => {
   }
 };
 
+const crearVentasDB = async (camion, carga_id, conductor, tabla) => {
+  try {
+    for (const venta of tabla) {
+      await ventas.create({
+        id: generateId(),
+        fecha: '2024/09/06',
+        hora: generarHoraActual(),
+        carga_id: carga_id,
+        camion_id: camion.id,
+        conductor_id: conductor.id,
+        tipoCilindroId: Number(venta.tipoCilindroId),
+        cantidad: Number(venta.cantidad),
+        valor: Number(venta.valor),
+      });
+    }
+    return { message: 'Accion completa', result: [] };
+  } catch (error) {
+    throw error;
+  }
+};
+
+const obtenerTablaVentas = async (carga_id) => {
+  try {
+    const data = await ventas.findAll({
+      attributes: ['cantidad', 'valor'],
+      where: { carga_id },
+      include: [
+        {
+          model: tipo_cilindros,
+          as: 'tipoCilindro',
+          attributes: ['tipo', 'id'],
+        },
+      ],
+    });
+
+    return { message: 'Accion completa', result: data };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
   transfereciaCilindros,
   TablaReportesDiarios,
   getTeblaVisualCargaDB,
   crearTablaDescargaDB,
   obtenerTablaDescargaDB,
+  crearVentasDB,
+  obtenerTablaVentas,
 };

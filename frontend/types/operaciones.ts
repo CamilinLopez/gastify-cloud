@@ -4,6 +4,7 @@ interface TablaState {
   openTablaCarga: boolean;
   openTablaDescarga: boolean;
   openTablaOperaciones: boolean;
+  openTablaVentas: boolean;
 }
 
 export interface TablaProps {
@@ -81,6 +82,7 @@ interface TypeTablaReportesDiarios {
 }
 
 export interface InitialStateOperaciones {
+  responseTablaVentas: { message: string; result: ResponseTablaVentas[] };
   responseTablaDescarga: { message: string; result: ResponseTablaDescarga[] };
   responseTablaVisualCarga: { message: string; result: DetalleCargas[] };
   responseTablaReportesDiarios: TypeTablaReportesDiarios;
@@ -130,4 +132,38 @@ export interface ResponseTablaDescarga {
   llenos: number;
   vacíos: number;
   prestados: number;
+}
+
+type CilindroVentas = {
+  tipoCilindroId: string;
+  cantidad: string;
+  valor: string;
+};
+
+export interface formularioVentas {
+  '5kg': CilindroVentas;
+  '11kg': CilindroVentas;
+  '15kg': CilindroVentas;
+  '45kg': CilindroVentas;
+  H15: CilindroVentas;
+}
+
+export interface TablaVentasSend {
+  cantidad: string;
+  tipo: string;
+  tipoCilindroId: string;
+  valor: string;
+}
+
+export interface cargaDatosVentas {
+  carga_id: string;
+  camion: { id: string; placa: string };
+  conductor: { id: string; nombre: string };
+  tabla: TablaVentasSend[];
+}
+
+export interface ResponseTablaVentas {
+  cantidad: number;
+  valor: number;
+  tipoCilindro: { id: number; tipo: string };
 }

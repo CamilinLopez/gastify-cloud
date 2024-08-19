@@ -11,6 +11,8 @@ import {
   TypeTablaVisualCarga,
   Formulario,
   cargaDatosTablaDescarga,
+  formularioVentas,
+  cargaDatosVentas,
 } from '@/types/operaciones';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { tipoCilindros } from '@/arraysObjects/dataCilindros';
@@ -21,6 +23,8 @@ import {
   GetTablaReportesDiarios,
   GetTablaVisualCarga,
   TablaCargaThunk,
+  PostTablaVentas,
+  GetTablaVentas,
 } from '@/redux/slice/operaciones/thunks';
 import { AutocompletableCamiones, AutocompletableConductores } from './desplegables';
 import { RootState } from '@/redux/reducer';
@@ -31,11 +35,11 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
   const dispatch: AppDispatch = useDispatch();
 
   const [infoCilindros, setInfoCilindros] = useState<nameCilindro>({
-    '5kg': { cantidad: '', cilindro: { id: '', tipo: '' } },
-    '11kg': { cantidad: '', cilindro: { id: '', tipo: '' } },
-    '15kg': { cantidad: '', cilindro: { id: '', tipo: '' } },
-    '45kg': { cantidad: '', cilindro: { id: '', tipo: '' } },
-    H15: { cantidad: '', cilindro: { id: '', tipo: '' } },
+    '5kg': { cantidad: '0', cilindro: { id: '1', tipo: '5kg' } },
+    '11kg': { cantidad: '0', cilindro: { id: '2', tipo: '11kg' } },
+    '15kg': { cantidad: '0', cilindro: { id: '3', tipo: '15kg' } },
+    '45kg': { cantidad: '0', cilindro: { id: '4', tipo: '45kg' } },
+    H15: { cantidad: '0', cilindro: { id: '5', tipo: 'H15' } },
   });
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -331,6 +335,30 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
   const dispatch: AppDispatch = useDispatch();
   const tabla1 = useSelector((state: RootState) => state.operaciones.responseTablaReportesDiarios.result);
 
+  const estadoTablaVentas = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
+    e.preventDefault();
+    //llamar a la base de datos para saber si hay cargas asociadas al id en la tabla descarga_camiones
+    dispatch(GetTablaVisualCarga(carga.id));
+    dispatch(GetTablaVentas(carga.id));
+
+    infoCarga.setCarga({
+      ...infoCarga.carga,
+      id: carga.id,
+      fecha: carga.fecha,
+      camione: carga.camione,
+      conductore: carga.conductore,
+      hora: carga.hora,
+    });
+
+    setEstado({
+      ...estado,
+      openTablaOperaciones: false,
+      openTablaDescarga: false,
+      openTablaCarga: false,
+      openTablaVentas: true,
+    });
+  };
+
   const estadoTablaDescarga = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
     e.preventDefault();
 
@@ -400,12 +428,15 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
                 <td className="px-6 py-4 text-secondary-14px ">{item.fecha}</td>
                 <td className="px-6 py-4 text-secondary-14px ">{item.camione.placa}</td>
                 <td className="px-6 py-4 text-secondary-14px ">{item.conductore.nombre}</td>
-                <td className="px-6 py-4 text-secondary-14px ">
+                <td className="px-6 py-4 text-secondary-14px flex flex-col">
                   <button onClick={(e) => estadoTablaDescarga(e, item)} className="text-start underline">
                     Abrir Tabla de Descarga
                   </button>
                   <button onClick={(e) => estadoTablacarga(e, item)} className="text-start underline">
                     Abrir Tabla de Carga
+                  </button>
+                  <button className="text-start underline" onClick={(e) => estadoTablaVentas(e, item)}>
+                    Abrir Tabla de Ventas
                   </button>
                 </td>
               </tr>
@@ -482,6 +513,151 @@ const TablaVisualCarga: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEs
   );
 };
 
+const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado }) => {
+  const dispatch: AppDispatch = useDispatch();
+  const TablaVentas = useSelector((state: RootState) => state.operaciones.responseTablaVentas.result);
+  const [form, setForm] = useState<formularioVentas>({
+    '5kg': { tipoCilindroId: '', cantidad: '', valor: '' },
+    '11kg': { tipoCilindroId: '', cantidad: '', valor: '' },
+    '15kg': { tipoCilindroId: '', cantidad: '', valor: '' },
+    '45kg': { tipoCilindroId: '', cantidad: '', valor: '' },
+    H15: { tipoCilindroId: '', cantidad: '', valor: '' },
+  });
+  const [registrarData, setRegistrarData] = useState(false);
+
+  const estadoTablas = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setEstado({
+      ...estado,
+      openTablaCarga: false,
+      openTablaDescarga: false,
+      openTablaOperaciones: true,
+      openTablaVentas: false,
+    });
+  };
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>, field: 'cantidad' | 'valor', id: string) => {
+    const { value, name } = e.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name as keyof formularioVentas]: {
+        ...prevForm[name as keyof formularioVentas],
+        [field]: value,
+        tipoCilindroId: id,
+      },
+    }));
+  };
+
+  const registrar = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const array = Object.entries(form).map(([key, value]) => ({
+      tipo: key,
+      ...value,
+    }));
+
+    const data: cargaDatosVentas = {
+      carga_id: carga.id,
+      conductor: carga.conductore,
+      camion: carga.camione,
+      tabla: array,
+    };
+
+    await dispatch(PostTablaVentas(data));
+    await dispatch(GetTablaVentas(carga.id));
+  };
+
+  useEffect(() => {
+    if (TablaVentas.length > 0) {
+      setRegistrarData(true);
+    } else {
+      setRegistrarData(false);
+    }
+  }, [TablaVentas]);
+
+  return (
+    <>
+      <h3 className="text-18px py-4" id="tabla_carga">
+        Tabla de Ventas
+      </h3>
+      <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl ">
+        <table className="min-w-full divide-y divide-gray-200 ">
+          <thead>
+            <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px">
+              <th>Identificador Único de Carga</th>
+              <th>Fecha</th>
+              <th>Número de Móvil (Camión)</th>
+              <th>Nombre del Conductor</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            <tr className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.id}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.fecha}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.camione.placa}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{carga.conductore.nombre}</td>
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
+                <button
+                  onClick={(e) => estadoTablas(e)}
+                  className="bg-azul rounded-xl font-Inter font-[500] text-blanco py-1 px-2">
+                  Cerrar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <thead className="bg-blanco">
+            <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px ">
+              <th>Tipo de cilindro</th>
+              <th>Cantidad</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {registrarData === false
+              ? tipoCilindros.map((row, index) => (
+                  <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
+                    <td className="text-secondary-14px text-center">{row.tipo}</td>
+                    <td className="text-secondary-14px text-center">
+                      <input
+                        name={row.tipo}
+                        value={form[row.tipo].cantidad}
+                        onChange={(e) => handleOnChange(e, 'cantidad', String(row.id))}
+                        type="number"
+                        className="w-10  text-black overflow-hidden"
+                        placeholder="0"
+                      />
+                    </td>
+                    <td className="text-secondary-14px text-center">
+                      <input
+                        name={row.tipo}
+                        value={form[row.tipo].valor}
+                        onChange={(e) => handleOnChange(e, 'valor', String(row.id))}
+                        type="text"
+                        className="w-14  text-black overflow-hidden"
+                        placeholder="0"
+                      />
+                    </td>
+                  </tr>
+                ))
+              : TablaVentas?.map((row, index) => (
+                  <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
+                    <td className="text-secondary-14px text-center">{row.tipoCilindro.tipo}</td>
+                    <td className="text-secondary-14px text-center">{row.cantidad}</td>
+                    <td className="text-secondary-14px text-center">{row.valor}</td>
+                  </tr>
+                ))}
+          </tbody>
+        </table>
+      </div>
+      <button
+        onClick={(e) => registrar(e)}
+        className={`${!registrarData ? 'block' : 'hidden'} bg-blue-400  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold`}>
+        Registrar
+      </button>
+    </>
+  );
+};
+
 export default function SectionsOperacion() {
   const dispatch: AppDispatch = useDispatch();
 
@@ -496,6 +672,7 @@ export default function SectionsOperacion() {
     openTablaCarga: false,
     openTablaDescarga: false,
     openTablaOperaciones: true,
+    openTablaVentas: false,
   });
   //formulario de tabla de carga
   const [form, setForm] = useState<CargaDatos>({
@@ -568,6 +745,9 @@ export default function SectionsOperacion() {
           estado={openTablaOperaciones}
           setEstado={setOpenTablaOperaciones}
         />
+      )}
+      {openTablaOperaciones.openTablaVentas && (
+        <TablaVentas carga={carga} estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
       )}
     </div>
   );
