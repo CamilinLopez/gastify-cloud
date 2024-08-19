@@ -28,11 +28,15 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
       }
       Cookies.remove('token');
+
       return NextResponse.redirect(new URL('/signin', request.url));
     }
   } catch (error) {
     Cookies.remove('token');
     console.error('Error verifying JWT token:', error);
+    setTimeout(() => {
+      console.log('Esto se muestra después de 3 segundos.');
+    }, 15000);
     return NextResponse.redirect(new URL('/signin', request.url));
   }
 }
