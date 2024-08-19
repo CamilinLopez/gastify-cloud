@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
         },
         body: JSON.stringify({
           token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjQwMzI0MTl9.VrazTL7sO2_jn4hULah8uPT5G6z9rNg1CxGvIpoYZlA',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjQwMzMxMzR9.plx99eSWMNwTsAbn2TV3ekIfb5uytyIjckve80oRy_Y',
         }),
       });
 

@@ -22,7 +22,7 @@ const crearEmpresa = async (req, res, next) => {
         message: 'Registro exitoso',
         empresa,
         token,
-        dashboard: `${PAGE_URL}/dashboard/inicio`
+        dashboard: `${PAGE_URL}/dashboard/inicio`,
       });
     })(req, res, next);
   } catch (error) {
@@ -43,6 +43,14 @@ const signinEmpresa = async (req, res, next) => {
         const body = { id: user.id };
 
         const token = jwt.sign(body, SECRET_KEY);
+
+        res.cookie('token', token, {
+          httpOnly: true, // Asegura que la cookie solo se envíe en solicitudes HTTP(S)
+          secure: process.env.NODE_ENV === 'production', // Solo en HTTPS en producción
+          sameSite: 'strict', // Previene que la cookie sea enviada en solicitudes cruzadas
+          path: '/', // Asegura que la cookie esté disponible en todas las rutas
+          maxAge: 7 * 24 * 60 * 60 * 1000, // Opcional: 7 días en milisegundos
+        });
 
         // return res.redirect(`${PAGE_URL}/dashboard/inicio`);
         return res.json({ dashboard: `${PAGE_URL}/dashboard/inicio`, token });
