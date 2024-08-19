@@ -18,6 +18,11 @@ const Form = () => {
     e.preventDefault();
     const login = await dispatch(LoginThunk({ email, password }));
     console.log(login, 'hola desde signig');
+
+    setTimeout(() => {
+      console.log('Esto se muestra después de 3 segundos.');
+    }, 15000);
+
     if (login.payload.dashboard && login.payload.token) {
       window.location.href = login.payload.dashboard;
     }
