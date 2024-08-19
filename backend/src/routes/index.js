@@ -5,6 +5,9 @@ const inventarioRoutes = require('./inventarioRoutes');
 const operacionesRoutes = require('./operacionesRoutes');
 const reportesRoutes = require('./reportes');
 const inicioRoutes = require('./inicio');
+const rolesRoutes = require('./rolesRoutes');
+const empresaRoutes = require('./empresaRoutes');
+const usuariosRoutes = require('./usuariosRoutes');
 
 const routes = Router();
 
@@ -20,5 +23,12 @@ routes.use('/operaciones', operacionesRoutes);
 routes.use('/reportes', reportesRoutes);
 //rutas para la seccion de reportes
 routes.use('/inicio', inicioRoutes);
+
+//rutas para la seccion roles
+routes.use('/roles', rolesRoutes);
+//rutas para la seccion empresa
+routes.use('/empresa', empresaRoutes);
+//rutas para la seccion usuarios
+routes.use('/usuario', usuariosRoutes);
 
 module.exports = routes;

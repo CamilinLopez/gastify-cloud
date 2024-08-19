@@ -1,23 +1,65 @@
+'use client'
 import Navbar from '@/components/inviteUser/navbar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store';
+import { LoginThunk } from '@/redux/slice/usuarios/thunks';
+import { AppDispatch } from "@/redux/store";
+
 
 const Form = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const dispatch: AppDispatch = useDispatch();
+  const { status, error, messageResponse, user } = useSelector((state: RootState) => state.usuarios);
+
+  const handleSubmit = async(e :React.FormEvent) => {
+    e.preventDefault();
+    const login = await dispatch(LoginThunk({ email, password }));
+    if (login.payload.dashboard && login.payload.token) {
+      window.location.href =login.payload.dashboard
+    }
+  };
+
+
+
   return (
-    <div className="w-1/3 flex flex-col gap-y-3">
+    <form className="w-1/3 flex flex-col gap-y-3" onSubmit={handleSubmit}>
       <div>
         <p className="text-16px">E-mail</p>
-        <input className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24" type="email" placeholder="you@example.com" />
+        <input 
+          className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24" 
+          type="email" 
+          placeholder="you@example.com" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
       </div>
       <div>
-        <p className="tex-16px">Password</p>
-        <input className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24" type="password" placeholder="" />
+        <p className="text-16px">Password</p>
+        <input 
+          className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24" 
+          type="password" 
+          placeholder="******" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
       </div>
       <div className="flex gap-x-3">
         <input type="checkbox" />
         <p>Remember me</p>
       </div>
-      <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco px-4 py-2">Iniciar sesión</button>
-    </div>
+      <button 
+        type="submit" 
+        className="bg-azul rounded-xl font-Inter font-[500] text-blanco px-4 py-2"
+      >
+        Iniciar sesión
+      </button>
+    </form>
   );
 };
 

@@ -1,15 +1,15 @@
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+// const https = require('https');
+// const fs = require('fs');
+// const path = require('path');
 const server = require('./src/app');
 const { database } = require('./src/db/index');
 require('dotenv').config();
 
 // Leer los certificados SSL
-const httpsOptions = {
-  key: fs.readFileSync(path.join(__dirname, 'server.key')),
-  cert: fs.readFileSync(path.join(__dirname, 'server.cert')),
-};
+// const httpsOptions = {
+//   key: fs.readFileSync(path.join(__dirname, 'server.key')),
+//   cert: fs.readFileSync(path.join(__dirname, 'server.cert')),
+// };
 
 const initializeDatabase = async () => {
   try {
