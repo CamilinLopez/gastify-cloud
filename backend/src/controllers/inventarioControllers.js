@@ -68,16 +68,38 @@ const registrarConductorDB = async (nombreConductor, licencia) => {
       fecha: generarFechaActual(),
       hora: generarHoraActual(),
     });
-    const tabla = await conductores.findAll();
+    const tabla = await conductores.findAll({ where: { activo: true } });
     return { message: 'Conductor creado', result: tabla };
   } catch (error) {
     throw error;
   }
 };
 
+const eliminarConductorDB = async (id) => {
+  try {
+    const data = await conductores.update({ activo: false, eliminadoEn: generarFechaActual() }, { where: { id: id } });
+    return { message: 'Accion completa', result: [] };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+const eliminarCamionDB = async (id) => {
+  try {
+    const data = await camiones.update({ activo: false, eliminadoEn: generarFechaActual() }, { where: { id: id } });
+    return { message: 'Accion completa', result: [] };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const getTablaConductores = async () => {
   try {
-    const data = await conductores.findAll();
+    const data = await conductores.findAll({
+      where: { activo: true },
+    });
     return { message: 'Accion exitosa', result: data };
   } catch (error) {
     throw error;
@@ -91,7 +113,7 @@ const registrarCamionesDB = async (marca, modelo, placa, capacidad_carga) => {
       defaults: { id: generateId(), fecha: generarFechaActual(), marca, modelo, placa, capacidad_carga },
     });
 
-    const dataTabla = await camiones.findAll();
+    const dataTabla = await camiones.findAll({ where: { activo: true } });
 
     if (created)
       return {
@@ -106,32 +128,8 @@ const registrarCamionesDB = async (marca, modelo, placa, capacidad_carga) => {
 
 const tomarTablaCamionesDB = async () => {
   try {
-    const data = await camiones.findAll();
+    const data = await camiones.findAll({ where: { activo: true } });
     return { message: 'Acción completa.', result: data };
-  } catch (error) {
-    throw error;
-  }
-};
-
-const deleteCamionesDB = async (id) => {
-  try {
-    const data = await camiones.destroy({
-      where: { id },
-    });
-    const tabla = await camiones.findAll();
-    if (data) return { message: 'Eliminado correctamente.', result: tabla };
-    else throw { message: 'Vehículo no encontrado.', result: id };
-  } catch (error) {
-    throw error;
-  }
-};
-
-const deleteConductoresDB = async (id) => {
-  try {
-    const data = await conductores.destroy({ where: { id } });
-    const tabla = await conductores.findAll();
-    if (data) return { message: 'Eliminado correctamente.', result: tabla };
-    else throw { message: 'Conductor no encontrado', result: id };
   } catch (error) {
     throw error;
   }
@@ -143,6 +141,6 @@ module.exports = {
   getTablaConductores,
   registrarCamionesDB,
   tomarTablaCamionesDB,
-  deleteCamionesDB,
-  deleteConductoresDB,
+  eliminarConductorDB,
+  eliminarCamionDB,
 };

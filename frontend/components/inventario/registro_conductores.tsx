@@ -101,7 +101,7 @@ const Tabla = () => {
                   onClick={(e) => deleteConductores(e, item.id)}
                   className="bg-azul rounded-xl font-Inter font-[500] text-blanco py-1 px-2">
                   Eliminar
-                </button>{' '}
+                </button>
               </td>
             </tr>
           ))}

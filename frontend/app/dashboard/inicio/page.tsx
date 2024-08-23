@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Inicio() {
   return (
-    <div>
+    <div className="w-full">
       <SectionsInicio />
     </div>
   );

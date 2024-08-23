@@ -9,7 +9,7 @@ const server = express();
 
 // Configuración de CORS
 const corsOptions = {
-  origin: 'https://gastify-cloud-one.vercel.app', //'http://localhost:3000',  // Tu dominio
+  origin: 'http://localhost:3000', //'https://gastify-cloud-one.vercel.app', //'http://localhost:3000',  // Tu dominio
   credentials: true, // Habilita el envío de cookies y encabezados de autenticación
   allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
   exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Encabezados expuestos

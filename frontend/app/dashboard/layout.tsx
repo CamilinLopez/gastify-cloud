@@ -13,10 +13,10 @@ export default function LayoutDashboard({ children }: { children: React.ReactNod
         </div>
       </div>
       <div className="flex flex-grow overflow-auto px-6 py-5 w-screen">
-        <div className="sticky top-0 h-full w-3/12">
+        <div className="sticky top-0 h-full w-3/12 xl:block hidden">
           <Menu />
         </div>
-        <div className="p-4 w-9/12">
+        <div className="p-4 xl:w-10/12 w-full">
           <h1 className="px-4 text-36px">Dashboard</h1>
           {children}
         </div>

@@ -17,6 +17,10 @@ const config: Config = {
         blanco: '#ffffff',
         azul: '#1C8CD6',
       },
+      screens: {
+        xl: '1300px',
+        movile: '480px',
+      },
     },
   },
   plugins: [],

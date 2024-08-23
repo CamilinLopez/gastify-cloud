@@ -29,6 +29,15 @@ const Camiones = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      eliminadoEn: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
     },
     {
       timestamps: false,

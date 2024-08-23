@@ -23,7 +23,7 @@ const Ventas = (sequelize) => {
           model: 'cargas',
           key: 'id',
         },
-        allowNull: false,
+        allowNull: true,
       },
       camion_id: {
         type: DataTypes.STRING,
@@ -31,7 +31,7 @@ const Ventas = (sequelize) => {
           model: 'camiones',
           key: 'id',
         },
-        allowNull: false,
+        allowNull: true,
       },
       conductor_id: {
         type: DataTypes.STRING,
@@ -39,7 +39,7 @@ const Ventas = (sequelize) => {
           model: 'conductores',
           key: 'id',
         },
-        allowNull: false,
+        allowNull: true,
       },
       tipoCilindroId: {
         type: DataTypes.INTEGER,

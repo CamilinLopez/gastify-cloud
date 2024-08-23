@@ -36,7 +36,7 @@ const cilindrosVendidosPorDia = async () => {
       include: { model: tipo_cilindros, as: 'tipoCilindro', attributes: ['id', 'tipo'] },
       where: {
         fecha: {
-          [Op.eq]: '2024/08/16',
+          [Op.eq]: today,
         },
       },
       group: ['tipoCilindro.id', 'tipoCilindro.tipo'],

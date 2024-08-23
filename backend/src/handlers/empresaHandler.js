@@ -32,6 +32,7 @@ const crearEmpresa = async (req, res, next) => {
 
 const signinEmpresa = async (req, res, next) => {
   passport.authenticate('signin', async (err, user, info) => {
+    console.log(user, 'tania');
     try {
       if (err || !user) {
         const error = new Error('new Error');

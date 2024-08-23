@@ -5,8 +5,8 @@ const {
   tomarTablaConductores,
   crearCamionesHandler,
   tomarTablaCamiones,
-  BorrarCamion,
-  BorrarConductor,
+  eliminarConductorHandler,
+  eliminarCamionHandler,
 } = require('../handlers/inventarioHandler');
 
 const inventarioRoutes = Router();
@@ -16,7 +16,7 @@ inventarioRoutes.post('/crearConductor', crearConductorHandler);
 inventarioRoutes.get('/getTablaConductores', tomarTablaConductores);
 inventarioRoutes.post('/crearCamiones', crearCamionesHandler);
 inventarioRoutes.get('/getTablaCamiones', tomarTablaCamiones);
-inventarioRoutes.delete('/deleteCamiones/:id', BorrarCamion);
-inventarioRoutes.delete('/deleteConductores/:id', BorrarConductor);
+inventarioRoutes.delete('/deleteCamiones/:id', eliminarCamionHandler);
+inventarioRoutes.delete('/deleteConductores/:id', eliminarConductorHandler);
 
 module.exports = inventarioRoutes;

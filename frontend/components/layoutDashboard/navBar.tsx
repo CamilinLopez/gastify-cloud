@@ -1,8 +1,43 @@
-import Image from 'next/image';
-import React from 'react';
-import MenuDespegable from '../menuDespegable/menuDespegable';
+'use client';
+
+import { useState } from 'react';
+import { ArrowLeft, ArrowRight } from '../svg/svgImages';
+import { SelectOptions } from './dropdown';
+import Menu from './menu';
 
 export default function NavBar() {
+  const [, setCount] = useState<number>(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  const handleClickArrows = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    const buttonName = event.currentTarget.name;
+    const container = document.getElementById('printTextContainer');
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+    if (!container) return;
+
+    const id: NodeJS.Timeout = setInterval(() => {
+      setIntervalId(id);
+      setCount((prevCount) => {
+        console.log(prevCount, container.clientWidth);
+        if (buttonName === 'startRight' && prevCount < container.clientWidth) {
+          container.scrollLeft = prevCount;
+          return prevCount + 1;
+        }
+        if (buttonName === 'startLeft' && prevCount > 0) {
+          container.scrollLeft = prevCount - 200;
+          return prevCount - 1;
+        } else {
+          clearInterval(id);
+          setIntervalId(null);
+          return prevCount;
+        }
+      });
+    }, 2);
+  };
   return (
     <div className="bg-blanco h-16">
       <div className="flex h-full justify-between items-center">
@@ -17,11 +52,14 @@ export default function NavBar() {
           </svg>
           <h1 className="text-18px">Gastify Cloud</h1>
         </div>
-        <div className="flex items-center gap-x-8">
-          <div className="relative">
-            <MenuDespegable />
+        <div className="flex overflow-x-hidden xl:hidden mx-3">
+          <ArrowLeft name="startLeft" onClick={handleClickArrows} className="" />
+          <div id="printTextContainer" className="overflow-x-hidden">
+            <Menu />
           </div>
-
+          <ArrowRight name="startRight" onClick={handleClickArrows} className="" />
+        </div>
+        <div className="flex items-center gap-x-8">
           <div>
             <button onClick={(e) => e.preventDefault()} className="bg-gris-1 p-[10px] rounded-[12px]">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="17" viewBox="0 0 18 17" fill="none">
@@ -35,9 +73,10 @@ export default function NavBar() {
             </button>
           </div>
           <div>
-            <button className="h-[40px] w-[40px] rounded-[20px]">
-              <Image alt="imgUsuario" src={'/images/userImage.png'} width={512} height={512} priority />
-            </button>
+            <SelectOptions name={'Alarmas'} />
+          </div>
+          <div>
+            <SelectOptions name={'Camilo'} />
           </div>
         </div>
       </div>

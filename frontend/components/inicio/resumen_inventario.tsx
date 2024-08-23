@@ -22,7 +22,7 @@ export default function ResumenInventario() {
       <h3 className="text-18px py-4" id="resumen_inventario">
         Resumen de Inventario
       </h3>
-      <div className="flex w-full">
+      <div className="flex w-full gap-x-8">
         <div className="w-1/2">
           <h4 className="text-16px">Cantidad de cilindros llenos por tipo</h4>
           {tabla.llenos.map((item, index) => (

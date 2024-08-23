@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import Cookies from 'js-cookie';
-
+//https://gastify-cloud.onrender.com/empresa/verificar-token
 export async function middleware(request: NextRequest) {
   const jwt = request.cookies.get('token');
-  console.log(jwt, 'hola desde middleware actualizado');
   try {
     if (request.nextUrl.pathname.startsWith('/dashboard')) {
       if (!jwt) return NextResponse.redirect(new URL('/signin', request.url));
-      const response = await fetch('https://gastify-cloud.onrender.com/empresa/verificar-token', {
+      const response = await fetch('http://localhost:3001/empresa/verificar-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

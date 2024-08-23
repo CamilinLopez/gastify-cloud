@@ -4,9 +4,29 @@ const {
   getTablaConductores,
   registrarCamionesDB,
   tomarTablaCamionesDB,
-  deleteCamionesDB,
-  deleteConductoresDB,
+  eliminarConductorDB,
+  eliminarCamionDB,
 } = require('../controllers/inventarioControllers');
+
+const eliminarConductorHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const data = await eliminarConductorDB(id);
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ errors: error });
+  }
+};
+
+const eliminarCamionHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const data = await eliminarCamionDB(id);
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ errors: error });
+  }
+};
 
 const getTablaInventarioBodegaHandler = async (req, res) => {
   const fecha = req.query.fecha;
@@ -56,32 +76,12 @@ const tomarTablaCamiones = async (req, res) => {
   }
 };
 
-const BorrarCamion = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const data = await deleteCamionesDB(id);
-    res.status(200).json({ data });
-  } catch (error) {
-    res.status(400).json({ errors: error });
-  }
-};
-
-const BorrarConductor = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const data = await deleteConductoresDB(id);
-    res.status(200).json({ data });
-  } catch (error) {
-    res.status(400).json({ errors: error });
-  }
-};
-
 module.exports = {
   getTablaInventarioBodegaHandler,
   crearConductorHandler,
   tomarTablaConductores,
   crearCamionesHandler,
   tomarTablaCamiones,
-  BorrarCamion,
-  BorrarConductor,
+  eliminarConductorHandler,
+  eliminarCamionHandler,
 };
