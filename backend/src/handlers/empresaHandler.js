@@ -34,13 +34,17 @@ const signinEmpresa = async (req, res, next) => {
   passport.authenticate('signin', async (err, user, info) => {
     try {
       if (err || !user) {
-        const error = new Error('new Error');
+        const error = new Error(info);
         return next(error);
       }
 
       req.login(user, { session: false }, async (err) => {
         if (err) return next(err);
+<<<<<<< Updated upstream
         const body = { id: user.id };
+=======
+        const body = { id: user.empresa.dataValues.id || user.usuario.dataValues.id };
+>>>>>>> Stashed changes
 
         const token = jwt.sign(body, SECRET_KEY);
 
@@ -66,7 +70,10 @@ const invitarUsuario = async (req, res, next) => {
 
 const verificarToken = async (req, res, next) => {
   const { token } = req.body;
+<<<<<<< Updated upstream
   console.log(token);
+=======
+>>>>>>> Stashed changes
   let decoded;
   try {
     decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });

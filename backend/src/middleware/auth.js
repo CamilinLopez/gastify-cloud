@@ -2,15 +2,18 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { empresas, roles, usuarios } = require('../db/index')
 const JWTStrategy = require('passport-jwt').Strategy;
-const ExtractJWT = require('passport-jwt').ExtractJwt
+const ExtractJwt = require('passport-jwt').ExtractJwt
 const { SECRET_KEY } = require('../config/env')
-const { generateToken } = require('../helpers/generateToken')
+const { generateToken, verifyToken } = require('../helpers/generateToken')
 
 passport.use('registrar',new LocalStrategy({
   usernameField: 'email', 
   passwordField: 'password',
-}, async(email, password, done)=>{
+  passReqToCallback: true,
+}, async(req, email, password, done)=>{
   try{
+    const { nombre } = req.body; // Aquí obtienes el campo nombre del request
+
     const empresa = await empresas.findOne({where:{email}});
 
     if(empresa){
@@ -22,7 +25,7 @@ passport.use('registrar',new LocalStrategy({
     if(!rol){
       throw new Error('Rol de Administrador no encontrado');
     }
-    const newEmpresa = await empresas.create({email, password, rolId: rol.id});
+    const newEmpresa = await empresas.create({nombre, email, password, rolId: rol.id});
 
     const { authentication } = generateToken({ id: newEmpresa.id }, SECRET_KEY);
     
@@ -55,7 +58,6 @@ passport.use('signin', new LocalStrategy({
 
     // Si no es una empresa, buscar en la tabla de usuarios
     const usuario = await usuarios.findOne({ where: { email } });
-
     if (usuario) {
       // Verificar la contraseña del usuario
       const isValid = await usuario.comparePassword(password);
@@ -78,12 +80,16 @@ passport.use('signin', new LocalStrategy({
 
 passport.use(new JWTStrategy({
   secretOrKey: SECRET_KEY,
-  jwtFromRequest: ExtractJWT.fromUrlQueryParameter('secret_token'),
-},async(token, done)=>{
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el token del encabezado Authorization
+}, async (token, done) => {
   try {
-    return done(null, token.user);
+    console.log('Esto es el token', token);
+
+    // Establece el id del usuario en req.user
+    return done(null, { id: token.id });
+
   } catch (error) {
-    done(error)
+    // En caso de error, pasa el error al done callback
+    return done(error);
   }
 }));
-

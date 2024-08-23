@@ -1,14 +1,21 @@
 'use client'
 import Navbar from '@/components/inviteUser/navbar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store';
 import { LoginThunk } from '@/redux/slice/usuarios/thunks';
+<<<<<<< Updated upstream
 import { AppDispatch } from "@/redux/store";
 
+=======
+import { AppDispatch } from '@/redux/store';
+import { useRouter } from 'next/navigation';
+>>>>>>> Stashed changes
 
 const Form = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,8 +25,16 @@ const Form = () => {
   const handleSubmit = async(e :React.FormEvent) => {
     e.preventDefault();
     const login = await dispatch(LoginThunk({ email, password }));
+<<<<<<< Updated upstream
     if (login.payload.dashboard && login.payload.token) {
       window.location.href =login.payload.dashboard
+=======
+
+    if (login.payload.dashboard && login.payload.token) {
+      console.log(login.payload.dashboard)
+      // window.location.href = login.payload.dashboard;
+      router.push('/dashboard/inicio')
+>>>>>>> Stashed changes
     }
   };
 

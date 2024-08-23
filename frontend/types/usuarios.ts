@@ -1,5 +1,6 @@
 // Interface para las credenciales del usuario (registro o login)
 export interface UserCredentials {
+  nombre:string
   email: string;
   password: string;
 }

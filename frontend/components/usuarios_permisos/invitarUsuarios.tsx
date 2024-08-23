@@ -193,7 +193,7 @@ const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
                 </td>
               </tr>
             ) : currentData.length > 0 ? (
-              currentData.map((item, i) => (
+              currentData.map((item:any, i) => (
                 <tr key={i}>
                   <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
                     {item.email}
@@ -203,9 +203,13 @@ const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
                     {item.verificado === false ? 'pendiente' : 'aceptado'}
                   </td>
                   <td className="px-6 py-4 text-secondary-14px">
-                    <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">
-                      {item.verificado === false ? 'Cancelar Invitación' : ''}
-                    </button>
+                  <button 
+  className={`bg-azul rounded-xl font-Inter font-[500] text-blanco p-2 ${item.verificado ? 'opacity-50 cursor-not-allowed' : ''}`}
+  disabled={item.verificado} // Desactiva el botón si ya está verificado
+>
+  {item.verificado ? 'Invitación Confirmada' : 'Cancelar Invitación'}
+</button>
+
                   </td>
                 </tr>
               ))

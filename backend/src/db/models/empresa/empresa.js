@@ -11,6 +11,10 @@ const Empresa = (sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
+      nombre: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -22,7 +26,6 @@ const Empresa = (sequelize) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        // Eliminar `unique: true`, ya que dos usuarios podrían tener la misma contraseña
         validate: {
           len: [8, 100], // Asegúrate de que la contraseña tenga al menos 8 caracteres
         },

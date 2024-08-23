@@ -1,7 +1,43 @@
-import React from 'react';
+'use client'
+import React, { useState, useEffect } from 'react';
 import { Flechas } from '../svg/svgImages';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
+import { RolesThunk } from '@/redux/slice/roles/thunks';
+
+
 const Form = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { roles, status, error } = useSelector((state: RootState) => state.roles);
+
+  const [formValues, setFormValues] = React.useState({
+    id: '',
+    email: '',
+    'rolId': '',
+  });
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await dispatch(RolesThunk());
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
   return (
     <div className="w-full">
       <form className="w-full flex flex-col gap-y-5" action="">
@@ -17,15 +53,32 @@ const Form = () => {
             type="text"
           />
         </div>
+        
         <div className="w-full">
-          <p className="text-16px">Rol</p>
-          <div className="relative w-5/12">
-            <input className="p-4 h-14 bg-gris-1 rounded-xl w-full" type="text" placeholder="Seleccionar" />
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
-              <Flechas />
+            <p className="text-16px py-2">Rol</p>
+            <div className="relative w-5/12">
+              {/* <input className="p-4 h-14 bg-gris-1 rounded-xl w-full" type="text" placeholder="Seleccionar" /> */}
+              <select
+                className="p-4 h-14 bg-gris-1 rounded-xl w-full  border-gray-300 focus:border-blue-500 outline-none transition duration-300 appearance-none shadow-md"
+                name="rolId"
+                value={formValues.rolId}
+                onChange={handleInputChange}
+                required>
+                <option value="" disabled>
+                  {roles.length > 0 ? 'Seleccionar' : 'Cargando roles...'}
+                </option>
+                {roles.map((role:any) => (
+                  <option key={role.id} value={role.id}>
+                    {role.nombre}
+                  </option>
+                ))}
+              </select>
+
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
+                <Flechas />
+              </div>
             </div>
           </div>
-        </div>
         <button className="w-5/12  h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">Buscar</button>
       </form>
     </div>

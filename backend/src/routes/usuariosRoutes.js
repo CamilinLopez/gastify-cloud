@@ -1,12 +1,19 @@
 const { Router } = require('express');
-const { crearUsuario, ingresarPassword, todosUsuarios } = require('../handlers/usuarioHandler');
+const { ingresarPassword, todosUsuarios, todosUsuariosFiltrado } = require('../handlers/usuarioHandler');
 const passport = require('passport');
 
 const usuariosRoutes = Router();
 
-usuariosRoutes.post('/post-usuario',passport.authenticate('jwt',{session:false}), crearUsuario);
-usuariosRoutes.post('/post-usuario-crear-password', ingresarPassword);
-usuariosRoutes.get('/gets-usuarios', todosUsuarios);
+// ruta para crear contraseña para ñlos usuarios invitados
+usuariosRoutes.post('/post-usuario-crear-password', passport.authenticate('jwt',{session:false}), ingresarPassword);
+
+// ruta para obtener usuarios de las empresas
+usuariosRoutes.get('/gets-usuarios', passport.authenticate('jwt',{session:false}), todosUsuarios);
+
+// ruta para filtrar los usuarios filtrados por id email o rol
+usuariosRoutes.post('/gets-usuarios-filtrado', passport.authenticate('jwt',{session:false}), todosUsuariosFiltrado);
+
+
 
 
 module.exports = usuariosRoutes;

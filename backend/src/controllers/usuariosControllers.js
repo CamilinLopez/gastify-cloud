@@ -1,35 +1,5 @@
-const { usuarios, empresas, roles } = require('../db/index');
+const { usuarios, roles } = require('../db/index');
 const bcrypt = require('bcrypt');
-
-const crearUsuarios = async (data) => {
-  try {
-    const empresa = await empresas.findByPk(data.empresaId);
-    if (!empresa) {
-      throw new Error('Empresa no encontrado');
-    }
-
-    // Hashear la contraseña
-    data.contraseña = await bcrypt.hash(data.contraseña, 10);
-    
-    // Crear el nuevo usuario
-    const nuevoUsuario = await usuarios.create(data);
-
-    const usuarioConEmpresa = await usuarios.findByPk(nuevoUsuario.id, {
-      include: [
-        {
-          model: empresas,
-          as: 'empresa',
-          attributes: ['nombre' ],
-        },
-      ],
-    });
-
-    return usuarioConEmpresa;
-  } catch (error) {
-    throw error;
-  }
-};
-
 
 
 const crearUsuarioPasswordDB = async ({email, password, empresa}) => {
@@ -43,6 +13,7 @@ const crearUsuarioPasswordDB = async ({email, password, empresa}) => {
 
     // Actualizar la contraseña del usuario
     usuario.password = hashedPassword;
+    usuario.verificado = true;
     usuario.save()
     return usuario
 
@@ -73,8 +44,35 @@ const obtenerTodosUsuarios = async () => {
   }
 };
 
+
+const obtenerTodosUsuariosFiltrado = async ({ id, email, rolId }) => {
+  try {
+    const whereClause = {};
+
+    // Agrega condiciones de búsqueda si los parámetros están presentes
+    if (id && id.trim() !== "") whereClause.id = id;
+    if (email && email.trim() !== "") whereClause.email = email;
+    if (rolId && rolId.trim() !== "") whereClause.rolId = rolId;
+
+    if (Object.keys(whereClause).length === 0) {
+      return []; 
+    }
+
+    const usuariosData = await usuarios.findAll({
+      where: whereClause,
+      attributes: { exclude: ['password', 'empresaId'] },
+    });
+
+    return usuariosData;
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 module.exports = {
-  crearUsuarios,
   obtenerTodosUsuarios,
-  crearUsuarioPasswordDB
+  crearUsuarioPasswordDB,
+  obtenerTodosUsuariosFiltrado
 };
