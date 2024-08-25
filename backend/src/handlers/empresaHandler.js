@@ -41,7 +41,7 @@ const signinEmpresa = async (req, res, next) => {
 
       req.login(user, { session: false }, async (err) => {
         if (err) return next(err);
-        const body = { id: user.id };
+        const body = { id: user.empresa.dataValues.id || user.usuario.dataValues.id };
 
         const token = jwt.sign(body, SECRET_KEY);
 
@@ -67,7 +67,6 @@ const invitarUsuario = async (req, res, next) => {
 
 const verificarToken = async (req, res, next) => {
   const { token } = req.body;
-  console.log(token);
   let decoded;
   try {
     console.log('hola desde verificar-toke 111');
