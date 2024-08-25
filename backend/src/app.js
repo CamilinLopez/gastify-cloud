@@ -4,12 +4,13 @@ const morgan = require('morgan');
 const routes = require('./routes');
 const passport = require('passport');
 require('./middleware/auth');
+const { CORS_ORIGIN_URL } = require('./config/env')
 
 const server = express();
 
 // Configuración de CORS
 const corsOptions = {
-  origin: 'http://localhost:3000', //'https://gastify-cloud-one.vercel.app', //'http://localhost:3000',  // Tu dominio
+  origin: `${CORS_ORIGIN_URL}`,  // Tu dominio
   credentials: true, // Habilita el envío de cookies y encabezados de autenticación
   allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
   exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Encabezados expuestos

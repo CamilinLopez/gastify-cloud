@@ -1,7 +1,7 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY, PAGE_URL } = require('../config/env');
-const { invateUser } = require('../controllers/empresasControllers');
+const { invateUser, eliminarInvitacion } = require('../controllers/empresasControllers');
 const { verifyToken, generateToken } = require('../helpers/generateToken');
 
 const crearEmpresa = async (req, res, next) => {
@@ -35,14 +35,13 @@ const signinEmpresa = async (req, res, next) => {
     console.log(user, 'tania');
     try {
       if (err || !user) {
-        const error = new Error('new Error');
+        const error = new Error(info);
         return next(error);
       }
 
       req.login(user, { session: false }, async (err) => {
         if (err) return next(err);
-        const body = { id: user.empresa.dataValues.id };
-        // console.log(user.empresa.dataValues.id, 'papapapa', user.id, 'quesosososo', user.empresa, 'mamaa');
+        const body = { id: user.id };
 
         const token = jwt.sign(body, SECRET_KEY);
 
@@ -57,9 +56,9 @@ const signinEmpresa = async (req, res, next) => {
 
 const invitarUsuario = async (req, res, next) => {
   try {
-    const { rolId, email, empresa } = req.body;
-    const data = await invateUser({ rolId, email, empresa });
-
+    const { rolId, email } = req.body;
+  
+    const data = await invateUser({ rolId, email, empresaId:req.user.id });
     res.status(200).json({ message: data.message, usuario: data.usuarioData });
   } catch (error) {
     res.status(400).json({ errors: error.message });
@@ -68,7 +67,7 @@ const invitarUsuario = async (req, res, next) => {
 
 const verificarToken = async (req, res, next) => {
   const { token } = req.body;
-  console.log(token, 'hola desde verificar token');
+  console.log(token);
   let decoded;
   try {
     console.log('hola desde verificar-toke 111');
@@ -84,9 +83,20 @@ const verificarToken = async (req, res, next) => {
   }
 };
 
+
+const cancelarInvitacion = async (req, res, next) => {
+  const { idInvitacion } = req.params
+  try {
+    const data = await eliminarInvitacion({eliminarInvitacion:idInvitacion});
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ errors: error.message });
+  }
+};
 module.exports = {
   crearEmpresa,
   signinEmpresa,
   invitarUsuario,
   verificarToken,
+  cancelarInvitacion
 };

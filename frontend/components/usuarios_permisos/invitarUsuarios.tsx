@@ -8,7 +8,12 @@ import { RolesThunk } from '@/redux/slice/roles/thunks';
 
 import { SendInviteThunk, GetsUsersThunk } from '@/redux/slice/usuarios/thunks';
 
-const Form = () => {
+import { axiosInstance } from '@/config/axios';
+
+interface FormProps {
+  setUsersInvited: React.Dispatch<React.SetStateAction<any[]>>;
+}
+const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { roles, status, error } = useSelector((state: RootState) => state.roles);
@@ -20,12 +25,12 @@ const Form = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFormSubmit = async (event:React.FormEvent) => {
+  const handleFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setIsSubmitting(true); // Cambia el estado para mostrar "Enviando..."
 
     await handleSubmit();
-    
+
     setIsSubmitting(false); // Restablece el estado después de enviar
   };
 
@@ -51,16 +56,17 @@ const Form = () => {
 
   const [message, setMessage] = useState<string | null>(null);
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     // event.preventDefault();
 
     const send = await dispatch(SendInviteThunk(formValues));
 
+    await setUsersInvited((prevUsers) => [...prevUsers, send.payload.usuario]);
+  
     if (send.payload.message) {
       setMessage(send.payload.message);
     }
   };
-
 
   useEffect(() => {
     if (message) {
@@ -68,13 +74,13 @@ const Form = () => {
         setMessage(null);
       }, 3000); // 3 segundos
 
-      return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta antes de que el tiempo haya pasado
+      return () => clearTimeout(timer);
     }
   }, [message]);
 
   return (
     <div className="w-full">
-       {message && <div className="text-center text-cyan-700">{message}</div>}
+      {message && <div className="text-center text-cyan-700">{message}</div>}
       <form className="w-full" onSubmit={handleFormSubmit}>
         <div className="w-full flex items-end">
           <div className="w-8/12">
@@ -102,7 +108,7 @@ const Form = () => {
                 <option value="" disabled>
                   {roles.length > 0 ? 'Seleccionar' : 'Cargando roles...'}
                 </option>
-                {roles.map((role:any) => (
+                {roles.map((role: any) => (
                   <option key={role.id} value={role.id}>
                     {role.nombre}
                   </option>
@@ -118,8 +124,7 @@ const Form = () => {
           <button
             type="submit"
             className="w-full sm:w-1/4 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco"
-            disabled={status === 'loading' || isSubmitting}
-          >
+            disabled={status === 'loading' || isSubmitting}>
             {status === 'loading' || isSubmitting ? 'Enviando...' : 'Enviar invitación'}
           </button>
         </div>
@@ -130,15 +135,18 @@ const Form = () => {
 };
 
 export default function InvitarUsuarios() {
+  const [usersInvited, setUsersInvited] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = React.useState<number>(1);
 
   const dispatch = useDispatch<AppDispatch>();
-  const { data, status, error } = useSelector((state: RootState) => state.getsUsuarios);
+  const { status, error } = useSelector((state: RootState) => state.getsUsuarios);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await dispatch(RolesThunk());
-        await dispatch(GetsUsersThunk());
+        const usersInvited = await dispatch(GetsUsersThunk());
+        setUsersInvited(usersInvited.payload.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -149,15 +157,32 @@ export default function InvitarUsuarios() {
 
   const textTable = ['correo electrónico', 'Rol', 'Estado de invitación', 'Acciones'];
 
-  const [currentPage, setCurrentPage] = React.useState<number>(1);
-const itemsPerPage = 5; 
+  
+  const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
-const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentData = usersInvited.slice(indexOfFirstItem, indexOfLastItem);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+  };
+
+
+
+  const handleEliminarInvitacion = async (idInvitacion:string) => {
+    console.log(idInvitacion)
+    const confirmacion = window.confirm('¿Estás seguro de que deseas cancelar la invitación?');
+  
+    if (confirmacion) {
+      try {
+        await axiosInstance.delete(`/empresa/post-empresa-cancelar-invitacion/${idInvitacion}`);
+
+        setUsersInvited((prevUsers) => prevUsers.filter((user) => user.id !== idInvitacion));
+      } catch (error) {
+        alert('Hubo un error al cancelar la invitación.');
+      }
+    }
   };
 
   return (
@@ -167,78 +192,77 @@ const currentData = data.slice(indexOfFirstItem, indexOfLastItem);
       </h1>
 
       <div className="flex flex-col gap-y-6">
-        <Form />
+        <Form setUsersInvited={setUsersInvited}/>
         <div className="overflow-x-auto border-[1px] rounded-xl">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-blanco">
-            <tr>
-              {textTable.map((item) => (
-                <th key={item} className="px-6 py-3 text-left text-xs text-14px">
-                  {item}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {status === 'loading' ? (
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-blanco">
               <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
-                  Cargando datos...
-                </td>
+                {textTable.map((item) => (
+                  <th key={item} className="px-6 py-3 text-left text-xs text-14px">
+                    {item}
+                  </th>
+                ))}
               </tr>
-            ) : status === 'failed' ? (
-              <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-red-500">
-                  {error}
-                </td>
-              </tr>
-            ) : currentData.length > 0 ? (
-              currentData.map((item, i) => (
-                <tr key={i}>
-                  <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">
-                    {item.email}
-                  </td>
-                  <td className="px-6 py-4 text-secondary-14px">{item.rol.nombre}</td>
-                  <td className="px-6 py-4 text-secondary-14px">
-                    {item.verificado === false ? 'pendiente' : 'aceptado'}
-                  </td>
-                  <td className="px-6 py-4 text-secondary-14px">
-                    <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">
-                      {item.verificado === false ? 'Cancelar Invitación' : ''}
-                    </button>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {status === 'loading' ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
+                    Cargando datos...
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
-                  No hay datos disponibles
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : status === 'failed' ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-4 text-center text-red-500">
+                    {error}
+                  </td>
+                </tr>
+              ) : currentData.length > 0 ? (
+                currentData.map((item: any, i) => (
+                  <tr key={i}>
+                    <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{item.email}</td>
+                    <td className="px-6 py-4 text-secondary-14px">{item.rol.nombre}</td>
+                    <td className="px-6 py-4 text-secondary-14px">
+                      {item.verificado === false ? 'pendiente' : 'aceptado'}
+                    </td>
+                    <td className="px-6 py-4 text-secondary-14px">
+                    <button
+  className={`bg-azul rounded-xl font-Inter font-[500] text-blanco p-2 ${item.verificado ? 'opacity-50 cursor-not-allowed' : ''}`}
+  disabled={item.verificado} // Desactiva el botón si ya está verificado
+  onClick={() => handleEliminarInvitacion(item.id)} // Función para eliminar
+>
+  {item.verificado ? 'Invitación Confirmada' : 'Cancelar Invitación'}
+</button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
+                    No hay datos disponibles
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
           <div className="flex justify-between py-4">
-          <button
-            className="bg-gray-300 px-4 py-2 rounded-lg"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Anterior
-          </button>
-          <span className="text-gray-700">
-            Página {currentPage} de {Math.ceil(data.length / itemsPerPage)}
-          </span>
-          <button
-            className="bg-gray-300 px-4 py-2 rounded-lg"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === Math.ceil(data.length / itemsPerPage)}
-          >
-            Siguiente
-          </button>
-        </div>
-
+            <button
+              className="bg-gray-300 px-4 py-2 rounded-lg"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}>
+              Anterior
+            </button>
+            <span className="text-gray-700">
+              Página {currentPage} de {Math.ceil(usersInvited.length / itemsPerPage)}
+            </span>
+            <button
+              className="bg-gray-300 px-4 py-2 rounded-lg"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === Math.ceil(usersInvited.length / itemsPerPage)}>
+              Siguiente
+            </button>
+          </div>
         </div>
       </div>
     </div>

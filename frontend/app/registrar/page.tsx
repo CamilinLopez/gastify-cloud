@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 const Form = () => {
   const router = useRouter();
   const [formValues, setFormValues] = useState({
+    nombre: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -36,15 +37,28 @@ const Form = () => {
       return;
     }
 
-    const registro = await dispatch(RegistroThunk({ email: formValues.email, password: formValues.password }));
+  const registro = await dispatch(RegistroThunk({ email: formValues.email, password: formValues.password, nombre:formValues.nombre }));
 
-    if (registro.payload?.dashboard && typeof registro.payload.dashboard === 'string') {
-      window.location.href = registro.payload.dashboard;
-    }
-  };
+if (registro.payload?.dashboard && typeof registro.payload.dashboard === 'string') {
+  window.location.href = registro.payload.dashboard;
+}
+
+
+};
+
+
 
   return (
-    <form className="w-full flex flex-col gap-y-7" onSubmit={handleSubmit}>
+    <form className="w-full flex flex-col gap-y-10" onSubmit={handleSubmit}>
+    <input
+        className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
+        type="text"
+        name="nombre" // Asegúrate de asignar un nombre único para cada input
+        placeholder="Nombre"
+        value={formValues.nombre}
+        onChange={handleChange}
+        required
+      />
       <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="email"
@@ -96,17 +110,12 @@ export default function Register() {
             <h1 className="text-24px">Empezar</h1>
             <p className="font-Inter font-[400] text-[16px]">Comience a configurar su cuenta</p>
           </div>
-          <div className="w-full">
-            <input
-              className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
-              type="password"
-              name="confirmPassword" // Asegúrate de asignar un nombre único para cada input
-              placeholder="Nombre"
-              // value={formValues.confirmPassword}
-              // onChange={handleChange}
-              required
-            />
-          </div>
+          {/* <div className="w-full">
+            <button className="flex items-center justify-center w-full py-2 bg-gris-1 gap-x-2 rounded-xl">
+              <G_google />
+              <p className="text-14px">Regístrate con Google</p>
+            </button>
+          </div> */}
           <div className="w-full flex justify-center">
             <p className="text-secondary-14px">|</p>
           </div>

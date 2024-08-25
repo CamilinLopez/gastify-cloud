@@ -1,14 +1,19 @@
 const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { generateId } = require('../../../utils/generadorId')
 
 const Empresa = (sequelize) => {
   const EmpresaModel = sequelize.define(
     'empresas',
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
-        autoIncrement: true,
+        allowNull: false,
+        defaultValue: () => generateId()
+      },
+      nombre: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       email: {
@@ -22,7 +27,6 @@ const Empresa = (sequelize) => {
       password: {
         type: DataTypes.STRING,
         allowNull: false,
-        // Eliminar `unique: true`, ya que dos usuarios podrían tener la misma contraseña
         validate: {
           len: [8, 100], // Asegúrate de que la contraseña tenga al menos 8 caracteres
         },

@@ -1,22 +1,11 @@
 const {
-  crearUsuarios,
   crearUsuarioPasswordDB,
-  obtenerTodosUsuarios
+  obtenerTodosUsuarios,
+  obtenerTodosUsuariosFiltrado 
 } = require('../controllers/usuariosControllers');
 
 const { PAGE_URL } = require('../config/env')
 
-const crearUsuario = async (req, res) => {
-  try {
-    const { nombre, email, contraseña, empresaId } = req.body;
-
-    const data = await crearUsuarios({nombre, email, contraseña, empresaId});
-
-    res.status(200).json({ data });
-  } catch (error) {
-    res.status(400).json({ errors: error.message });
-  }
-};
 
 const ingresarPassword = async (req, res) => {
   try {
@@ -40,11 +29,22 @@ const todosUsuarios = async (req, res) => {
 };
 
 
+const todosUsuariosFiltrado = async (req, res) => {
+  try {
+    const { id, email, rolId } = req.body;
+    const data = await obtenerTodosUsuariosFiltrado({ id, email, rolId });
+
+    res.status(200).json({ data });
+  } catch (error) {
+    res.status(400).json({ errors: error.message });
+  }
+};
+
 
 
 
 module.exports = {
-  crearUsuario,
   ingresarPassword,
-  todosUsuarios
+  todosUsuarios,
+  todosUsuariosFiltrado
 };
