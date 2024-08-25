@@ -33,7 +33,8 @@ export const handleFetchRegistroLogin = (builder: any) => {
       state.status = 'loading';
     })
     .addCase(LoginThunk.fulfilled, (state: InitialStateUsuarios, action: any) => {
-      state.user = action.payload.token;
+
+      state.user = action.payload.user;
       state.messageResponse = action.payload.message;
       state.status = 'succeeded';
       state.error = null;

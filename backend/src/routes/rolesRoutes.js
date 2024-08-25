@@ -5,10 +5,10 @@ const passport = require('passport');
 const rolesRoutes = Router();
 
 rolesRoutes.get('/get-roles', passport.authenticate('jwt',{session:false}),  obtenerRoles);
-rolesRoutes.get('/get-permisos', obtenerPermisos);
+rolesRoutes.get('/get-permisos',  passport.authenticate('jwt',{session:false}), obtenerPermisos);
 rolesRoutes.post('/post-rol', crearRol);
 
 
-rolesRoutes.post('/asignar-permiso', asignarPermisoRol);
+rolesRoutes.put('/asignar-permiso/:rolId', passport.authenticate('jwt',{session:false}),  asignarPermisoRol);
 
 module.exports = rolesRoutes;

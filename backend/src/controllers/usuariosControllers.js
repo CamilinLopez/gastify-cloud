@@ -50,9 +50,9 @@ const obtenerTodosUsuariosFiltrado = async ({ id, email, rolId }) => {
     const whereClause = {};
 
     // Agrega condiciones de búsqueda si los parámetros están presentes
-    if (id && id.trim() !== "") whereClause.id = id;
-    if (email && email.trim() !== "") whereClause.email = email;
-    if (rolId && rolId.trim() !== "") whereClause.rolId = rolId;
+    if (id) whereClause.id = id.trim();
+    if (email) whereClause.email = email.trim();
+    if (rolId) whereClause.rolId = rolId;
 
     if (Object.keys(whereClause).length === 0) {
       return []; 
