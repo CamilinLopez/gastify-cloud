@@ -1,15 +1,16 @@
 const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { generateId } = require('../../../utils/generadorId')
 
 const Empresa = (sequelize) => {
   const EmpresaModel = sequelize.define(
     'empresas',
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
-        autoIncrement: true,
         allowNull: false,
+        defaultValue: () => generateId()
       },
       nombre: {
         type: DataTypes.STRING,

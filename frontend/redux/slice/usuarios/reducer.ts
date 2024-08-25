@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { InitialStateUsuarios } from '@/types/usuarios';
-import { RegistroThunk, LoginThunk, SendInviteThunk, GetsUsersThunk, UserSetPasswordThunk } from './thunks';
+import { RegistroThunk, LoginThunk, SendInviteThunk, GetsUsersThunk, UserSetPasswordThunk, FilterUsers } from './thunks';
 
 export const handleFetchRegistroLogin = (builder: any) => {
   builder
@@ -123,6 +123,26 @@ export const handleFetchUsuarioSetPassword = (builder: any) => {
       state.error = null;
     })
     .addCase(UserSetPasswordThunk.rejected, (state: any, action: any) => {
+      state.status = 'failed';
+      state.messageResponse = null;
+      state.error = action.payload.errors || 'Error desconocido';
+    });
+};
+
+
+export const handleFetchUsuariosFilter= (builder: any) => {
+  builder
+
+    .addCase(FilterUsers.pending, (state: any) => {
+      state.status = 'loading';
+    })
+    .addCase(FilterUsers.fulfilled, (state: any, action: any) => {
+      state.data = action.payload.data;
+      state.messageResponse = action.payload.message;
+      state.status = 'succeeded';
+      state.error = null;
+    })
+    .addCase(FilterUsers.rejected, (state: any, action: any) => {
       state.status = 'failed';
       state.messageResponse = null;
       state.error = action.payload.errors || 'Error desconocido';

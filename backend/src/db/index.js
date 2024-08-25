@@ -22,8 +22,6 @@ const database = new Sequelize(`${urlLocal}`, {
   logging: false,
   native: false,
 });
-<<<<<<< Updated upstream
-=======
 
 // const database = new Sequelize(
 //   'postgresql://camilo:a68LZdADLnNeW6PZj8BzIaKk3WytTnVm@dpg-cr197jtds78s739qho60-a.oregon-postgres.render.com/gastifycloud_00um',
@@ -39,7 +37,6 @@ const database = new Sequelize(`${urlLocal}`, {
 //     },
 //   },
 // );
->>>>>>> Stashed changes
 
 //llamar modelos
 modelEstadocilindro(database);

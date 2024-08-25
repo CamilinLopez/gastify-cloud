@@ -10,6 +10,7 @@ const generateId = (length = 10) => {
   return result;
 };
 
+// funciona con DateOnly
 const generarFechaActual = () => {
   const now = moment();
 

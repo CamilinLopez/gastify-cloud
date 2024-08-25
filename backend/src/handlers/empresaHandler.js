@@ -1,7 +1,7 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY, PAGE_URL } = require('../config/env');
-const { invateUser } = require('../controllers/empresasControllers');
+const { invateUser, eliminarInvitacion } = require('../controllers/empresasControllers');
 const { verifyToken, generateToken } = require('../helpers/generateToken');
 
 const crearEmpresa = async (req, res, next) => {
@@ -40,11 +40,7 @@ const signinEmpresa = async (req, res, next) => {
 
       req.login(user, { session: false }, async (err) => {
         if (err) return next(err);
-<<<<<<< Updated upstream
-        const body = { id: user.id };
-=======
         const body = { id: user.empresa.dataValues.id || user.usuario.dataValues.id };
->>>>>>> Stashed changes
 
         const token = jwt.sign(body, SECRET_KEY);
 
@@ -59,9 +55,9 @@ const signinEmpresa = async (req, res, next) => {
 
 const invitarUsuario = async (req, res, next) => {
   try {
-    const { rolId, email, empresa } = req.body;
-    const data = await invateUser({ rolId, email, empresa });
-
+    const { rolId, email } = req.body;
+  
+    const data = await invateUser({ rolId, email, empresaId:req.user.id });
     res.status(200).json({ message: data.message, usuario: data.usuarioData });
   } catch (error) {
     res.status(400).json({ errors: error.message });
@@ -70,10 +66,6 @@ const invitarUsuario = async (req, res, next) => {
 
 const verificarToken = async (req, res, next) => {
   const { token } = req.body;
-<<<<<<< Updated upstream
-  console.log(token);
-=======
->>>>>>> Stashed changes
   let decoded;
   try {
     decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });
@@ -88,9 +80,20 @@ const verificarToken = async (req, res, next) => {
   }
 };
 
+
+const cancelarInvitacion = async (req, res, next) => {
+  const { idInvitacion } = req.params
+  try {
+    const data = await eliminarInvitacion({eliminarInvitacion:idInvitacion});
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ errors: error.message });
+  }
+};
 module.exports = {
   crearEmpresa,
   signinEmpresa,
   invitarUsuario,
   verificarToken,
+  cancelarInvitacion
 };

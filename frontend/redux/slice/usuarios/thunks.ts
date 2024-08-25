@@ -81,3 +81,18 @@ export const UserSetPasswordThunk = createAsyncThunk(
     }
   }
 );
+
+export const FilterUsers = createAsyncThunk(
+  'usuarios/gets-usuarios-filtrado',
+  async (userData: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post('/usuario/gets-usuarios-filtrado', userData);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido');
+      }
+      return rejectWithValue('Error inesperado');
+    }
+  }
+);

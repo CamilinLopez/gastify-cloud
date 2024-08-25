@@ -4,7 +4,8 @@ const { empresas, roles, usuarios } = require('../db/index')
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const { SECRET_KEY } = require('../config/env')
-const { generateToken, verifyToken } = require('../helpers/generateToken')
+const { generateToken } = require('../helpers/generateToken')
+const { generateId } = require('../utils/generadorId')
 
 passport.use('registrar',new LocalStrategy({
   usernameField: 'email', 

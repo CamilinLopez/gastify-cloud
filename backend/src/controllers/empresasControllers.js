@@ -1,27 +1,18 @@
 const { usuarios, empresas, roles } = require('../db/index');
-const { generateToken, verifyToken } = require('../helpers/generateToken')
+const { generateToken } = require('../helpers/generateToken')
 const sendMailerVerificationLink = require('../helpers/sendEmail')
 const { SECRET_KEY, WEBS_URL } = require('../config/env')
 
 const invateUser = async (data) => {
   try {    
     
-     const empresaData = verifyToken(data.empresa, SECRET_KEY,{ ignoreExpiration: true });
-    
-    if (!empresaData) {
-      throw new Error('Token de empresa inválido o expirado.');
-    }
-console.log(empresaData)
-    const empresa = await empresas.findOne({ where: { id: empresaData.id } });
+    const empresa = await empresas.findOne({ where: { id: data.empresaId } });
 
     if (!empresa) {
       throw new Error('La empresa no fue encontrada en la base de datos.');
     }
 
-
-    data = {...data, empresaId:empresaData.id }
-    const usuario = await usuarios.create(data);
-    
+    const usuario = await usuarios.create(data);    
 
     const usuarioData = await usuarios.findOne({
       where: { id: usuario.id }, 
@@ -56,6 +47,27 @@ console.log(empresaData)
   }
 };
 
+
+
+const eliminarInvitacion = async ({eliminarInvitacion}) => {
+  try {    
+
+    const usuario = await usuarios.findOne({ where: { id: eliminarInvitacion } });
+
+    if (!usuario) {
+      throw new Error('El usuario no fue encontrado en la base de datos.');
+    }
+
+    await usuario.destroy();
+
+    return { message: 'Invitación cancelada y usuario eliminado', usuario };
+ 
+  } catch (error) {
+    console.log(error)
+    throw error;
+  }
+};
 module.exports = {
-  invateUser
+  invateUser,
+  eliminarInvitacion
 };

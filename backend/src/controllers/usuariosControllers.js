@@ -60,9 +60,15 @@ const obtenerTodosUsuariosFiltrado = async ({ id, email, rolId }) => {
 
     const usuariosData = await usuarios.findAll({
       where: whereClause,
-      attributes: { exclude: ['password', 'empresaId'] },
+      attributes: { exclude: ['password', 'empresaId','rolId'] },
+      include: [
+        {
+          model: roles, // Asegúrate de importar el modelo Role
+          as: 'rol', // Debe coincidir con el alias en la relación definida
+          attributes: ['nombre'], // Campos específicos del rol que deseas incluir
+        },
+      ],
     });
-
     return usuariosData;
 
   } catch (error) {

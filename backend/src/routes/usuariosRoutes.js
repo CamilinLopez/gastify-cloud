@@ -4,7 +4,7 @@ const passport = require('passport');
 
 const usuariosRoutes = Router();
 
-// ruta para crear contraseña para ñlos usuarios invitados
+// ruta para crear contraseña para los usuarios invitados
 usuariosRoutes.post('/post-usuario-crear-password', passport.authenticate('jwt',{session:false}), ingresarPassword);
 
 // ruta para obtener usuarios de las empresas

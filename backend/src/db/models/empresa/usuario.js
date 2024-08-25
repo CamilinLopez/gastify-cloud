@@ -1,15 +1,16 @@
 const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { generateId } = require('../../../utils/generadorId')
 
 const Usuario = (sequelize) => {
   const UsuarioModel = sequelize.define(
     'usuarios',
     {
       id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         primaryKey: true,
-        autoIncrement: true,
         allowNull: false,
+        defaultValue: () => generateId()
       },
       email: {
         type: DataTypes.STRING,
@@ -33,7 +34,7 @@ const Usuario = (sequelize) => {
         defaultValue: DataTypes.NOW,
       },
       empresaId: { // Clave foránea que hace referencia a la tabla de empresas
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         references: {
           model: 'empresas', // Nombre de la tabla de empresas
           key: 'id',
