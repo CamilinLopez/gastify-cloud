@@ -23,6 +23,7 @@ const CilindrosPorDia = () => {
   const ventasToday = useSelector((state: RootState) => state.inicio.responseVentaPorDia);
   const array = ventasToday.result;
   const today = ventasToday.today;
+  console.log(ventasToday)
 
   const maxValue = Math.max(...array?.map((item) => Number(item.totalCantidad)));
 

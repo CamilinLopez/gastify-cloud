@@ -8,6 +8,7 @@ const inicioRoutes = require('./inicio');
 const rolesRoutes = require('./rolesRoutes');
 const empresaRoutes = require('./empresaRoutes');
 const usuariosRoutes = require('./usuariosRoutes');
+const alarmasRouters = require('./alarmasRouters');
 
 const routes = Router();
 
@@ -30,5 +31,8 @@ routes.use('/roles', rolesRoutes);
 routes.use('/empresa', empresaRoutes);
 //rutas para la seccion usuarios
 routes.use('/usuario', usuariosRoutes);
+
+//rutas para seccion alarmas
+routes.use('/alarmas', alarmasRouters);
 
 module.exports = routes;

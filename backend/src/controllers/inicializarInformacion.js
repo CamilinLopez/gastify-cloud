@@ -1,7 +1,6 @@
 const { estado_cilindros, tipo_cilindros, inventario_bodegas, ventas } = require('../db/index');
 const { literal } = require('sequelize');
 const { inventarioInicial, VentasInicial } = require('../utils/cargainicialInventaio');
-const { generateId, generarFechaActual, generarHoraActual } = require('../utils/generadorId');
 const cron = require('node-cron');
 
 const crearDatosDB = async () => {

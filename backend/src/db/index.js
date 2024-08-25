@@ -10,6 +10,7 @@ const {
   modelDetallesCarga,
   modelDescarga,
   modelVentas,
+  modelStockCilindros,
 } = require('./models/inventario/index');
 
 const { modelPermisos, modelRoles, modelRolesPermisos } = require('./models/roles/index');
@@ -57,6 +58,8 @@ modelRolesPermisos(database);
 
 modelEmpresa(database);
 modelUsuario(database);
+
+modelStockCilindros(database);
 
 //modelos de seccion inventario
 const {

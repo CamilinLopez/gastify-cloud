@@ -81,7 +81,13 @@ export default function Menu() {
               onClick={() => handleItemClick(item.name)}>
               <button className={`text-14px py-2 w-full flex gap-2 items-center`}>
                 {item.subMenu && selectedItem === item.name ? <ChevronDown /> : <ChevronRight />}
-                {!item.subMenu ? <Link href={item.path}>{item.name}</Link> : item.name}
+                {!item.subMenu ? (
+                  <Link className="text-14px" href={item.path}>
+                    {item.name}
+                  </Link>
+                ) : (
+                  item.name
+                )}
               </button>
 
               {selectedItem === item.name &&

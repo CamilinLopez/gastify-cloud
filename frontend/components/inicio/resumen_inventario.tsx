@@ -12,8 +12,6 @@ export default function ResumenInventario() {
   const maxValueLLenos = Math.max(...tabla?.llenos.map((item) => Number(item.totalCantidad)));
   const maxValueVacios = Math.max(...tabla?.vacios.map((item) => Number(item.totalCantidad)));
 
-  console.log(maxValueLLenos, maxValueVacios);
-
   useEffect(() => {
     dispatch(getTablaInventarioResumen());
   }, [dispatch]);
