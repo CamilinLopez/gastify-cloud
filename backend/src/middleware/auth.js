@@ -40,13 +40,12 @@ passport.use('signin', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
 },async(email, password, done)=>{
-
-  // Validar el email y la contraseña del usuario en la base de datos.
   try {
     // Buscar en la tabla de empresas
     const empresa = await empresas.findOne({ where: { email } });
 
     if (empresa) {
+
       // Verificar la contraseña de la empresa
       const isValid = await empresa.comparePassword(password);
       
@@ -60,6 +59,9 @@ passport.use('signin', new LocalStrategy({
     // Si no es una empresa, buscar en la tabla de usuarios
     const usuario = await usuarios.findOne({ where: { email } });
     if (usuario) {
+      if(!usuario.verificado)
+        return done(null, false, { message: 'Verifique La Cuenta' });
+
       // Verificar la contraseña del usuario
       const isValid = await usuario.comparePassword(password);
       
@@ -74,6 +76,7 @@ passport.use('signin', new LocalStrategy({
     return done(null, false, { message: 'Credenciales incorrectas' });
 
   } catch (error) {
+    console.log(error);
     return done(error);
   }
 
@@ -84,8 +87,7 @@ passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el token del encabezado Authorization
 }, async (token, done) => {
   try {
-    console.log('Esto es el token', token);
-
+    console.log(token)
     // Establece el id del usuario en req.user
     return done(null, { id: token.id });
 

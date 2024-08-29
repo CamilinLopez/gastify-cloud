@@ -27,7 +27,6 @@ const Form = () => {
     }
 
     if (login.payload.dashboard && login.payload.token) {
-      console.log(login.payload.dashboard)
       // window.location.href = login.payload.dashboard;
       router.push('/dashboard/inicio')
     }

@@ -60,7 +60,6 @@ export const handleFetchRegistroLogin = (builder: any) => {
       state.status = 'loading';
     })
     .addCase(SendInviteThunk.fulfilled, (state: any, action: any) => {
-      console.log(action)
       state.user = action.payload.usuario;
       state.messageResponse = action.payload.message;
       state.status = 'succeeded';
@@ -75,7 +74,6 @@ export const handleFetchRegistroLogin = (builder: any) => {
 
     // obtener todos los usuarios  
     .addCase(GetsUsersThunk.pending, (state: any) => {
-      // console.log('loading',state)
       state.status = 'loading';
     })
     .addCase(GetsUsersThunk.fulfilled, (state: any, action: any) => {

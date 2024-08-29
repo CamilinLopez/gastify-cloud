@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = (data, secret, options = { value: 6, unit: 'hours' }) => {
+const generateToken = (data, secret, options = { value: 6, unit: 'days' }) => {
   // Calcular el tiempo de expiración en segundos.
   const expiration = calculateExpirationInSeconds(options.value, options.unit);
 

@@ -5,11 +5,47 @@ import { RoutesMenu } from '@/arraysObjects/menu';
 import { ChevronDown } from '../icons/chevron-down';
 import Link from 'next/link';
 import { ChevronRight } from '../icons/chevron-right';
+import { axiosInstance } from '@/config/axios';
+
 
 export default function Menu() {
+  
+  const [userPermissions, setUserPermissions] = useState<string[]>([]);
+  const [filteredMenu, setFilteredMenu] = useState(RoutesMenu);
+
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
   const menuRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const res = await axiosInstance.get(`/roles/roles-permisos`);
+        const permisos = res.data.data.rol.permisos.map((p:any) => p.nombre);
+        setUserPermissions(permisos);
+        const filtered = filterRoutes(RoutesMenu, permisos);
+        setFilteredMenu(filtered);
+      } catch (error) {
+        console.error('Error obteniendo permisos del usuario:', error);
+      }
+    };
+
+    fetchPermissions();
+  }, []);
+
+  const filterRoutes = (routes:any, permisos: string[]): any[] => {
+    return routes
+      .filter((route:any) => permisos.includes(route.permisos)) // Filtra el menú basado en permisos
+      .map((route:any) => ({
+        ...route,
+        subMenu: route.subMenu ? filterRoutes(route.subMenu, permisos) : undefined // Filtra submenús recursivamente
+      }));
+  };
+
+  
+
 
   const toggleDropdown = (index: number) => {
     if (openIndex === index) {
@@ -24,7 +60,6 @@ export default function Menu() {
     }
   };
 
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const handleItemClick = (item: string) => {
     if (selectedItem === item) {
@@ -37,7 +72,7 @@ export default function Menu() {
   return (
     <div>
       <div className="flex relative xl:hidden">
-        {RoutesMenu.map((item, index) => (
+        {filteredMenu.map((item, index) => (
           <div
             key={index}
             ref={(el) => {

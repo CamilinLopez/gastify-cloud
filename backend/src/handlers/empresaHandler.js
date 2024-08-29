@@ -69,7 +69,6 @@ const verificarToken = async (req, res, next) => {
   const { token } = req.body;
   let decoded;
   try {
-    console.log('hola desde verificar-toke 111');
     decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });
 
     const newToken = generateToken({ id: decoded.id }, SECRET_KEY);

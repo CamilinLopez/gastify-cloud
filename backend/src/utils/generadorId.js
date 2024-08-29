@@ -13,7 +13,6 @@ const generateId = (length = 10) => {
 // funciona con DateOnly
 const generarFechaActual = () => {
   const now = moment();
-
   const newFecha = moment(now).format('YYYY-MM-DD');
   return newFecha;
 };

@@ -8,6 +8,7 @@ export interface TypeRoutes {
 export interface Routes {
   name: string;
   path: string;
+  permisos: string,
   subMenu?: TypeRoutes[];
 }
 

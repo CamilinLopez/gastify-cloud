@@ -6,6 +6,7 @@ const { SECRET_KEY, WEBS_URL } = require('../config/env')
 const invateUser = async (data) => {
   try {    
     
+    // verificar si es de una empresa o es un usuario para sacar el id de la empresa
     const empresa = await empresas.findOne({ where: { id: data.empresaId } });
 
     if (!empresa) {
@@ -42,7 +43,6 @@ const invateUser = async (data) => {
      return { message: 'Email enviado',authentication, usuarioData };
 
   } catch (error) {
-    console.log(error)
     throw error;
   }
 };

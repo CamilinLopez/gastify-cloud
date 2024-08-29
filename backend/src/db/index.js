@@ -172,6 +172,17 @@ roles.hasMany(usuarios, {
   as: 'usuarios',
 });
 
+
+empresas.belongsTo(roles, {
+  foreignKey: 'rolId',
+  as: 'rol',
+});
+
+roles.hasMany(empresas, {
+  foreignKey: 'rolId',
+  as: 'empresas',
+});
+
 // console.log(Object.keys(database.models));
 
 module.exports = {

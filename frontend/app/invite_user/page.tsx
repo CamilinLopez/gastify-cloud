@@ -7,12 +7,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store';
 import { UserSetPasswordThunk } from '@/redux/slice/usuarios/thunks';
 import { AppDispatch } from "@/redux/store";
-
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 
 export default function InviteUser() {
-  
+  const router = useRouter();
+
   const [formValues, setFormValues] = useState({
+    nombre: '',
     password: '',
     confirmPassword: '',
     email:'',
@@ -70,9 +73,20 @@ useEffect(() => {
     event.preventDefault();
     if (formValues.password === formValues.confirmPassword) {
 
-      const setPassword = await dispatch(UserSetPasswordThunk({ email:formValues.email, password:formValues.password, empresa:formValues.empresa }));
+      const setPassword = await dispatch(UserSetPasswordThunk({ email:formValues.email, password:formValues.password, empresa:formValues.empresa, nombre:formValues.nombre }));
     if (setPassword.payload.dashboard) {
-      window.location.href =setPassword.payload.dashboard
+      // window.location.href =setPassword.payload.dashboard
+      router.push('/dashboard/inicio')
+
+      // Establecer el token en las cookies si está disponible
+      const token = setPassword.payload.token; // Ajusta esto según cómo obtienes el token
+      if (token) {
+        Cookies.set('token', token, {
+          expires: 7, // Duración en días
+          secure: true, // Solo en HTTPS
+          sameSite: 'None', // Políticas de mismo sitio
+        });
+      }
     }
       // Aquí puedes hacer el submit, enviar los datos al servidor, etc.
     } else {
@@ -100,6 +114,17 @@ useEffect(() => {
           <div className="flex flex-col gap-y-5">
             <p className="text-secondary-14px">Nombre de usuario: {usuario}</p>
             <form className="flex flex-col gap-y-6" onSubmit={handleFormSubmit}>
+            <div className="flex flex-col">
+                <p className="text-16px">Nombre</p>
+                <input
+                  className="p-4 h-14 bg-gris-1 rounded-xl w-full"
+                  type='text'
+                  required
+                  name="nombre"
+                  value={formValues.nombre}
+                  onChange={handleInputChange}
+                />
+              </div>
               <div className="flex flex-col">
                 <p className="text-16px">Contraseña</p>
                 <input

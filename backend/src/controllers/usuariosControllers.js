@@ -1,21 +1,25 @@
-const { usuarios, roles } = require('../db/index');
+const { usuarios, roles, empresas } = require('../db/index');
 const bcrypt = require('bcrypt');
+const { generarFechaActual } = require('../utils/generadorId')
 
-
-const crearUsuarioPasswordDB = async ({email, password, empresa}) => {
+const crearUsuarioPasswordDB = async ({email, password, empresa,nombre}) => {
   try {
     const usuario = await usuarios.findOne({where:{email, empresaId:empresa}}) 
-
     if (!usuario) {
       throw new Error('Usuario no encontrado');
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Actualizar la contraseña del usuario
-    usuario.password = hashedPassword;
-    usuario.verificado = true;
-    usuario.save()
-    return usuario
+    if(!usuario.verificado){
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      usuario.password = hashedPassword;
+      usuario.verificado = true;
+      usuario.nombre = nombre
+      await usuario.save();
+      return usuario
+
+    }
+    throw new Error('El usuario ya está verificado');
 
   } catch (error) {
     throw error;
@@ -26,7 +30,9 @@ const crearUsuarioPasswordDB = async ({email, password, empresa}) => {
 
 const obtenerTodosUsuarios = async () => {
   try {
+    // const id = req.usuario.id
     const usuariosData = await usuarios.findAll({
+      where: { activo: true }, 
       attributes: { exclude: ['rolId','password','empresaId'] }, 
       include: [
         {
@@ -59,7 +65,7 @@ const obtenerTodosUsuariosFiltrado = async ({ id, email, rolId }) => {
     }
 
     const usuariosData = await usuarios.findAll({
-      where: whereClause,
+      where: {whereClause,activo:true},
       attributes: { exclude: ['password', 'empresaId','rolId'] },
       include: [
         {
@@ -77,8 +83,57 @@ const obtenerTodosUsuariosFiltrado = async ({ id, email, rolId }) => {
 };
 
 
+const infoUserAutenthicate = async ({ id }) => {
+  try {
+    const empresa = await fetchEntity(empresas, id);
+    if (empresa) return { type: 'empresa', empresa };
+
+    const usuario = await fetchEntity(usuarios, id);
+    if (usuario) return { type: 'usuario', usuario };
+
+    throw new Error('Información no encontrada');
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+const deleteUser = async ({ id }) => {
+  try {
+    const usuario = await fetchEntity(usuarios, id);
+    if (!usuario)
+      throw new Error('uusario no encontrado');
+    
+    usuario.activo=false;
+    usuario.eliminadoEn = generarFechaActual()
+    await usuario.save()
+
+    return { message: 'Usuario eliminado', usuario };
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+const fetchEntity = async (model, id) => {
+  return model.findOne({
+    where: { id },
+    attributes: { exclude: ['password', 'fecha_registro', 'rolId'] },
+    include: [
+      {
+        model: roles,
+        as: 'rol',
+        attributes: ['nombre'],
+      },
+    ],
+  });
+};
 module.exports = {
   obtenerTodosUsuarios,
   crearUsuarioPasswordDB,
-  obtenerTodosUsuariosFiltrado
+  obtenerTodosUsuariosFiltrado,
+  infoUserAutenthicate,
+  deleteUser
 };

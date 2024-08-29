@@ -12,6 +12,10 @@ const Usuario = (sequelize) => {
         allowNull: false,
         defaultValue: () => generateId()
       },
+      nombre: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -49,7 +53,17 @@ const Usuario = (sequelize) => {
           key: 'id',
         },
       },
+      activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      eliminadoEn: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
     },
+    
     {
       timestamps: false,
     },

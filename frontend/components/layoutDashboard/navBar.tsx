@@ -6,9 +6,8 @@ import { Usuarios, Alertas, Configuracion } from './dropdown';
 import Menu from './menu';
 
 
-
-
 export default function NavBar() {
+  
   
   const [, setCount] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
