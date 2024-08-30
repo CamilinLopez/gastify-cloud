@@ -63,9 +63,10 @@ const obtenerTodosUsuariosFiltrado = async ({ id, email, rolId }) => {
     if (Object.keys(whereClause).length === 0) {
       return []; 
     }
-
+    whereClause.activo=true
     const usuariosData = await usuarios.findAll({
-      where: {whereClause,activo:true},
+      where: whereClause,
+
       attributes: { exclude: ['password', 'empresaId','rolId'] },
       include: [
         {

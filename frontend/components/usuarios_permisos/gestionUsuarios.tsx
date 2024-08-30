@@ -6,6 +6,8 @@ import { AppDispatch, RootState } from '@/redux/store';
 import { RolesThunk } from '@/redux/slice/roles/thunks';
 import { FilterUsers } from '@/redux/slice/usuarios/thunks';
 import { CustomSelect } from './customSelect';
+import { axiosInstance } from '@/config/axios';
+import Swal from 'sweetalert2';
 
 interface FormProps {
   setDataFilter: React.Dispatch<React.SetStateAction<any[]>>;
@@ -100,6 +102,42 @@ export default function GestionUsuarios() {
 
   const textTable = ['ID', 'Nombre', 'correo electrónico', 'Rol', 'Acciones'];
 
+  const handleEliminarUsuario = async (idUser: string, email: string) => {
+    Swal.fire({
+      title: `¿Estás seguro de eliminar al usuario ${email}?`,
+      text: '¡No podrás revertir esto!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, bórralo!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Llamada a la API para eliminar la invitación
+          await axiosInstance.delete(`/usuario/delete-usuario/${idUser}`);
+
+          // Actualizar la lista de usuarios invitados
+          setDataFilter((prevUsers) => prevUsers.filter((user) => user.id !== idUser));
+
+          // Mostrar confirmación de eliminación con el email
+          Swal.fire({
+            title: '¡Eliminado!',
+            text: `El usuario ${email} ha sido eliminada.`,
+            icon: 'success',
+          });
+        } catch (error) {
+          // Manejar error en la eliminación
+          Swal.fire({
+            title: 'Error',
+            text: `Hubo un error al cancelar la elimicaciòn para ${email}.`,
+            icon: 'error',
+          });
+        }
+      }
+    });
+  };
+
 
   return (
     <div className="w-full p-4">
@@ -128,8 +166,8 @@ export default function GestionUsuarios() {
                     <td className="px-6 py-4 text-secondary-14px ">{item.email}</td>
                     <td className="px-6 py-4 text-secondary-14px ">{item.rol.nombre}</td>
                     <td className="px-6 py-4 text-secondary-14px flex gap-x-3">
-                      <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">Eliminar</button>
-                      <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">Guardar</button>
+                      <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2" onClick={() => handleEliminarUsuario(item.id, item.email)} // Función para eliminar
+                      >Eliminar</button>
                     </td>
                   </tr>
                 ))

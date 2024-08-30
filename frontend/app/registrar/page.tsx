@@ -117,7 +117,7 @@ export default function Register() {
             </button>
           </div> */}
           <div className="w-full flex justify-center">
-            <p className="text-secondary-14px">|</p>
+            {/* <p className="text-secondary-14px">|</p> */}
           </div>
           <div className="w-full">
             <Form />

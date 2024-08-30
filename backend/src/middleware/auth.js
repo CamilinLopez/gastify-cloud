@@ -87,7 +87,6 @@ passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Extrae el token del encabezado Authorization
 }, async (token, done) => {
   try {
-    console.log(token)
     // Establece el id del usuario en req.user
     return done(null, { id: token.id });
 

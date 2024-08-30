@@ -7,12 +7,8 @@ import Link from 'next/link';
 import { ChevronRight } from '../icons/chevron-right';
 import { axiosInstance } from '@/config/axios';
 
-
 export default function Menu() {
-  
-  const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [filteredMenu, setFilteredMenu] = useState(RoutesMenu);
-
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
@@ -23,8 +19,8 @@ export default function Menu() {
     const fetchPermissions = async () => {
       try {
         const res = await axiosInstance.get(`/roles/roles-permisos`);
-        const permisos = res.data.data.rol.permisos.map((p:any) => p.nombre);
-        setUserPermissions(permisos);
+
+        const permisos = await res.data.data.rol.permisos.map((p: any) => p.nombre);
         const filtered = filterRoutes(RoutesMenu, permisos);
         setFilteredMenu(filtered);
       } catch (error) {
@@ -35,17 +31,18 @@ export default function Menu() {
     fetchPermissions();
   }, []);
 
-  const filterRoutes = (routes:any, permisos: string[]): any[] => {
-    return routes
-      .filter((route:any) => permisos.includes(route.permisos)) // Filtra el menú basado en permisos
-      .map((route:any) => ({
-        ...route,
-        subMenu: route.subMenu ? filterRoutes(route.subMenu, permisos) : undefined // Filtra submenús recursivamente
-      }));
-  };
-
+  const filterRoutes = (routes: any[], permisos: string[]): any[] => {
+    return routes.filter((route) => {
+      // If the route doesn't have a permisos key or it is empty, allow it by default
+      if (!route.permisos || route.permisos.length === 0) {
+        return true;
+      }
   
-
+      // Check if the route's permisos match any of the user's permissions
+      return permisos.includes(route.permisos);
+    });
+  };
+  
 
   const toggleDropdown = (index: number) => {
     if (openIndex === index) {
@@ -59,7 +56,6 @@ export default function Menu() {
       setOpenIndex(index);
     }
   };
-
 
   const handleItemClick = (item: string) => {
     if (selectedItem === item) {
@@ -93,7 +89,7 @@ export default function Menu() {
             )}
             {openIndex === index && item.subMenu && (
               <div
-                className="fixed w-48 bg-white shadow-lg z-50 w-auto"
+                className="fixed bg-white shadow-lg z-50 w-auto"
                 style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                 {item.subMenu.map((subItem) => (
                   <div key={subItem.name} className="flex flex-col">
@@ -109,7 +105,7 @@ export default function Menu() {
       </div>
       <div className="bg-blanco p-4 xl:flex xl:flex-col h-full justify-between hidden">
         <div className="flex flex-col gap-y-1">
-          {RoutesMenu.map((item) => (
+          {filteredMenu.map((item) => (
             <div
               key={item.name}
               className={`cursor-pointer flex flex-col w-full justify-center items-center rounded-xl`}
