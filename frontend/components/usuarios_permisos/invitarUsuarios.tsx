@@ -43,7 +43,6 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
     // event.preventDefault();
 
     const send = await dispatch(SendInviteThunk(formValues));
-
     await setUsersInvited((prevUsers) => [...prevUsers, send.payload.usuario]);
   
     Swal.fire({

@@ -8,6 +8,7 @@ import { CustomSelect } from './customSelect';
 
 import { axiosInstance } from '@/config/axios';
 import Swal from 'sweetalert2';
+import { fetchPermisos } from '@/redux/slice/usuarios/usuarios-permisos';
 
 interface PrintCheckboxProps {
   roles: any[];
@@ -61,6 +62,7 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
         )
       );
    
+      dispatch(fetchPermisos());
 
       Swal.fire({
       position: "center",
@@ -106,7 +108,6 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
         </button>
       </div>
     );
-    
 };
   
  

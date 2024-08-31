@@ -5,10 +5,17 @@ import { RoutesMenu } from '@/arraysObjects/menu';
 import { ChevronDown } from '../icons/chevron-down';
 import Link from 'next/link';
 import { ChevronRight } from '../icons/chevron-right';
-import { axiosInstance } from '@/config/axios';
+// import { axiosInstance } from '@/config/axios';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '@/redux/store';
+import { fetchPermisos } from '@/redux/slice/usuarios/usuarios-permisos';
 
 export default function Menu() {
-  const [filteredMenu, setFilteredMenu] = useState(RoutesMenu);
+  const dispatch:AppDispatch = useDispatch();
+  const { filteredRoutes, status } = useSelector((state: RootState) => state.permisosUser);
+
+  // const [filteredMenu, setFilteredMenu] = useState([]);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
@@ -16,33 +23,38 @@ export default function Menu() {
   const menuRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const fetchPermissions = async () => {
-      try {
-        const res = await axiosInstance.get(`/roles/roles-permisos`);
+    if (status === 'idle') {
+      dispatch(fetchPermisos());
+    }
 
-        const permisos = await res.data.data.rol.permisos.map((p: any) => p.nombre);
-        const filtered = filterRoutes(RoutesMenu, permisos);
-        setFilteredMenu(filtered);
-      } catch (error) {
-        console.error('Error obteniendo permisos del usuario:', error);
-      }
-    };
+  }, [dispatch, status]);
 
-    fetchPermissions();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPermissions = async () => {
+  //     try {
+  //       const res = await axiosInstance.get(`/roles/roles-permisos`);
+  //       const permisos = res.data.data.rol.permisos.map((p: any) => p.nombre);
+  //       const filtered:any= filterRoutes(RoutesMenu, permisos);
+  //       setFilteredMenu(filtered);
+  //     } catch (error) {
+  //       console.error('Error obteniendo permisos del usuario:', error);
+  //     }
+  //   };
 
-  const filterRoutes = (routes: any[], permisos: string[]): any[] => {
+  //   fetchPermissions();
+  // }, []);
+
+  const filterRoutes = (routes: any[], permisos: string[])=> {
     return routes.filter((route) => {
-      // If the route doesn't have a permisos key or it is empty, allow it by default
+      // Si no hay permisos requeridos, se muestra por defecto.
       if (!route.permisos || route.permisos.length === 0) {
         return true;
       }
   
-      // Check if the route's permisos match any of the user's permissions
+      // Filtrar si el usuario tiene el permiso requerido para la ruta.
       return permisos.includes(route.permisos);
     });
   };
-  
 
   const toggleDropdown = (index: number) => {
     if (openIndex === index) {
@@ -68,7 +80,7 @@ export default function Menu() {
   return (
     <div>
       <div className="flex relative xl:hidden">
-        {filteredMenu.map((item, index) => (
+        {filteredRoutes.map((item:any, index) => (
           <div
             key={index}
             ref={(el) => {
@@ -91,7 +103,7 @@ export default function Menu() {
               <div
                 className="fixed bg-white shadow-lg z-50 w-auto"
                 style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
-                {item.subMenu.map((subItem) => (
+                {item.subMenu.map((subItem:any) => (
                   <div key={subItem.name} className="flex flex-col">
                     <Link href={subItem.path} className="p-2 hover:bg-gray-100">
                       {subItem.name}
@@ -105,7 +117,7 @@ export default function Menu() {
       </div>
       <div className="bg-blanco p-4 xl:flex xl:flex-col h-full justify-between hidden">
         <div className="flex flex-col gap-y-1">
-          {filteredMenu.map((item) => (
+          {filteredRoutes.map((item:any) => (
             <div
               key={item.name}
               className={`cursor-pointer flex flex-col w-full justify-center items-center rounded-xl`}
@@ -122,7 +134,7 @@ export default function Menu() {
               </button>
 
               {selectedItem === item.name &&
-                item.subMenu?.map((subItem) => (
+                item.subMenu?.map((subItem:any) => (
                   <Link
                     key={subItem.name}
                     href={subItem.path}
