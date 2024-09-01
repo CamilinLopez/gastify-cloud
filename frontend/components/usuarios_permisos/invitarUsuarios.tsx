@@ -1,7 +1,5 @@
 'use client';
-import { TablaGestiosUsuarios } from '@/types/usuarios_permisos';
 import React, { useState, useEffect } from 'react';
-import { Flechas } from '../svg/svgImages';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { RolesThunk } from '@/redux/slice/roles/thunks';
@@ -9,6 +7,8 @@ import { RolesThunk } from '@/redux/slice/roles/thunks';
 import { SendInviteThunk, GetsUsersThunk } from '@/redux/slice/usuarios/thunks';
 
 import { axiosInstance } from '@/config/axios';
+import { CustomSelect } from './customSelect';
+import Swal from 'sweetalert2';
 
 interface FormProps {
   setUsersInvited: React.Dispatch<React.SetStateAction<any[]>>;
@@ -24,15 +24,8 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [buttonText, setButtonText] = useState('Enviar invitación');
 
-  const handleFormSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsSubmitting(true); // Cambia el estado para mostrar "Enviando..."
-
-    await handleSubmit();
-
-    setIsSubmitting(false); // Restablece el estado después de enviar
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +39,39 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
     fetchData();
   }, [dispatch]);
 
+  const handleSubmit = async () => {
+    // event.preventDefault();
+
+    const send = await dispatch(SendInviteThunk(formValues));
+    await setUsersInvited((prevUsers) => [...prevUsers, send.payload.usuario]);
+  
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: `${send.payload.message}`,
+      showConfirmButton: false,
+      timer: 2000
+    });
+
+  };
+
+  const handleFormSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsSubmitting(true); // Cambia el estado para mostrar "Enviando..."
+    setButtonText('Enviando...');
+
+    await handleSubmit();
+
+    setFormValues({ email: '', rolId: '' });
+
+    setIsSubmitting(false); // Restablece el estado después de enviar
+
+    // Espera 3 segundos antes de volver a mostrar "Enviar invitación"
+    setTimeout(() => {
+      setButtonText('Enviar invitación');
+    }, 3000);
+  };
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setFormValues({
@@ -54,34 +80,16 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
     });
   };
 
-  const [message, setMessage] = useState<string | null>(null);
-
-  const handleSubmit = async () => {
-    // event.preventDefault();
-
-    const send = await dispatch(SendInviteThunk(formValues));
-
-    await setUsersInvited((prevUsers) => [...prevUsers, send.payload.usuario]);
-  
-    if (send.payload.message) {
-      setMessage(send.payload.message);
-    }
+  const handleSelectChange = (value: string) => {
+    setFormValues({
+      ...formValues,
+      rolId: value,
+    });
   };
-
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => {
-        setMessage(null);
-      }, 3000); // 3 segundos
-
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
 
   return (
     <div className="w-full">
-      {message && <div className="text-center text-cyan-700">{message}</div>}
-      <form className="w-full" onSubmit={handleFormSubmit}>
+     <form className="w-full" onSubmit={handleFormSubmit}>
         <div className="w-full flex items-end">
           <div className="w-8/12">
             <p className="text-16px py-2">correo electrónico</p>
@@ -97,33 +105,11 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
           </div>
           <div className="w-6/12">
             <p className="text-16px py-2">Rol</p>
-            <div className="relative w-8/12">
-              {/* <input className="p-4 h-14 bg-gris-1 rounded-xl w-full" type="text" placeholder="Seleccionar" /> */}
-              <select
-                className="p-4 h-14 bg-gris-1 rounded-xl w-full  border-gray-300 focus:border-blue-500 outline-none transition duration-300 appearance-none shadow-md"
-                name="rolId"
-                value={formValues.rolId}
-                onChange={handleInputChange}
-                required>
-                <option value="" disabled>
-                  {roles.length > 0 ? 'Seleccionar' : 'Cargando roles...'}
-                </option>
-                {roles.map((role: any) => (
-                  <option key={role.id} value={role.id}>
-                    {role.nombre}
-                  </option>
-                ))}
-              </select>
-
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
-                <Flechas />
-              </div>
-            </div>
+            <CustomSelect options={roles} selectedValue={formValues.rolId} onChange={handleSelectChange} />
           </div>
-
           <button
             type="submit"
-            className="w-full sm:w-1/4 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco"
+            className="ml-5 w-full sm:w-1/4 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco"
             disabled={status === 'loading' || isSubmitting}>
             {status === 'loading' || isSubmitting ? 'Enviando...' : 'Enviar invitación'}
           </button>
@@ -170,19 +156,40 @@ export default function InvitarUsuarios() {
 
 
 
-  const handleEliminarInvitacion = async (idInvitacion:string) => {
-    console.log(idInvitacion)
-    const confirmacion = window.confirm('¿Estás seguro de que deseas cancelar la invitación?');
-  
-    if (confirmacion) {
-      try {
-        await axiosInstance.delete(`/empresa/post-empresa-cancelar-invitacion/${idInvitacion}`);
+  const handleEliminarInvitacion = async (idInvitacion: string, email: string) => {
+    Swal.fire({
+      title: `¿Estás seguro de eliminar la invitación para ${email}?`,
+      text: '¡No podrás revertir esto!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, bórralo!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Llamada a la API para eliminar la invitación
+          await axiosInstance.delete(`/empresa/post-empresa-cancelar-invitacion/${idInvitacion}`);
 
-        setUsersInvited((prevUsers) => prevUsers.filter((user) => user.id !== idInvitacion));
-      } catch (error) {
-        alert('Hubo un error al cancelar la invitación.');
+          // Actualizar la lista de usuarios invitados
+          setUsersInvited((prevUsers) => prevUsers.filter((user) => user.id !== idInvitacion));
+
+          // Mostrar confirmación de eliminación con el email
+          Swal.fire({
+            title: '¡Eliminado!',
+            text: `La invitación para ${email} ha sido eliminada.`,
+            icon: 'success',
+          });
+        } catch (error) {
+          // Manejar error en la eliminación
+          Swal.fire({
+            title: 'Error',
+            text: `Hubo un error al cancelar la invitación para ${email}.`,
+            icon: 'error',
+          });
+        }
       }
-    }
+    });
   };
 
   return (
@@ -227,12 +234,12 @@ export default function InvitarUsuarios() {
                     </td>
                     <td className="px-6 py-4 text-secondary-14px">
                     <button
-  className={`bg-azul rounded-xl font-Inter font-[500] text-blanco p-2 ${item.verificado ? 'opacity-50 cursor-not-allowed' : ''}`}
-  disabled={item.verificado} // Desactiva el botón si ya está verificado
-  onClick={() => handleEliminarInvitacion(item.id)} // Función para eliminar
->
-  {item.verificado ? 'Invitación Confirmada' : 'Cancelar Invitación'}
-</button>
+                        className={`bg-azul rounded-xl font-Inter font-[500] text-blanco p-2 ${item.verificado ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={item.verificado} // Desactiva el botón si ya está verificado
+                        onClick={() => handleEliminarInvitacion(item.id, item.email)} // Función para eliminar
+                      >
+                        {item.verificado ? 'Invitación Confirmada' : 'Cancelar Invitación'}
+                      </button>
                     </td>
                   </tr>
                 ))

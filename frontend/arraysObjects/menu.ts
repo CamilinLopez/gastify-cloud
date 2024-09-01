@@ -4,10 +4,12 @@ export const RoutesMenu: Routes[] = [
   {
     name: 'Inicio',
     path: '/dashboard/inicio',
+    permisos: 'inicio',
   },
   {
     name: 'Inventario',
     path: '/dashboard/inventario',
+    permisos: 'inventario',
     subMenu: [
       {
         name: 'Inventario de Bodega',
@@ -30,18 +32,24 @@ export const RoutesMenu: Routes[] = [
   {
     name: 'Operaciones diarias',
     path: '/dashboard/operaciones_diarias',
+    permisos: 'operaciones diarias',
+
   },
   {
     name: 'Reportes',
     path: '/dashboard/reportes',
+    permisos: 'reportes',
+
   },
   {
     name: 'Abastecimiento',
     path: '/dashboard/abastecimiento',
+    permisos: 'abastecimiento',
   },
   {
     name: 'Usuarios y permisos',
     path: '/dashboard/usuarios_permisos',
+    permisos: 'usuarios y permisos',
     subMenu: [
       {
         name: 'Invitar usuarios',

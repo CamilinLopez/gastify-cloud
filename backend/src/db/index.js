@@ -16,8 +16,8 @@ const {
 const { modelPermisos, modelRoles, modelRolesPermisos } = require('./models/roles/index');
 const { modelEmpresa, modelUsuario } = require('./models/empresa/index');
 
-const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
-const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
+const urlLocal = 'postgres://postgres:1010@localhost:5432/gastifycloud';
+// const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
 const database = new Sequelize(`${urlLocal}`, {
@@ -170,6 +170,17 @@ usuarios.belongsTo(roles, {
 roles.hasMany(usuarios, {
   foreignKey: 'rolId',
   as: 'usuarios',
+});
+
+
+empresas.belongsTo(roles, {
+  foreignKey: 'rolId',
+  as: 'rol',
+});
+
+roles.hasMany(empresas, {
+  foreignKey: 'rolId',
+  as: 'empresas',
 });
 
 // console.log(Object.keys(database.models));

@@ -1,11 +1,13 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { Flechas } from '../svg/svgImages';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { RolesThunk } from '@/redux/slice/roles/thunks';
 import { FilterUsers } from '@/redux/slice/usuarios/thunks';
+import { CustomSelect } from './customSelect';
+import { axiosInstance } from '@/config/axios';
+import Swal from 'sweetalert2';
 
 interface FormProps {
   setDataFilter: React.Dispatch<React.SetStateAction<any[]>>;
@@ -54,6 +56,13 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
     }
   };
 
+  const handleSelectChange = (value: string) => {
+    setFormValues({
+      ...formValues,
+      rolId: value,
+    });
+  };
+
   return (
     <div className="w-full">
       <form className="w-full flex flex-col gap-y-5" onSubmit={handleSubmit}>
@@ -76,30 +85,12 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
         </div>
         
         <div className="w-full">
-            <p className="text-16px py-2">Rol</p>
-            <div className="relative w-5/12">
-              {/* <input className="p-4 h-14 bg-gris-1 rounded-xl w-full" type="text" placeholder="Seleccionar" /> */}
-              <select
-                className="p-4 h-14 bg-gris-1 rounded-xl w-full  border-gray-300 focus:border-blue-500 outline-none transition duration-300 appearance-none shadow-md"
-                name="rolId"
-                value={formValues.rolId}
-                onChange={handleInputChange}
-                >
-                <option value="">
-                  {roles.length > 0 ? 'Seleccionar' : 'Cargando roles...'}
-                </option>
-                {roles.map((role:any) => (
-                  <option key={role.id} value={role.id}>
-                    {role.nombre}
-                  </option>
-                ))}
-              </select>
-
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
-                <Flechas />
-              </div>
-            </div>
+          <p className="text-16px py-2">Rol</p>
+          <div className="relative w-5/12">
+            <CustomSelect options={roles} selectedValue={formValues.rolId} onChange={handleSelectChange} />
           </div>
+        </div>
+
         <button type='submit' className="w-5/12  h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">Buscar</button>
       </form>
     </div>
@@ -111,15 +102,43 @@ export default function GestionUsuarios() {
 
   const textTable = ['ID', 'Nombre', 'correo electrónico', 'Rol', 'Acciones'];
 
-  const info = [
-    {
-      ID: '455f5gh22dfg',
-      Nombre: 'Antonio moralez cuesta',
-      'correo electrónico': 'antonito455@gmail.com',
-      Rol: 'Administrador',
-      Acciones: ['Eliminar', 'Guardar'],
-    },
-  ];
+  const handleEliminarUsuario = async (idUser: string, email: string) => {
+    Swal.fire({
+      title: `¿Estás seguro de eliminar al usuario ${email}?`,
+      text: '¡No podrás revertir esto!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, bórralo!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Llamada a la API para eliminar la invitación
+          await axiosInstance.delete(`/usuario/delete-usuario/${idUser}`);
+
+          // Actualizar la lista de usuarios invitados
+          setDataFilter((prevUsers) => prevUsers.filter((user) => user.id !== idUser));
+
+          // Mostrar confirmación de eliminación con el email
+          Swal.fire({
+            title: '¡Eliminado!',
+            text: `El usuario ${email} ha sido eliminada.`,
+            icon: 'success',
+          });
+        } catch (error) {
+          // Manejar error en la eliminación
+          Swal.fire({
+            title: 'Error',
+            text: `Hubo un error al cancelar la elimicaciòn para ${email}.`,
+            icon: 'error',
+          });
+        }
+      }
+    });
+  };
+
+
   return (
     <div className="w-full p-4">
       <h1 className="text-18px py-6" id="gestion_usuarios">
@@ -139,22 +158,26 @@ export default function GestionUsuarios() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {dataFilter.map((item:any, i) => (
-                <tr key={i}>
-                  <td className="px-6 py-4 text-secondary-14px ">{item.id}</td>
-                  <td className="px-6 py-4 text-secondary-14px ">{item.email}</td>
-                  <td className="px-6 py-4 text-secondary-14px ">{item.email}</td>
-                  <td className="px-6 py-4 text-secondary-14px ">{item.rol.nombre}</td>
-                  <td className="px-6 py-4 text-secondary-14px flex gap-x-3">
-                    <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">
-                      Eliminar
-                    </button>
-                    <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2">
-                      Guardar
-                    </button>
+              {dataFilter.length > 0 ? (
+                dataFilter.map((item: any, i) => (
+                  <tr key={i}>
+                    <td className="px-6 py-4 text-secondary-14px ">{item.id}</td>
+                    <td className="px-6 py-4 text-secondary-14px ">{item.email}</td>
+                    <td className="px-6 py-4 text-secondary-14px ">{item.email}</td>
+                    <td className="px-6 py-4 text-secondary-14px ">{item.rol.nombre}</td>
+                    <td className="px-6 py-4 text-secondary-14px flex gap-x-3">
+                      <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2" onClick={() => handleEliminarUsuario(item.id, item.email)} // Función para eliminar
+                      >Eliminar</button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-4 text-gray-500">
+                    No hay datos disponibles
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

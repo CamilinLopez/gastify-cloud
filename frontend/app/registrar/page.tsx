@@ -25,7 +25,7 @@ const Form = () => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
-      [name]: value, // Actualiza el campo correspondiente en el objeto de estado
+      [name]: value,
     });
   };
 
@@ -51,7 +51,7 @@ const Form = () => {
       <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="text"
-        name="nombre" // Asegúrate de asignar un nombre único para cada input
+        name="nombre" 
         placeholder="Nombre"
         value={formValues.nombre}
         onChange={handleChange}
@@ -63,7 +63,7 @@ const Form = () => {
       <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="email"
-        name="email" // Asegúrate de asignar un nombre único para cada input
+        name="email" 
         placeholder="E-mail"
         value={formValues.email}
         onChange={handleChange}
@@ -72,7 +72,7 @@ const Form = () => {
       <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="password"
-        name="password" // Asegúrate de asignar un nombre único para cada input
+        name="password" 
         placeholder="Contraseña"
         value={formValues.password}
         onChange={handleChange}
@@ -81,7 +81,7 @@ const Form = () => {
       <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="password"
-        name="confirmPassword" // Asegúrate de asignar un nombre único para cada input
+        name="confirmPassword" 
         placeholder="Confirmar Contraseña"
         value={formValues.confirmPassword}
         onChange={handleChange}
@@ -117,6 +117,9 @@ export default function Register() {
               <p className="text-14px">Regístrate con Google</p>
             </button>
           </div> */}
+          <div className="w-full flex justify-center">
+            {/* <p className="text-secondary-14px">|</p> */}
+          </div>
           <div className="w-full">
             <Form />
           </div>

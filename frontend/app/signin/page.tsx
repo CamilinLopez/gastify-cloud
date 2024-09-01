@@ -13,16 +13,20 @@ const Form = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); 
 
   const dispatch: AppDispatch = useDispatch();
-  const { status, error, messageResponse, user } = useSelector((state: RootState) => state.usuarios);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const login = await dispatch(LoginThunk({ email, password }));
 
+    if (login.payload.errors) {
+      setError(login.payload.errors);
+      return;
+    }
+
     if (login.payload.dashboard && login.payload.token) {
-      console.log(login.payload.dashboard)
       // window.location.href = login.payload.dashboard;
       router.push('/dashboard/inicio')
     }
@@ -56,6 +60,11 @@ const Form = () => {
         <input type="checkbox" />
         <p>Remember me</p>
       </div>
+
+      {error && (
+          <p className="text-red-500 mt-3">{error}</p>
+        )}
+        
       <button type="submit" className="bg-azul rounded-xl font-Inter font-[500] text-blanco px-4 py-2">
         Iniciar sesión
       </button>

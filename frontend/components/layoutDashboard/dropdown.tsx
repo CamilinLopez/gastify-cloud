@@ -6,8 +6,23 @@ import { FlechaDown } from '../svg/svgImages';
 import Link from 'next/link';
 import { axiosInstance } from '@/config/axios';
 import { useTheme } from '@/context/ThemeContext';
+import { useRouter } from 'next/navigation'; // Importar useRouter para redirigir
+import Cookies from 'js-cookie'; // Importar js-cookie para gestionar cookies
+
+type UsuarioType = {
+  id: string;
+  nombre: string;
+  email: string;
+  rol: {
+    nombre: string;
+  };
+};
 
 export const Usuarios = ({ name }: SelectOptionType) => {
+  const router = useRouter();
+
+  const [usuario, setUsuario] = useState<UsuarioType | null>(null);
+
   const [open, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -15,6 +30,17 @@ export const Usuarios = ({ name }: SelectOptionType) => {
 
   // Cerrar el dropdown si se hace clic fuera de él
   useEffect(() => {
+    const fetchUsuarioData = async () => {
+      try {
+        const response = await axiosInstance.get('/usuario/get-usuario-data');
+        setUsuario(response.data.empresa || response.data.usuario); // Asignar los datos obtenidos del usuario al estado
+      } catch (error) {
+        console.error('Error al obtener los datos del usuario:', error);
+      }
+    };
+
+    fetchUsuarioData();
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpen(false);
@@ -27,10 +53,21 @@ export const Usuarios = ({ name }: SelectOptionType) => {
     };
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      // Eliminar el token de las cookies
+      Cookies.remove('token');
+
+      // Redirigir a la página de inicio de sesión
+      router.push('/signin');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
   return (
     <div className="relative" ref={dropdownRef}>
       <div className="flex items-center gap-x-1">
-        <p className="text-14px dark:text-textDark">{name}</p>
+        <p className="text-14px dark:text-textDark">{usuario?.nombre}</p>
         <button onClick={toggleDropdown}>
           <FlechaDown />
         </button>
@@ -38,14 +75,16 @@ export const Usuarios = ({ name }: SelectOptionType) => {
       {open && (
         <div className="dark:bg-bgDark absolute z-10 mt-3 w-48 bg-white border border-gray-300 rounded-md shadow-lg right-0">
           <div className="p-4 flex flex-col gap-y-2 items-start ">
-            <p className="text-16px dark:text-[#CFCFCF]">Administrador</p>
+            <p className="text-16px dark:text-[#CFCFCF]">{usuario?.rol.nombre}</p>
             <hr className="w-full border-t border-gray-300 my-3 dark:border-borderDarck" />
             <Link href={'/dashboard/usuario/cuenta'} className="text-14px dark:text-[#CFCFCF]">
               Cuenta
             </Link>
             <p className="text-14px dark:text-[#CFCFCF]">Organización</p>
             <hr className="w-full border-t border-gray-300 my-3 dark:border-borderDarck" />
-            <button className="bg-azul rounded-md px-3 py-1 font-Inter font-[400] text-blanco dark:text-[#CFCFCF]">
+            <button
+              className="bg-azul rounded-md px-3 py-1 font-Inter font-[400] text-blanco dark:text-[#CFCFCF]"
+              onClick={handleLogout}>
               Cerrar sesión
             </button>
           </div>

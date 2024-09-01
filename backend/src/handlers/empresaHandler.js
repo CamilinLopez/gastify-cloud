@@ -32,11 +32,10 @@ const crearEmpresa = async (req, res, next) => {
 
 const signinEmpresa = async (req, res, next) => {
   passport.authenticate('signin', async (err, user, info) => {
-    console.log(user, 'tania');
+
     try {
       if (err || !user) {
-        const error = new Error(info);
-        return next(error);
+        return res.status(400).json({ errors: info.message });
       }
 
       req.login(user, { session: false }, async (err) => {
@@ -46,10 +45,11 @@ const signinEmpresa = async (req, res, next) => {
         const token = jwt.sign(body, SECRET_KEY);
 
         // return res.redirect(`${PAGE_URL}/dashboard/inicio`);
-        return res.json({ dashboard: `${PAGE_URL}/dashboard/inicio`, token });
+        return res.json({ dashboard: `${PAGE_URL}/dashboard/inicio`, token, user: user.empresa.dataValues || user.usuario.dataValues });
       });
     } catch (e) {
-      return next(e);
+      console.error(e);
+      res.status(500).json({ errors: 'Error en el servidor' });
     }
   })(req, res, next);
 };
@@ -69,7 +69,6 @@ const verificarToken = async (req, res, next) => {
   const { token } = req.body;
   let decoded;
   try {
-    console.log('hola desde verificar-toke 111');
     decoded = verifyToken(token, SECRET_KEY, { ignoreExpiration: true });
 
     const newToken = generateToken({ id: decoded.id }, SECRET_KEY);

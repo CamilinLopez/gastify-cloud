@@ -1,4 +1,4 @@
-const { roles, permisos, roles_permisos } = require('../db/index');
+const { roles, permisos } = require('../db/index');
 
 const crearRoles = async () => {
   try {
@@ -41,7 +41,7 @@ const obtenerTodosRoles = async () => {
       include: {
         model: permisos,
         as: 'permisos', // Usa el alias definido
-        attributes: ['nombre'], // Opcional: limita los atributos del permiso
+        attributes: ['nombre','id'], // Opcional: limita los atributos del permiso
         through: {
           attributes: [], // Excluye los atributos de la tabla intermedia
         },
@@ -65,8 +65,45 @@ const obtenerTodosPermisos = async () => {
   }
 };
 
+
+const asignarPermisoRoles = async ({ rol, permiso }) => {
+  try {
+    // Encuentra el rol por ID
+    const role = await roles.findByPk(rol);
+
+    if (!role) {
+      throw new Error('Rol no encontrado');
+    }
+
+    // Asigna los permisos al rol, sobrescribiendo los permisos actuales
+    await role.setPermisos(permiso);
+
+    // Opción para añadir permisos sin eliminar los anteriores:
+    // await rol.addPermisos(permisos);
+
+    // Opcional: devuelve el rol con los permisos asignados para verificar
+    const rolConPermisos = await roles.findByPk(rol, {
+      include: [{
+        model: permisos,
+        as: 'permisos', // Aquí especificamos el alias usado en la asociación
+        attributes: ['id', 'nombre'], // Muestra solo id y nombre de los permisos
+        through: { attributes: [] } // Excluye atributos de la tabla intermedia
+      }]
+    });
+
+
+    return rolConPermisos;
+
+  } catch (error) {
+    console.error('Error asignando permisos al rol:', error.message);
+    throw error;
+  }
+};
+
+
 module.exports = {
   crearRoles,
   obtenerTodosRoles,
   obtenerTodosPermisos,
+  asignarPermisoRoles
 };
