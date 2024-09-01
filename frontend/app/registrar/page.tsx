@@ -57,9 +57,7 @@ const Form = () => {
         onChange={handleChange}
         required
       />
-      <div className="w-full flex justify-center">
-        <p className="text-secondary-14px">|</p>
-      </div>
+     
       <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="email"
