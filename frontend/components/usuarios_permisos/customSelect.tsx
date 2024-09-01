@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Flechas } from "../svg/svgImages";
+import { useState } from 'react';
+import { Flechas } from '../svg/svgImages';
 
 export const CustomSelect: React.FC<{
   options: { id: string; nombre: string }[];
@@ -18,26 +18,22 @@ export const CustomSelect: React.FC<{
   return (
     <div className="relative">
       <div
-        className="p-4 h-14 bg-gris-1 rounded-xl w-full border-gray-300 focus:border-blue-500 outline-none transition duration-300 shadow-md cursor-pointer flex items-center justify-between"
-        onClick={toggleDropdown}
-      >
-        <span>
-          {options.find(option => option.id === selectedValue)?.nombre || 'Seleccionar'}
-        </span>
+        className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-full border-gray-300 focus:border-blue-500 outline-none transition duration-300 shadow-md cursor-pointer flex items-center justify-between"
+        onClick={toggleDropdown}>
+        <span>{options.find((option) => option.id === selectedValue)?.nombre || 'Seleccionar'}</span>
         <Flechas />
       </div>
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute dark:text-textDark dark:bg-bgDark1 z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
           {options.length === 0 ? (
-            <div className="p-2 text-gray-500">Cargando opciones...</div>
+            <div className="p-2 text-gray-500 dark:text-textDark">Cargando opciones...</div>
           ) : (
-            options.map(option => (
+            options.map((option) => (
               <div
                 key={option.id}
-                className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
-                onClick={() => handleOptionClick(option)}
-              >
+                className="p-2 hover:bg-gray-100 dark:hover:bg-bgDark cursor-pointer flex items-center"
+                onClick={() => handleOptionClick(option)}>
                 <span className="flex-grow">{option.nombre}</span>
               </div>
             ))

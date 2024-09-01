@@ -26,7 +26,6 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [buttonText, setButtonText] = useState('Enviar invitación');
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,15 +43,14 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
 
     const send = await dispatch(SendInviteThunk(formValues));
     await setUsersInvited((prevUsers) => [...prevUsers, send.payload.usuario]);
-  
+
     Swal.fire({
-      position: "center",
-      icon: "success",
+      position: 'center',
+      icon: 'success',
       title: `${send.payload.message}`,
       showConfirmButton: false,
-      timer: 2000
+      timer: 2000,
     });
-
   };
 
   const handleFormSubmit = async (event: React.FormEvent) => {
@@ -89,12 +87,12 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
 
   return (
     <div className="w-full">
-     <form className="w-full" onSubmit={handleFormSubmit}>
+      <form className="w-full" onSubmit={handleFormSubmit}>
         <div className="w-full flex items-end">
           <div className="w-8/12">
-            <p className="text-16px py-2">correo electrónico</p>
+            <p className="text-16px py-2 dark:text-textDark">correo electrónico</p>
             <input
-              className="p-4 h-14 bg-gris-1 rounded-xl w-8/12"
+              className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-8/12"
               type="email"
               placeholder="arturo369@gmail.com"
               name="email"
@@ -104,12 +102,12 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
             />
           </div>
           <div className="w-6/12">
-            <p className="text-16px py-2">Rol</p>
+            <p className="text-16px py-2 dark:text-textDark">Rol</p>
             <CustomSelect options={roles} selectedValue={formValues.rolId} onChange={handleSelectChange} />
           </div>
           <button
             type="submit"
-            className="ml-5 w-full sm:w-1/4 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco"
+            className="ml-5 w-full sm:w-1/4 h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco"
             disabled={status === 'loading' || isSubmitting}>
             {status === 'loading' || isSubmitting ? 'Enviando...' : 'Enviar invitación'}
           </button>
@@ -143,7 +141,6 @@ export default function InvitarUsuarios() {
 
   const textTable = ['correo electrónico', 'Rol', 'Estado de invitación', 'Acciones'];
 
-  
   const itemsPerPage = 5;
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -153,8 +150,6 @@ export default function InvitarUsuarios() {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-
-
 
   const handleEliminarInvitacion = async (idInvitacion: string, email: string) => {
     Swal.fire({
@@ -193,28 +188,28 @@ export default function InvitarUsuarios() {
   };
 
   return (
-    <div className="w-full p-4">
-      <h1 className="text-18px py-6" id="invitar_usuarios">
+    <div className="w-full p-4 dark:bg-bgDark">
+      <h1 className="text-18px py-6 dark:text-textDark" id="invitar_usuarios">
         Invitar usuarios
       </h1>
 
       <div className="flex flex-col gap-y-6">
-        <Form setUsersInvited={setUsersInvited}/>
-        <div className="overflow-x-auto border-[1px] rounded-xl">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-blanco">
+        <Form setUsersInvited={setUsersInvited} />
+        <div className="overflow-x-auto border-[1px] rounded-xl dark:border-borderDarck">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
+            <thead className="bg-blanco dark:bg-bgDark1">
               <tr>
                 {textTable.map((item) => (
-                  <th key={item} className="px-6 py-3 text-left text-xs text-14px">
+                  <th key={item} className="px-6 py-3 text-left text-xs text-14px dark:text-textDark">
                     {item}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
               {status === 'loading' ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
+                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px dark:text-textDark">
                     Cargando datos...
                   </td>
                 </tr>
@@ -227,14 +222,16 @@ export default function InvitarUsuarios() {
               ) : currentData.length > 0 ? (
                 currentData.map((item: any, i) => (
                   <tr key={i}>
-                    <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px]">{item.email}</td>
-                    <td className="px-6 py-4 text-secondary-14px">{item.rol.nombre}</td>
-                    <td className="px-6 py-4 text-secondary-14px">
+                    <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px] dark:text-textDark">
+                      {item.email}
+                    </td>
+                    <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.rol.nombre}</td>
+                    <td className="px-6 py-4 text-secondary-14px dark:text-textDark">
                       {item.verificado === false ? 'pendiente' : 'aceptado'}
                     </td>
                     <td className="px-6 py-4 text-secondary-14px">
-                    <button
-                        className={`bg-azul rounded-xl font-Inter font-[500] text-blanco p-2 ${item.verificado ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      <button
+                        className={`bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco p-2 ${item.verificado ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={item.verificado} // Desactiva el botón si ya está verificado
                         onClick={() => handleEliminarInvitacion(item.id, item.email)} // Función para eliminar
                       >
@@ -245,7 +242,7 @@ export default function InvitarUsuarios() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px">
+                  <td colSpan={4} className="px-6 py-4 text-center text-secondary-14px dark:text-textDark">
                     No hay datos disponibles
                   </td>
                 </tr>
@@ -253,18 +250,18 @@ export default function InvitarUsuarios() {
             </tbody>
           </table>
 
-          <div className="flex justify-between py-4">
+          <div className="flex justify-between py-4 px-1">
             <button
-              className="bg-gray-300 px-4 py-2 rounded-lg"
+              className="bg-gray-300 px-4 py-2 rounded-lg dark:bg-azul dark:text-textDark"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}>
               Anterior
             </button>
-            <span className="text-gray-700">
+            <span className="text-gray-700 dark:text-textDark">
               Página {currentPage} de {Math.ceil(usersInvited.length / itemsPerPage)}
             </span>
             <button
-              className="bg-gray-300 px-4 py-2 rounded-lg"
+              className="bg-gray-300 px-4 py-2 rounded-lg dark:bg-azul dark:text-textDark"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === Math.ceil(usersInvited.length / itemsPerPage)}>
               Siguiente

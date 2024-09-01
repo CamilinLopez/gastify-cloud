@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -67,15 +67,20 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
     <div className="w-full">
       <form className="w-full flex flex-col gap-y-5" onSubmit={handleSubmit}>
         <div className="w-full flex flex-col gap-y-2">
-          <p className="text-16px">ID usuario</p>
-          <input className="p-4 h-14 bg-gris-1 rounded-xl w-5/12" placeholder="5879954" type="text" name="id"
-            value={formValues.id}
-            onChange={handleInputChange} />
-        </div>
-        <div className="w-full flex flex-col gap-y-2">
-          <p className="text-16px">Correo Electrónico</p>
+          <p className="text-16px dark:text-textDark">ID usuario</p>
           <input
-            className="p-4 h-14 bg-gris-1 rounded-xl w-5/12 pl-4 pr-24"
+            className="p-4 h-14 bg-gris-1 rounded-xl w-5/12 dark:bg-bgDark1 dark:text-textDark"
+            placeholder="5879954"
+            type="text"
+            name="id"
+            value={formValues.id}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="w-full flex flex-col gap-y-2 ">
+          <p className="text-16px dark:text-textDark">Correo Electrónico</p>
+          <input
+            className="p-4 h-14 bg-gris-1 rounded-xl w-5/12 pl-4 pr-24 dark:bg-bgDark1 dark:text-textDark"
             placeholder="carlos569@gmail.com"
             type="text"
             name="email"
@@ -83,15 +88,19 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
             onChange={handleInputChange}
           />
         </div>
-        
+
         <div className="w-full">
-          <p className="text-16px py-2">Rol</p>
+          <p className="text-16px py-2 dark:text-textDark">Rol</p>
           <div className="relative w-5/12">
             <CustomSelect options={roles} selectedValue={formValues.rolId} onChange={handleSelectChange} />
           </div>
         </div>
 
-        <button type='submit' className="w-5/12  h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">Buscar</button>
+        <button
+          type="submit"
+          className="w-5/12  h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco">
+          Buscar
+        </button>
       </form>
     </div>
   );
@@ -138,42 +147,45 @@ export default function GestionUsuarios() {
     });
   };
 
-
   return (
-    <div className="w-full p-4">
-      <h1 className="text-18px py-6" id="gestion_usuarios">
+    <div className="w-full p-4 dark:bg-bgDark">
+      <h1 className="text-18px py-6 dark:text-textDark" id="gestion_usuarios">
         Gestión de usuarios
       </h1>
       <div className="flex flex-col gap-y-6">
         <Form setDataFilter={setDataFilter} />
-        <div className="overflow-x-auto border-[1px] rounded-xl">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-blanco">
+        <div className="overflow-x-auto border-[1px] rounded-xl dark:border-borderDarck">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
+            <thead className="bg-blanco dark:bg-bgDark1">
               <tr>
                 {textTable.map((item) => (
-                  <th key={item} className="px-6 py-3 text-left text-xs text-14px">
+                  <th key={item} className="px-6 py-3 text-left text-xs text-14px dark:text-textDark">
                     {item}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
               {dataFilter.length > 0 ? (
                 dataFilter.map((item: any, i) => (
                   <tr key={i}>
-                    <td className="px-6 py-4 text-secondary-14px ">{item.id}</td>
-                    <td className="px-6 py-4 text-secondary-14px ">{item.email}</td>
-                    <td className="px-6 py-4 text-secondary-14px ">{item.email}</td>
-                    <td className="px-6 py-4 text-secondary-14px ">{item.rol.nombre}</td>
+                    <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.id}</td>
+                    <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.email}</td>
+                    <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.email}</td>
+                    <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.rol.nombre}</td>
                     <td className="px-6 py-4 text-secondary-14px flex gap-x-3">
-                      <button className="bg-azul rounded-xl font-Inter font-[500] text-blanco p-2" onClick={() => handleEliminarUsuario(item.id, item.email)} // Función para eliminar
-                      >Eliminar</button>
+                      <button
+                        className="bg-azul rounded-xl dark:text-textDark font-Inter font-[500] text-blanco p-2"
+                        onClick={() => handleEliminarUsuario(item.id, item.email)} // Función para eliminar
+                      >
+                        Eliminar
+                      </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="text-center py-4 text-gray-500">
+                  <td colSpan={5} className="text-center py-4 text-gray-500 dark:text-textDark">
                     No hay datos disponibles
                   </td>
                 </tr>
