@@ -61,7 +61,7 @@ export const AutocompletableConductores = ({
         name={name}
         value={form.nombre_conductor.nombre}
         onChange={handleOnChange}
-        className="p-4 h-14 bg-gris-1 rounded-xl w-full"
+        className="p-4 h-14 bg-gris-1 rounded-xl w-full dark:text-textDark dark:bg-bgDark1"
         type="text"
         placeholder={placeholder}
       />
@@ -69,14 +69,14 @@ export const AutocompletableConductores = ({
         <Flechas />
       </div>
       {suggestions.length > 0 && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+        <div className="absolute z-10 mt-1 w-full dark:bg-bgDark1 bg-white border border-gray-300 rounded-md shadow-lg">
           {suggestions.map((option) => (
             <div
               key={option.id}
               className="p-2 hover:bg-gray-100 cursor-pointer flex gap-x-3"
               onClick={() => handleOptionClick(option.nombre, option.id)}>
-              <p className="w-1/2 flex items-start">{option.nombre}</p>
-              <p className="text-secondary-14px">{option.licencia}</p>
+              <p className="w-1/2 flex items-start dark:text-textDark">{option.nombre}</p>
+              <p className="text-secondary-14px dark:text-textDark">{option.licencia}</p>
             </div>
           ))}
         </div>
@@ -122,7 +122,7 @@ export const AutocompletableCamiones = ({
         name={name}
         value={form.numero_movil.placa}
         onChange={handleOnChange}
-        className="p-4 h-14 bg-gris-1 rounded-xl w-full"
+        className="p-4 h-14 bg-gris-1 rounded-xl w-full dark:bg-bgDark1 dark:text-textDark"
         type="text"
         placeholder={placeholder}
       />
@@ -130,14 +130,14 @@ export const AutocompletableCamiones = ({
         <Flechas />
       </div>
       {suggestions.length > 0 && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+        <div className="absolute z-10 mt-1 w-full dark:bg-bgDark1 bg-white border border-gray-300 rounded-md shadow-lg">
           {suggestions.map((option) => (
             <div
               key={option.id}
               className="p-2 hover:bg-gray-100 cursor-pointer flex gap-x-3"
               onClick={() => handleOptionClick(option.placa, option.id)}>
-              <p className="w-1/2 flex items-start">{option.marca}</p>
-              <p className="text-secondary-14px">{option.placa}</p>
+              <p className="w-1/2 flex items-start dark:text-textDark">{option.marca}</p>
+              <p className="text-secondary-14px dark:text-textDark">{option.placa}</p>
             </div>
           ))}
         </div>

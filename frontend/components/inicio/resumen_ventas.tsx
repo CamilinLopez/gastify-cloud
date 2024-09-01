@@ -23,7 +23,6 @@ const CilindrosPorDia = () => {
   const ventasToday = useSelector((state: RootState) => state.inicio.responseVentaPorDia);
   const array = ventasToday.result;
   const today = ventasToday.today;
-  console.log(ventasToday)
 
   const maxValue = Math.max(...array?.map((item) => Number(item.totalCantidad)));
 
@@ -34,21 +33,21 @@ const CilindrosPorDia = () => {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-y-3">
-        <p className="text-16px">Cantidad de cilindros vendidos en este día</p>
-        <p className="text-32px">{today}</p>
+        <p className="text-16px dark:text-textDark">Cantidad de cilindros vendidos en este día</p>
+        <p className="text-32px dark:dark:text-textDark">{today}</p>
       </div>
       <div className="flex h-40 items-end gap-x-3 w-full">
         {array.map((item, index) => (
           <div key={index} className="flex flex-col gap-y-2 w-2/3">
             <div
-              className="border-t-[2px] border-gris-2 bg-gris-1"
+              className="border-t-[2px] dark:bg-bgDark1 dark:border-bgDark1 border-gris-2 bg-gris-1"
               style={{
                 height: `${(Number(item.totalCantidad) / maxValue) * 100}px`,
               }}></div>
             <div className="flex items-center">
-              <p className="text-13px">{item.tipoCilindro.tipo}</p>
-              <p>-</p>
-              <p className="text-13px">{item.totalCantidad}</p>
+              <p className="text-13px dark:text-textDark">{item.tipoCilindro.tipo}</p>
+              <p className="dark:text-textDark">-</p>
+              <p className="text-13px dark:text-textDark ">{item.totalCantidad}</p>
             </div>
           </div>
         ))}
@@ -105,7 +104,7 @@ const SalesChart = () => {
 
   return (
     <div className="w-full flex flex-col gap-y-5">
-      <div className="text-16px">Ventas mensuales</div>
+      <div className="text-16px dark:text-textDark">Ventas mensuales</div>
       <Line data={data1} options={options} />
     </div>
   );
@@ -113,9 +112,9 @@ const SalesChart = () => {
 
 export default function Resumen_ventas() {
   return (
-    <div className="bg-blanco px-4 py-6 w-full">
+    <div className="bg-blanco dark:bg-bgDark px-4 py-6 w-full">
       <div>
-        <h1 className="text-18px" id="resumen_ventas">
+        <h1 className="text-18px dark:text-textDark" id="resumen_ventas">
           Resumen de Ventas
         </h1>
       </div>

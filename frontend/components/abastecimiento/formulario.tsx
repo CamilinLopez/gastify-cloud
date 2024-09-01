@@ -42,7 +42,7 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
         name={name}
         value={getName(name)}
         onChange={handleOnChange}
-        className="p-4 h-14 bg-gris-1 rounded-xl w-full"
+        className="p-4 h-14 dark:text-textDark dark:bg-bgDark1 bg-gris-1 rounded-xl w-full"
         type="text"
         placeholder="Seleccionar"
       />
@@ -52,7 +52,7 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
         <Flechas />
       </div>
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+        <div className="absolute z-10 mt-1 w-full dark:text-textDark dark:bg-bgDark1 bg-white border border-gray-300 rounded-md shadow-lg">
           {arrayCilindros.map((option) => (
             <div
               key={option.id}
@@ -109,7 +109,7 @@ export default function Formulario() {
 
   return (
     <div className="p-4 w-full">
-      <h1 className="text-18px py-6" id="registro_abastecimiento">
+      <h1 className="text-18px py-6 dark:text-textDark" id="registro_abastecimiento">
         Registro de abastecimiento
       </h1>
 
@@ -118,7 +118,7 @@ export default function Formulario() {
           <div className="w-full flex">
             <div className="w-1/2 flex flex-col gap-y-3 ">
               <div className="w-full flex flex-col gap-y-2">
-                <p className="text-16px py-2">Estado de cilindro</p>
+                <p className="text-16px py-2 dark:text-textDark">Estado de cilindro</p>
                 <SelectInput
                   name="estadoCilindro"
                   formAbastecimiento={formAbastecimiento}
@@ -127,7 +127,7 @@ export default function Formulario() {
                 />
               </div>
               <div className="w-full flex flex-col gap-y-2">
-                <p className="text-16px py-2">Tipo de cilindro</p>
+                <p className="text-16px py-2 dark:text-textDark">Tipo de cilindro</p>
                 <SelectInput
                   name="tipoCilindro"
                   formAbastecimiento={formAbastecimiento}
@@ -139,19 +139,19 @@ export default function Formulario() {
 
             <div className="w-1/2  flex flex-col gap-y-3 ">
               <div className="w-full flex flex-col gap-y-2">
-                <p className="text-16px py-2">Cantidad recibida</p>
+                <p className="text-16px py-2 dark:text-textDark">Cantidad recibida</p>
                 <input
                   name="cantidad"
                   value={formAbastecimiento.cantidad}
                   onChange={handleOnChange}
-                  className="p-4 h-14 bg-gris-1 rounded-xl w-10/12"
+                  className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-10/12"
                   type="number"
                   min="0"
                   placeholder="Ingresar cantidad"
                 />
               </div>
               <div className="w-full flex flex-col gap-y-2">
-                <p className="text-16px py-2">Acciones</p>
+                <p className="text-16px py-2 dark:text-textDark">Acciones</p>
                 <SelectInput
                   name="modificar"
                   formAbastecimiento={formAbastecimiento}
@@ -169,7 +169,7 @@ export default function Formulario() {
           <div className="flex flex-col md:flex-row items-center gap-4">
             <button
               onClick={(e) => registrarAbastecimiento(e)}
-              className="w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">
+              className="w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] dark:text-textDark text-blanco">
               Registrar
             </button>
             {dataStatus === 'loading' && <p>Cargando...</p>}

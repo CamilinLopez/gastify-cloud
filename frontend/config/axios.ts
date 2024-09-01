@@ -4,7 +4,7 @@ import https from 'https';
 
 // Crear una instancia de Axios
 export const axiosInstance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
+  baseURL: 'http://localhost:3001',
   // Puedes descomentar el httpsAgent si estás usando un servidor con un certificado autofirmado
   // httpsAgent: new https.Agent({
   //   rejectUnauthorized: false,
@@ -14,7 +14,7 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get('token');
-    
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,5 +23,5 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );

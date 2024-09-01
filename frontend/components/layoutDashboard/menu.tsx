@@ -72,17 +72,17 @@ export default function Menu() {
           </div>
         ))}
       </div>
-      <div className="bg-blanco p-4 xl:flex xl:flex-col h-full justify-between hidden">
+      <div className="bg-blanco dark:bg-bgDark1 p-4 xl:flex xl:flex-col h-full justify-between hidden">
         <div className="flex flex-col gap-y-1">
           {RoutesMenu.map((item) => (
             <div
               key={item.name}
               className={`cursor-pointer flex flex-col w-full justify-center items-center rounded-xl`}
               onClick={() => handleItemClick(item.name)}>
-              <button className={`text-14px py-2 w-full flex gap-2 items-center`}>
+              <button className={`text-14px dark:text-textDark py-2 w-full flex gap-2 items-center`}>
                 {item.subMenu && selectedItem === item.name ? <ChevronDown /> : <ChevronRight />}
                 {!item.subMenu ? (
-                  <Link className="text-14px" href={item.path}>
+                  <Link className="text-14px dark:text-textDark" href={item.path}>
                     {item.name}
                   </Link>
                 ) : (
@@ -95,7 +95,7 @@ export default function Menu() {
                   <Link
                     key={subItem.name}
                     href={subItem.path}
-                    className={`text-14px p-2 pl-4 flex flex-col gap-2 w-full bg-white`}>
+                    className={`text-14px p-2 pl-4 flex flex-col gap-2 w-full dark:text-textDark dark:bg-bgDark1 bg-white`}>
                     {subItem.name}
                   </Link>
                 ))}

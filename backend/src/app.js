@@ -4,13 +4,13 @@ const morgan = require('morgan');
 const routes = require('./routes');
 const passport = require('passport');
 require('./middleware/auth');
-const { CORS_ORIGIN_URL } = require('./config/env')
+const { CORS_ORIGIN_URL } = require('./config/env');
 
 const server = express();
 
 // Configuración de CORS
 const corsOptions = {
-  origin: `${CORS_ORIGIN_URL}`,  // Tu dominio
+  origin: 'http://localhost:3000', // Tu dominio
   credentials: true, // Habilita el envío de cookies y encabezados de autenticación
   allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
   exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Encabezados expuestos

@@ -3,7 +3,7 @@ import SectionReportes from '@/components/reportes';
 
 export default function Reportes() {
   return (
-    <div>
+    <div className="w-full dark:bg-bgDark">
       <SectionReportes />
     </div>
   );

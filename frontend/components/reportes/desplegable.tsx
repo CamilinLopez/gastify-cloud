@@ -52,7 +52,7 @@ export const AutocompletableConductores = ({
         name={name}
         value={form.conductor.nombre}
         onChange={handleOnChange}
-        className="p-4 h-14 bg-gris-1 rounded-xl w-full"
+        className="p-4 h-14 dark:text-textDark dark:bg-bgDark1 bg-gris-1 rounded-xl w-full"
         type="text"
         placeholder={placeholder}
       />
@@ -60,14 +60,14 @@ export const AutocompletableConductores = ({
         <Flechas />
       </div>
       {suggestions.length > 0 && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+        <div className="absolute dark:bg-bgDark1 z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
           {suggestions.map((option) => (
             <div
               key={option.id}
               className="p-2 hover:bg-gray-100 cursor-pointer flex gap-x-3"
               onClick={() => handleOptionClick(option.nombre, option.id)}>
-              <p className="w-1/2 flex items-start">{option.nombre}</p>
-              <p className="text-secondary-14px">{option.licencia}</p>
+              <p className="w-1/2 flex items-start dark:text-textDark">{option.nombre}</p>
+              <p className="text-secondary-14px dark:text-textDark">{option.licencia}</p>
             </div>
           ))}
         </div>

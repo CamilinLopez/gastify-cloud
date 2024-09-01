@@ -1,7 +1,9 @@
 const { inventario_bodegas, tipo_cilindros, estado_cilindros, stockcilindros } = require('../db/index');
 const { literal } = require('sequelize');
+const { generarFechaActual } = require('../utils/generadorId');
 
 const alarmaCilindros = async () => {
+  let arrayAlarmas = [];
   try {
     const data = await inventario_bodegas.findAll({
       attributes: ['tipoCilindroId', [literal('SUM("inventario_bodegas"."cantidad")'), 'totalCantidad']],
@@ -20,7 +22,22 @@ const alarmaCilindros = async () => {
       ],
       group: ['tipoCilindroId', 'tipoCilindro.id', 'tipoCilindro.tipo', 'estadoCilindro.id', 'estadoCilindro.tipo'],
     });
-    return { message: 'Accion completa', result: data };
+    const alarmas = await stockcilindros.findAll();
+
+    for (let k = 0; k < data.length; k++) {
+      for (let k1 = 0; k1 < alarmas.length; k1++) {
+        if (data[k].tipoCilindroId === alarmas[k1].tipoCilindroId) {
+          if (Number(data[k].dataValues.totalCantidad) < alarmas[k1].minStock)
+            arrayAlarmas.push({
+              Titulo: `Bajo Stock ${data[k].tipoCilindro.tipo}`,
+              Mensaje: `${data[k].dataValues.totalCantidad} uninades`,
+              Fecha: generarFechaActual(),
+            });
+        }
+      }
+    }
+
+    return { message: 'Accion completa', result: arrayAlarmas };
   } catch (error) {
     console.log(error);
     throw error;

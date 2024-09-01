@@ -234,7 +234,7 @@ const crearVentasDB = async (camion, carga_id, conductor, tabla) => {
     for (const venta of tabla) {
       await ventas.create({
         id: generateId(),
-        fecha: '2024/09/06',
+        fecha: generarFechaActual(),
         hora: generarHoraActual(),
         carga_id: carga_id,
         camion_id: camion.id,

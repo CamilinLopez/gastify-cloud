@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function PageInventarioBodega() {
   return (
-    <div className="w-full">
+    <div className="w-full dark:bg-bgDark">
       <InventarioBodega />
     </div>
   );

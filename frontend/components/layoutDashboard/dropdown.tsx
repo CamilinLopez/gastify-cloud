@@ -3,6 +3,9 @@
 import { SelectOptionType } from '@/types/layoutDashboard';
 import { useState, useEffect, useRef } from 'react';
 import { FlechaDown } from '../svg/svgImages';
+import Link from 'next/link';
+import { axiosInstance } from '@/config/axios';
+import { useTheme } from '@/context/ThemeContext';
 
 export const Usuarios = ({ name }: SelectOptionType) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -27,20 +30,24 @@ export const Usuarios = ({ name }: SelectOptionType) => {
   return (
     <div className="relative" ref={dropdownRef}>
       <div className="flex items-center gap-x-1">
-        <p className="text-14px">{name}</p>
+        <p className="text-14px dark:text-textDark">{name}</p>
         <button onClick={toggleDropdown}>
           <FlechaDown />
         </button>
       </div>
       {open && (
-        <div className="absolute z-10 mt-3 w-48 bg-white border border-gray-300 rounded-md shadow-lg right-0">
-          <div className="p-4 flex flex-col gap-y-2 items-start">
-            <p className="text-16px">Administrador</p>
-            <hr className="w-full border-t border-gray-300 my-3" />
-            <p className="text-14px">Cuenta</p>
-            <p className="text-14px">Organización</p>
-            <hr className="w-full border-t border-gray-300 my-3" />
-            <button className="bg-azul rounded-md px-3 font-Inter font-[400] text-blanco">Cerrar sesión</button>
+        <div className="dark:bg-bgDark absolute z-10 mt-3 w-48 bg-white border border-gray-300 rounded-md shadow-lg right-0">
+          <div className="p-4 flex flex-col gap-y-2 items-start ">
+            <p className="text-16px dark:text-[#CFCFCF]">Administrador</p>
+            <hr className="w-full border-t border-gray-300 my-3 dark:border-borderDarck" />
+            <Link href={'/dashboard/usuario/cuenta'} className="text-14px dark:text-[#CFCFCF]">
+              Cuenta
+            </Link>
+            <p className="text-14px dark:text-[#CFCFCF]">Organización</p>
+            <hr className="w-full border-t border-gray-300 my-3 dark:border-borderDarck" />
+            <button className="bg-azul rounded-md px-3 py-1 font-Inter font-[400] text-blanco dark:text-[#CFCFCF]">
+              Cerrar sesión
+            </button>
           </div>
         </div>
       )}
@@ -50,18 +57,29 @@ export const Usuarios = ({ name }: SelectOptionType) => {
 
 export const Alertas = ({ name }: SelectOptionType) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [response, setResponse] = useState<{
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    result: { Titulo: string; Mensaje: string; Fecha: string }[];
+  }>({
+    status: 'idle',
+    result: [],
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => setOpen(!open);
 
   // Cerrar el dropdown si se hace clic fuera de él
   useEffect(() => {
+    axiosInstance
+      .get('/alarmas/getAlarmaCilindros')
+      .then((data) => setResponse({ ...response, result: data.data.data.result, status: 'succeeded' }))
+      .catch((error) => console.log(error));
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -69,47 +87,47 @@ export const Alertas = ({ name }: SelectOptionType) => {
   }, []);
 
   const textTable = ['Titulo', 'Mensaje', 'Fecha'];
-  const alertas = [
-    {
-      Titulo: 'Bajo Stock 5kg',
-      Mensaje: '50 uninades',
-      fecha: '2024/22/07',
-    },
-  ];
 
   return (
     <div className="relative" ref={dropdownRef}>
       <div className="flex items-center gap-x-1">
-        <p className="text-14px">{name}</p>
+        <p className="text-14px dark:text-[#CFCFCF]">{name}</p>
         <button onClick={toggleDropdown}>
           <FlechaDown />
         </button>
       </div>
 
       {open && (
-        <div className="absolute z-10 mt-3 w-96 bg-white border border-gray-300 rounded-md shadow-lg right-0">
-          <div className="overflow-x-auto border-[1px] rounded-xl">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-blanco">
-                <tr className="[&>*]:text-center [&>*]:py-2">
-                  {textTable.map((item) => (
-                    <th key={item} className="px-3 py-3 text-left font-Inter text-[10px]">
-                      {item}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {alertas.map((item, i) => (
-                  <tr key={i} className="[&>*]:py-3 [&>*]:font-medium [&>*]:text-center ">
-                    <td className="px-6 py-4 font-Inter text-[10px]">{item.Titulo}</td>
-                    <td className="px-6 py-4 font-Inter text-[10px]">{item.Mensaje}</td>
-                    <td className="px-6 py-4 font-Inter text-[10px]">{item.fecha}</td>
+        <div
+          className={`dark:bg-bgDark absolute z-10 mt-3 ${response.result.length ? 'w-96' : 'w-72'} bg-white border border-gray-300 rounded-md shadow-lg right-0`}>
+          {response.result.length ? (
+            <div className="overflow-x-auto border-[1px] rounded-xl">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-blanco dark:bg-bgDark">
+                  <tr className="[&>*]:text-center [&>*]:py-2">
+                    {textTable.map((item) => (
+                      <th key={item} className="px-3 py-3 text-left font-Inter text-[10px] dark:text-[#CFCFCF]">
+                        {item}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="bg-white dark:bg-bgDark divide-y divide-gray-200">
+                  {response.result.map((item, i) => (
+                    <tr key={i} className="[&>*]:py-3 [&>*]:font-medium [&>*]:text-center ">
+                      <td className="px-6 py-4 font-Inter text-[10px] dark:text-[#CFCFCF] ">{item.Titulo}</td>
+                      <td className="px-6 py-4 font-Inter text-[10px] dark:text-[#CFCFCF] ">{item.Mensaje}</td>
+                      <td className="px-6 py-4 font-Inter text-[10px] dark:text-[#CFCFCF] ">{item.Fecha}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="w-full flex items-center justify-center font-Inter text-[14px] text-blanco dark:text-textDark">
+              Sin Alertas
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -119,8 +137,14 @@ export const Alertas = ({ name }: SelectOptionType) => {
 export const Configuracion = () => {
   const [open, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { theme, setTheme } = useTheme();
 
   const toggleDropdown = () => setOpen(!open);
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value as 'system' | 'light' | 'dark';
+
+    setTheme(value);
+  };
 
   // Cerrar el dropdown si se hace clic fuera de él
   useEffect(() => {
@@ -150,26 +174,34 @@ export const Configuracion = () => {
       </button>
 
       {open && (
-        <div className="absolute z-10 mt-3 w-80 bg-white border border-gray-300 rounded-md shadow-lg right-0">
+        <div className="dark:bg-bgDark absolute z-10 mt-3 w-80 bg-white border border-gray-300 rounded-md shadow-lg right-0">
           <div className="p-4">
-            <p className="text-16px">Modo visual</p>
+            <p className="text-16px dark:text-[#CFCFCF]">Modo visual</p>
             <div className="mt-4 flex flex-col gap-y-1">
               <div className="flex gap-x-3 items-center">
-                <input type="checkbox" />
-                <p className="text-14px">Predeterminado del navegador</p>
+                <input
+                  type="radio"
+                  name="theme"
+                  value="system"
+                  checked={theme === 'system'}
+                  onChange={handleOnChange}
+                />
+                <p className="text-14px dark:text-[#CFCFCF]">Predeterminado del navegador</p>
               </div>
               <div className="flex gap-x-3 items-center">
-                <input type="checkbox" />
-                <p className="text-14px">Claro</p>
+                <input type="radio" name="theme" value="light" checked={theme === 'light'} onChange={handleOnChange} />
+                <p className="text-14px dark:text-[#CFCFCF]">Claro</p>
               </div>
               <div className="flex gap-x-3 items-center">
-                <input type="checkbox" />
-                <p className="text-14px">Oscuro</p>
+                <input type="radio" name="theme" value="dark" checked={theme === 'dark'} onChange={handleOnChange} />
+                <p className="text-14px dark:text-[#CFCFCF]">Oscuro</p>
               </div>
             </div>
             <hr className="w-full border-t border-gray-300 my-3" />
             <div>
-              <p className="text-14px">Más ajustes de la configuración de usuario</p>
+              <Link href={'/dashboard/configuracion'} className="text-14px dark:text-[#CFCFCF]">
+                Más ajustes de la configuración de usuario
+              </Link>
             </div>
           </div>
         </div>

@@ -78,7 +78,9 @@ const registrarConductorDB = async (nombreConductor, licencia) => {
 const eliminarConductorDB = async (id) => {
   try {
     const data = await conductores.update({ activo: false, eliminadoEn: generarFechaActual() }, { where: { id: id } });
-    return { message: 'Accion completa', result: [] };
+    const tabla = await conductores.findAll({ where: { activo: true } });
+
+    return { message: 'Accion completa', result: tabla };
   } catch (error) {
     console.log(error);
     throw error;
@@ -88,7 +90,9 @@ const eliminarConductorDB = async (id) => {
 const eliminarCamionDB = async (id) => {
   try {
     const data = await camiones.update({ activo: false, eliminadoEn: generarFechaActual() }, { where: { id: id } });
-    return { message: 'Accion completa', result: [] };
+    const dataTabla = await camiones.findAll({ where: { activo: true } });
+
+    return { message: 'Accion completa', result: dataTabla };
   } catch (error) {
     console.log(error);
     throw error;

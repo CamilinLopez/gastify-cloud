@@ -37,20 +37,18 @@ const Form = () => {
       return;
     }
 
-  const registro = await dispatch(RegistroThunk({ email: formValues.email, password: formValues.password, nombre:formValues.nombre }));
+    const registro = await dispatch(
+      RegistroThunk({ email: formValues.email, password: formValues.password, nombre: formValues.nombre }),
+    );
 
-if (registro.payload?.dashboard && typeof registro.payload.dashboard === 'string') {
-  window.location.href = registro.payload.dashboard;
-}
-
-
-};
-
-
+    if (registro.payload?.dashboard && typeof registro.payload.dashboard === 'string') {
+      window.location.href = registro.payload.dashboard;
+    }
+  };
 
   return (
     <form className="w-full flex flex-col gap-y-10" onSubmit={handleSubmit}>
-    <input
+      <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="text"
         name="nombre" // Asegúrate de asignar un nombre único para cada input
@@ -59,6 +57,9 @@ if (registro.payload?.dashboard && typeof registro.payload.dashboard === 'string
         onChange={handleChange}
         required
       />
+      <div className="w-full flex justify-center">
+        <p className="text-secondary-14px">|</p>
+      </div>
       <input
         className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
         type="email"
@@ -116,9 +117,6 @@ export default function Register() {
               <p className="text-14px">Regístrate con Google</p>
             </button>
           </div> */}
-          <div className="w-full flex justify-center">
-            <p className="text-secondary-14px">|</p>
-          </div>
           <div className="w-full">
             <Form />
           </div>

@@ -30,23 +30,23 @@ const Form = () => {
         <div className="w-full flex">
           <div className="w-1/2 flex flex-col md:flex-row gap-x-2">
             <div className="w-full">
-              <p className="text-16px py-2">Nombre</p>
+              <p className="text-16px py-2 dark:text-textDark">Nombre</p>
               <input
                 name="nombre"
                 value={form.nombre}
                 onChange={handleOnCahnge}
-                className="p-4 h-14 bg-gris-1 rounded-xl "
+                className="p-4 h-14 bg-gris-1 rounded-xl dark:bg-bgDark1 dark:text-textDark"
                 type="text"
                 placeholder="Nombre"
               />
             </div>
             <div className="w-full">
-              <p className="text-16px py-2">Licencia</p>
+              <p className="text-16px py-2 dark:text-textDark">Licencia</p>
               <input
                 name="licencia"
                 value={form.licencia}
                 onChange={handleOnCahnge}
-                className="p-4 h-14 bg-gris-1 rounded-xl "
+                className="p-4 h-14 bg-gris-1 rounded-xl dark:bg-bgDark1 dark:text-textDark"
                 type="text"
                 placeholder="Licencia"
               />
@@ -55,7 +55,7 @@ const Form = () => {
         </div>
         <button
           onClick={(e) => registrar(e)}
-          className="my-6 w-4/12 h-12 bg-azul rounded-xl font-Inter font-[500] text-blanco">
+          className="my-6 w-4/12 h-12 bg-azul rounded-xl font-Inter dark:text-textDark font-[500] text-blanco">
           Registrar
         </button>
       </form>
@@ -67,6 +67,7 @@ const Tabla = () => {
   const dispatch: AppDispatch = useDispatch();
   const textTable = ['Fecha De Registro', 'ID', 'Nombre de Conductor', 'Licencia', 'Acciones'];
   const dataTable = useSelector((state: RootState) => state.inventario.sectionConductores.tabla);
+  console.log(dataTable);
 
   useEffect(() => {
     dispatch(getTablaConductores());
@@ -78,28 +79,28 @@ const Tabla = () => {
   };
 
   return (
-    <div className="overflow-x-auto border-[1px] rounded-xl">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-blanco">
+    <div className="overflow-x-auto border-[1px] rounded-xl dark:border-borderDarck">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
+        <thead className="bg-blanco dark:bg-bgDark1">
           <tr>
             {textTable.map((item) => (
-              <th key={item} className="px-6 py-3 text-center text-xs text-14px">
+              <th key={item} className="px-6 py-3 text-center text-xs text-14px dark:text-textDark">
                 {item}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
           {dataTable?.map((item, i) => (
             <tr key={i} className="text-center ">
-              <td className="px-6 py-4 text-secondary-14px ">{item.fecha}</td>
-              <td className="px-6 py-4 text-secondary-14px ">{item.id}</td>
-              <td className="px-6 py-4 text-secondary-14px ">{item.nombre}</td>
-              <td className="px-6 py-4 text-secondary-14px ">{item.licencia}</td>
-              <td className="px-6 py-4 text-secondary-14px ">
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.fecha}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.id}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.nombre}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.licencia}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">
                 <button
                   onClick={(e) => deleteConductores(e, item.id)}
-                  className="bg-azul rounded-xl font-Inter font-[500] text-blanco py-1 px-2">
+                  className="bg-azul rounded-xl dark:text-textDark font-Inter font-[500] text-blanco py-1 px-2">
                   Eliminar
                 </button>
               </td>
@@ -114,7 +115,7 @@ const Tabla = () => {
 export default function Registro_conductores() {
   return (
     <div className="p-4 w-full">
-      <h3 className="text-18px py-4">Registro de conductores</h3>
+      <h3 className="text-18px py-4 dark:text-textDark">Registro de conductores</h3>
       <div className="w-full">
         <Form />
       </div>
