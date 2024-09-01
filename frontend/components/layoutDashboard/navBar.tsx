@@ -1,45 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from '../svg/svgImages';
 import { Usuarios, Alertas, Configuracion } from './dropdown';
 import Menu from './menu';
 
-
 export default function NavBar() {
-  
-  
   const [, setCount] = useState<number>(0);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [counter, setCounter] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleClickArrows = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.preventDefault();
-    const buttonName = event.currentTarget.name;
+  // const handleClickArrows = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  //   event.preventDefault();
+  //   const buttonName = event.currentTarget.name;
+  //   const container = document.getElementById('printTextContainer');
+  //   if (intervalId) {
+  //     clearInterval(intervalId);
+  //     setIntervalId(null);
+  //   }
+  //   if (!container) return;
+
+  //   const id: NodeJS.Timeout = setInterval(() => {
+  //     setIntervalId(id);
+  //     setCount((prevCount) => {
+  //       if (buttonName === 'startRight' && prevCount < container.clientWidth) {
+  //         container.scrollLeft = prevCount;
+  //         return prevCount + 1;
+  //       }
+  //       if (buttonName === 'startLeft' && prevCount > 0) {
+  //         container.scrollLeft = prevCount - 200;
+  //         return prevCount - 1;
+  //       } else {
+  //         clearInterval(id);
+  //         setIntervalId(null);
+  //         return prevCount;
+  //       }
+  //     });
+  //   }, 2);
+  // };
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const nameButton = event.currentTarget.name;
     const container = document.getElementById('printTextContainer');
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(null);
-    }
-    if (!container) return;
+    const mainContainer = document.getElementById('containerMenu');
+    if (!container || !mainContainer) return;
 
-    const id: NodeJS.Timeout = setInterval(() => {
-      setIntervalId(id);
-      setCount((prevCount) => {
-        if (buttonName === 'startRight' && prevCount < container.clientWidth) {
-          container.scrollLeft = prevCount;
-          return prevCount + 1;
+    intervalRef.current = setInterval(() => {
+      setCounter((prevCounter) => {
+        if (nameButton === 'startLeft') {
+          container.scrollLeft = prevCounter;
+          return prevCounter + 1;
         }
-        if (buttonName === 'startLeft' && prevCount > 0) {
-          container.scrollLeft = prevCount - 200;
-          return prevCount - 1;
-        } else {
-          clearInterval(id);
-          setIntervalId(null);
-          return prevCount;
+        if (nameButton === 'startRight' && prevCounter > 0) {
+          container.scrollLeft = prevCounter;
+          return prevCounter - 1;
         }
+        return prevCounter;
       });
-    }, 2);
+    }, 10);
   };
+
+  const handleMouseUp = () => {
+    // Detiene el intervalo cuando se suelta el botón
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+
   return (
     <div className="bg-blanco h-16 dark:bg-bgDark">
       <div className="flex h-full justify-between items-center">
@@ -55,12 +83,16 @@ export default function NavBar() {
           </svg>
           <h1 className="text-18px dark:text-textDark">Gastify Cloud</h1>
         </div>
-        <div className="flex overflow-x-hidden xl:hidden mx-3">
-          <ArrowLeft name="startLeft" onClick={handleClickArrows} className="" />
+        <div id="containerMenu" className="flex overflow-x-hidden xl:hidden mx-3">
+          <button onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} name="startLeft">
+            <ArrowLeft />
+          </button>
           <div id="printTextContainer" className="overflow-x-hidden">
             <Menu />
           </div>
-          <ArrowRight name="startRight" onClick={handleClickArrows} className="" />
+          <button onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} name="startRight">
+            <ArrowRight />
+          </button>
         </div>
         <div className="flex items-center gap-x-8">
           <div>

@@ -56,30 +56,26 @@ export const FlechaDown: React.FC = () => (
   </div>
 );
 
-export const ArrowLeft: FC<CustomButtonProps> = ({ onClick, className, name }) => (
-  <button onClick={onClick} className={`${className}`} name={name}>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2.5}
-      stroke="currentColor"
-      className="w-6 h-6 text-custom-gris hover:text-custom-naranja">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-    </svg>
-  </button>
+export const ArrowLeft = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2.5}
+    stroke="currentColor"
+    className="w-6 h-6 text-custom-gris hover:text-custom-naranja dark:text-textDark">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+  </svg>
 );
 
-export const ArrowRight: FC<CustomButtonProps> = ({ name, onClick, className }) => (
-  <button className={`${className}`} onClick={onClick} name={name}>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2.5}
-      stroke="currentColor"
-      className="w-6 h-6 text-custom-gris hover:text-custom-naranja ">
-      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-    </svg>
-  </button>
+export const ArrowRight = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2.5}
+    stroke="currentColor"
+    className="w-6 h-6 text-custom-gris hover:text-custom-naranja dark:text-textDark">
+    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+  </svg>
 );

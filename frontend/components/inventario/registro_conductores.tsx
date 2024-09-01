@@ -67,7 +67,6 @@ const Tabla = () => {
   const dispatch: AppDispatch = useDispatch();
   const textTable = ['Fecha De Registro', 'ID', 'Nombre de Conductor', 'Licencia', 'Acciones'];
   const dataTable = useSelector((state: RootState) => state.inventario.sectionConductores.tabla);
-  console.log(dataTable);
 
   useEffect(() => {
     dispatch(getTablaConductores());
