@@ -28,33 +28,6 @@ export default function Menu() {
     }
   }, [dispatch, status]);
 
-  // useEffect(() => {
-  //   const fetchPermissions = async () => {
-  //     try {
-  //       const res = await axiosInstance.get(`/roles/roles-permisos`);
-  //       const permisos = res.data.data.rol.permisos.map((p: any) => p.nombre);
-  //       const filtered:any= filterRoutes(RoutesMenu, permisos);
-  //       setFilteredMenu(filtered);
-  //     } catch (error) {
-  //       console.error('Error obteniendo permisos del usuario:', error);
-  //     }
-  //   };
-
-  //   fetchPermissions();
-  // }, []);
-
-  const filterRoutes = (routes: any[], permisos: string[]) => {
-    return routes.filter((route) => {
-      // Si no hay permisos requeridos, se muestra por defecto.
-      if (!route.permisos || route.permisos.length === 0) {
-        return true;
-      }
-
-      // Filtrar si el usuario tiene el permiso requerido para la ruta.
-      return permisos.includes(route.permisos);
-    });
-  };
-
   const toggleDropdown = (index: number) => {
     if (openIndex === index) {
       setOpenIndex(null);
