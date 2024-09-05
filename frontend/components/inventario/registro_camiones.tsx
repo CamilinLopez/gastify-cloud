@@ -3,13 +3,16 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { crearCamion, tablaCamion, borrarCamiones } from '@/redux/slice/inventario/thunks';
-import { DatosCamiones } from '@/types/inventario_camiones';
+import { DatosCamiones, ErrorsForms } from '@/types/inventario_camiones';
 import { RootState } from '@/redux/reducer';
 import Cookies from 'js-cookie';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { validateCamiones } from './validate';
 
 const Form = () => {
   const dispatch: AppDispatch = useDispatch();
+  const response = useSelector((state: RootState) => state.inventario.status);
+  console.log(response);
 
   const [form, setForm] = useState<DatosCamiones>({
     id: '',
@@ -19,6 +22,7 @@ const Form = () => {
     placa: '',
     empresaId: '',
   });
+  const [errors, setErrors] = useState<ErrorsForms>({});
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -36,7 +40,12 @@ const Form = () => {
     const decoded = jwt.decode(token) as JwtPayload | null;
     const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
 
-    dispatch(crearCamion({ ...form, empresaId }));
+    const validateErrors = validateCamiones(form);
+    setErrors(validateErrors);
+
+    if (Object.keys(validateErrors).length === 0) {
+      dispatch(crearCamion({ ...form, empresaId }));
+    }
   };
 
   return (
@@ -54,6 +63,7 @@ const Form = () => {
                 type="text"
                 placeholder="Toyota"
               />
+              <p className="font-mono text-[15px] text-red-500">{errors.marca}</p>
             </div>
 
             <div className="w-full">
@@ -66,6 +76,7 @@ const Form = () => {
                 type="date"
                 placeholder="2011"
               />
+              <p className="font-mono text-[15px] text-red-500">{errors.modelo}</p>
             </div>
           </div>
           <div className="w-1/2 flex flex-col gap-y-2">
@@ -79,9 +90,10 @@ const Form = () => {
                 type="text"
                 placeholder="10.000"
               />
+              <p className="font-mono text-[15px] text-red-500">{errors.capacidad_carga}</p>
             </div>
             <div className="w-full">
-              <p className="text-16px py-2 dark:text-textDark">Placa del Camión:</p>
+              <p className="text-16px py-2 dark:text-textDark">Patente del camión:</p>
               <input
                 name="placa"
                 value={form.placa}
@@ -90,13 +102,14 @@ const Form = () => {
                 type="text"
                 placeholder="XYZ456"
               />
+              <p className="font-mono text-[15px] text-red-500">{errors.placa}</p>
             </div>
           </div>
         </div>
         <button
           onClick={(e) => registrar(e)}
           className="my-6 w-4/12 h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco">
-          Registrar
+          {response === 'loading' ? 'Cargando...' : 'Resgistrar'}
         </button>
       </form>
     </div>

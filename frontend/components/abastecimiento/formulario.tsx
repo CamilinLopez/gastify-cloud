@@ -4,7 +4,7 @@ import React, { useState, ChangeEvent } from 'react';
 import { Flechas } from '../svg/svgImages';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormAbastecimiento, SelectInputType } from '@/types/abastecimieneto';
+import { FormAbastecimiento, SelectInputType, ErrorsForms } from '@/types/abastecimieneto';
 import { estadoCilindros, estadoModificar, tipoCilindros } from '@/arraysObjects/dataCilindros';
 import { crearFormulario } from '@/redux/slice/abastecimiento/thunks';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { generateId } from '@/utils/generateId';
 import { RootState } from '@/redux/reducer';
 import Cookies from 'js-cookie';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { validate } from './validate';
 
 const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCilindros }: SelectInputType) => {
   //estados
@@ -83,8 +84,10 @@ export default function Formulario() {
     modificar: { id: '', tipo: '' },
     empresaId: '',
   });
+  const [errors, setErrors] = useState<ErrorsForms>({});
 
   const dataStatus = useSelector((state: RootState) => state.abastecimiento.status);
+
   //funciones
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormAbastecimiento({
@@ -104,15 +107,20 @@ export default function Formulario() {
     const newFecha = moment(now).format('YYYY-MM-DD');
     const newHora = moment(now).format('HH:mm:ss');
 
-    dispatch(
-      crearFormulario({
-        ...formAbastecimiento,
-        id: newId,
-        fecha: newFecha,
-        hora: newHora,
-        empresaId: empresaId,
-      }),
-    );
+    const validationErrors = validate(formAbastecimiento);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      dispatch(
+        crearFormulario({
+          ...formAbastecimiento,
+          id: newId,
+          fecha: newFecha,
+          hora: newHora,
+          empresaId: empresaId,
+        }),
+      );
+    }
   };
 
   return (
@@ -133,6 +141,7 @@ export default function Formulario() {
                   setFormAbastecimiento={setFormAbastecimiento}
                   arrayCilindros={estadoCilindros}
                 />
+                <p className="font-mono text-[15px] text-red-500">{errors.estadoCilindro}</p>
               </div>
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2 dark:text-textDark">Tipo de cilindro</p>
@@ -142,6 +151,7 @@ export default function Formulario() {
                   setFormAbastecimiento={setFormAbastecimiento}
                   arrayCilindros={tipoCilindros}
                 />
+                <p className="font-mono text-[15px] text-red-500">{errors.tipoCilindro}</p>
               </div>
             </div>
 
@@ -157,6 +167,7 @@ export default function Formulario() {
                   min="0"
                   placeholder="Ingresar cantidad"
                 />
+                <p className="font-mono text-[15px] text-red-500">{errors.cantidad}</p>
               </div>
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2 dark:text-textDark">Acciones</p>
@@ -166,6 +177,7 @@ export default function Formulario() {
                   setFormAbastecimiento={setFormAbastecimiento}
                   arrayCilindros={estadoModificar}
                 />
+                <p className="font-mono text-[15px] text-red-500">{errors.modificar}</p>
               </div>
             </div>
           </div>
@@ -174,14 +186,13 @@ export default function Formulario() {
             <p className="text-16px py-2">Observaciones</p>
             <textarea className="w-5/12 h-36 bg-gris-1 rounded-xl" />
           </div> */}
-          <div className="flex flex-col md:flex-row items-center gap-4">
+          <div className="flex flex-col">
             <button
               onClick={(e) => registrarAbastecimiento(e)}
               className="w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] dark:text-textDark text-blanco">
-              Registrar
+              {dataStatus === 'loading' ? <p>Cargando...</p> : 'Registrar'}
             </button>
-            {dataStatus === 'loading' && <p>Cargando...</p>}
-            {dataStatus === 'failed' && <p>❌Datos Incorrectos o no ingresados</p>}
+            <p className="font-mono text-[15px] text-red-500">{dataStatus === 'failed' && 'Error en el servidor'}</p>
           </div>
         </form>
       </div>

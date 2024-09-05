@@ -7,13 +7,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/reducer';
 import Cookies from 'js-cookie';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { validateConductores } from './validate';
+
+export interface Conductores {
+  nombre: string;
+  licencia: string;
+  empresaId: string;
+}
+
+export interface ErrorsConductores {
+  nombre?: string;
+  licencia?: string;
+}
 
 const Form = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Conductores>({
     nombre: '',
     licencia: '',
     empresaId: '',
   });
+  const [errors, setErrors] = useState<ErrorsConductores>({});
+
   const dispatch: AppDispatch = useDispatch();
 
   const handleOnCahnge = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +44,11 @@ const Form = () => {
 
     const decoded = jwt.decode(token) as JwtPayload | null;
     const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
-    dispatch(crearConductor({ ...form, empresaId }));
+
+    const validateErrors = validateConductores(form);
+    setErrors(validateErrors);
+
+    if (Object.keys(validateErrors).length === 0) dispatch(crearConductor({ ...form, empresaId }));
   };
 
   return (
@@ -48,6 +66,7 @@ const Form = () => {
                 type="text"
                 placeholder="Nombre"
               />
+              <p className="font-mono text-[15px] text-red-500">{errors.nombre}</p>
             </div>
             <div className="w-full">
               <p className="text-16px py-2 dark:text-textDark">Licencia</p>
@@ -59,6 +78,7 @@ const Form = () => {
                 type="text"
                 placeholder="Licencia"
               />
+              <p className="font-mono text-[15px] text-red-500">{errors.licencia}</p>
             </div>
           </div>
         </div>

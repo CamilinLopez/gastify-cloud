@@ -3,7 +3,7 @@
 import React, { ChangeEvent, useState } from 'react';
 
 export default function SectionCuenta() {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
   const [form, setForm] = useState({
     Nombre: '',
     Correo: '',

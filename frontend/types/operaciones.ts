@@ -45,9 +45,15 @@ export interface CargaDatos {
   empresaId: string;
 }
 
+export interface ErrorsForms {
+  numero_movil?: string;
+  nombre_conductor?: string;
+}
+
 export interface TablaCargaProps {
   estado: CargaDatos;
   setEstado: React.Dispatch<React.SetStateAction<CargaDatos>>;
+  setErrors: React.Dispatch<React.SetStateAction<ErrorsForms>>;
 }
 
 type Cilindro = { id: number | number; tipo: '5kg' | '11kg' | '15kg' | '45kg' | 'H15' };

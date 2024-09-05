@@ -13,6 +13,7 @@ import {
   cargaDatosTablaDescarga,
   formularioVentas,
   cargaDatosVentas,
+  ErrorsForms,
 } from '@/types/operaciones';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { tipoCilindros } from '@/arraysObjects/dataCilindros';
@@ -32,9 +33,12 @@ import { getTablaConductores, tablaCamion } from '@/redux/slice/inventario/thunk
 import { RegistrarTablaDescarga } from '@/redux/slice/operaciones/thunks';
 import Cookies from 'js-cookie';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { validate } from './validate';
 
-const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
+const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors }) => {
   const dispatch: AppDispatch = useDispatch();
+  const response = useSelector((state: RootState) => state.operaciones.status);
+  console.log(response);
 
   const [infoCilindros, setInfoCilindros] = useState<nameCilindro>({
     '5kg': { cantidad: '0', cilindro: { id: '1', tipo: '5kg' } },
@@ -76,9 +80,14 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
     const decoded = jwt.decode(token) as JwtPayload | null;
     const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
 
-    const data = { ...estado, carga_cilindros: infoCilindrosArray, empresaId };
-    await dispatch(TablaCargaThunk(data)); //envia la informacion para registrarla
-    await dispatch(GetTablaReportesDiarios(empresaId)); //trae la informacion cada vez que se registra, esto para mstrarla en la tabla reportes diarios
+    const validationErrors = validate(estado);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      const data = { ...estado, carga_cilindros: infoCilindrosArray, empresaId };
+      await dispatch(TablaCargaThunk(data)); //envia la informacion para registrarla
+      await dispatch(GetTablaReportesDiarios(empresaId)); //trae la informacion cada vez que se registra, esto para mstrarla en la tabla reportes diarios
+    }
   };
 
   return (
@@ -122,11 +131,14 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
           </tbody>
         </table>
       </div>
-      <button
-        onClick={(e) => registrar(e)}
-        className="bg-azul dark:text-textDark  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold">
-        Registrar
-      </button>
+      <div>
+        <button
+          onClick={(e) => registrar(e)}
+          className="bg-azul dark:text-textDark  text-white max-w-xl rounded-xl w-full my-4 py-3 md:px-10 font-bold">
+          {response === 'loading' ? 'Cargando...' : 'Registrar'}
+        </button>
+        <p className="font-mono text-[15px] text-red-500">{response === 'failed' ? 'Error en el servidor' : ''}</p>
+      </div>
     </>
   );
 };
@@ -709,6 +721,7 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
 export default function SectionsOperacion() {
   const dispatch: AppDispatch = useDispatch();
   const [isClient, setIsClient] = useState(false);
+  const [errors, setErrors] = useState<ErrorsForms>({});
 
   const conductores = useSelector((state: RootState) => state.inventario.sectionConductores.tabla);
   const camiones = useSelector((state: RootState) => state.inventario.sectionCamiones.tabla);
@@ -772,6 +785,7 @@ export default function SectionsOperacion() {
               name="numero_movil"
               placeholder="asdf236"
             />
+            <p className="font-mono text-[15px] text-red-500">{errors.numero_movil}</p>
           </div>
         </label>
 
@@ -785,10 +799,11 @@ export default function SectionsOperacion() {
               form={form}
               setForm={setForm}
             />
+            <p className="font-mono text-[15px] text-red-500">{errors.nombre_conductor}</p>
           </div>
         </label>
       </div>
-      <TablaCarga estado={form} setEstado={setForm} />
+      <TablaCarga estado={form} setEstado={setForm} setErrors={setErrors} />
       {isClient && openTablaOperaciones.openTablaDescarga && (
         <TablaDescarga datosCarga={carga} estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
       )}

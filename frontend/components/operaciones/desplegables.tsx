@@ -1,7 +1,7 @@
 'use client';
 
 import { CargaDatos } from '@/types/operaciones';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Flechas } from '../svg/svgImages';
 import { tablaConductores } from '@/types/inventario_bodegas';
 import { DatosCamiones } from '@/types/inventario_camiones';
@@ -31,6 +31,7 @@ export const AutocompletableConductores = ({
 }: TypeAutocompletableconductores) => {
   //estados
   const [suggestions, setSuggestions] = useState<tablaConductores[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
 
   //funciones
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +54,15 @@ export const AutocompletableConductores = ({
   const handleOptionClick = (name: string, id: string) => {
     setForm({ ...form, nombre_conductor: { id: id, nombre: name } });
     setSuggestions([]);
+    setOpen(false);
+  };
+
+  const openList = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const newOpen = !open;
+    setOpen(newOpen);
+    if (newOpen) setSuggestions(conductores);
+    else setSuggestions([]);
   };
 
   return (
@@ -66,9 +76,11 @@ export const AutocompletableConductores = ({
         placeholder={placeholder}
       />
       <div className="absolute cursor-pointer right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
-        <Flechas />
+        <button onClick={(e) => openList(e)}>
+          <Flechas />
+        </button>
       </div>
-      {suggestions.length > 0 && (
+      {(suggestions.length > 0 || open) && (
         <div className="absolute z-10 mt-1 w-full dark:bg-bgDark1 bg-white border border-gray-300 rounded-md shadow-lg">
           {suggestions.map((option) => (
             <div
@@ -94,8 +106,10 @@ export const AutocompletableCamiones = ({
 }: TypeAutocompletablecamiones) => {
   //estados
   const [suggestions, setSuggestions] = useState<DatosCamiones[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
 
   //funciones
+
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setForm({
@@ -111,9 +125,19 @@ export const AutocompletableCamiones = ({
     }
   };
 
+  const openList = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const newOpen = !open;
+
+    setOpen(newOpen);
+    if (newOpen) setSuggestions(camiones);
+    else setSuggestions([]);
+  };
+
   const handleOptionClick = (placa: string, id: string) => {
     setForm({ ...form, numero_movil: { id, placa: placa } });
     setSuggestions([]);
+    setOpen(false);
   };
 
   return (
@@ -127,9 +151,11 @@ export const AutocompletableCamiones = ({
         placeholder={placeholder}
       />
       <div className="absolute cursor-pointer right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
-        <Flechas />
+        <button onClick={(e) => openList(e)}>
+          <Flechas />
+        </button>
       </div>
-      {suggestions.length > 0 && (
+      {(suggestions.length > 0 || open) == true && (
         <div className="absolute z-10 mt-1 w-full dark:bg-bgDark1 bg-white border border-gray-300 rounded-md shadow-lg">
           {suggestions.map((option) => (
             <div

@@ -26,6 +26,13 @@ export interface FormAbastecimiento {
   empresaId: string;
 }
 
+export interface ErrorsForms {
+  cantidad?: string;
+  tipoCilindro?: string;
+  estadoCilindro?: string;
+  modificar?: string;
+}
+
 export interface SelectInputType {
   name: 'tipoCilindro' | 'estadoCilindro' | 'modificar';
   formAbastecimiento: FormAbastecimiento;

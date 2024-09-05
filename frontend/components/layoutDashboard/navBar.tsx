@@ -48,11 +48,11 @@ export default function NavBar() {
 
     intervalRef.current = setInterval(() => {
       setCounter((prevCounter) => {
-        if (nameButton === 'startLeft') {
+        if (nameButton === 'startRight') {
           container.scrollLeft = prevCounter;
           return prevCounter + 1;
         }
-        if (nameButton === 'startRight' && prevCounter > 0) {
+        if (nameButton === 'startLeft' && prevCounter > 0) {
           container.scrollLeft = prevCounter;
           return prevCounter - 1;
         }

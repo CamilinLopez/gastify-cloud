@@ -1,4 +1,5 @@
 'use client';
+//este componente no se ussa en el proyecto
 
 import { RootState } from '@/redux/reducer';
 import { GetTablaReportesDiarios, GetTablaVisualCarga } from '@/redux/slice/operaciones/thunks';
@@ -15,7 +16,7 @@ const Tabla1: React.FC<TypeShowTalbas> = ({ estado, setEstado }) => {
 
   const cambioTablas = (e: React.MouseEvent<HTMLButtonElement>, detalleTabla: InfoReportesDiarios) => {
     e.preventDefault();
-    dispatch(GetTablaVisualCarga(detalleTabla.id));
+    // dispatch(GetTablaVisualCarga(detalleTabla.id));
     setEstado({ ...estado, showTabla1: false, showTabla2: true });
   };
 
@@ -166,9 +167,9 @@ export default function InventarioCamiones() {
   });
   const dispatch: AppDispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(GetTablaReportesDiarios());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(GetTablaReportesDiarios());
+  // }, [dispatch]);
 
   return (
     <div className="p-4 w-full">

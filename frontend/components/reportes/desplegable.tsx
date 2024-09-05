@@ -22,6 +22,7 @@ export const AutocompletableConductores = ({
 }: TypeAutocompletableconductores) => {
   //estados
   const [suggestions, setSuggestions] = useState<tablaConductores[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
 
   //funciones
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +47,15 @@ export const AutocompletableConductores = ({
     setSuggestions([]);
   };
 
+  const openList = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const newOpen = !open;
+
+    setOpen(newOpen);
+    if (newOpen) setSuggestions(conductores);
+    else setSuggestions([]);
+  };
+
   return (
     <div className="relative w-5/12">
       <input
@@ -57,9 +67,11 @@ export const AutocompletableConductores = ({
         placeholder={placeholder}
       />
       <div className="absolute cursor-pointer right-3 top-1/2 transform -translate-y-1/2 flex flex-col justify-center">
-        <Flechas />
+        <button onClick={(e) => openList(e)}>
+          <Flechas />
+        </button>
       </div>
-      {suggestions.length > 0 && (
+      {(suggestions.length > 0 || open) && (
         <div className="absolute dark:bg-bgDark1 z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
           {suggestions.map((option) => (
             <div

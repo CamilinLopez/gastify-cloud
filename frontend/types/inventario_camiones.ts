@@ -34,3 +34,10 @@ export interface DatosCamiones {
   placa: string;
   empresaId: string;
 }
+
+export interface ErrorsForms {
+  marca?: string;
+  modelo?: string;
+  capacidad_carga?: string;
+  placa?: string;
+}
