@@ -32,4 +32,5 @@ export interface DatosCamiones {
   modelo: string;
   capacidad_carga: number;
   placa: string;
+  empresaId: string;
 }

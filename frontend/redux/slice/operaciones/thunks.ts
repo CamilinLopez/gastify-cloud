@@ -20,9 +20,9 @@ export const TablaCargaThunk = createAsyncThunk(
 
 export const GetTablaReportesDiarios = createAsyncThunk(
   'operaciones/getTablaOperacionesDiarias',
-  async (_, { rejectWithValue }) => {
+  async (empresaId: string, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/operaciones/getTablaReportesDiarios');
+      const response = await axiosInstance.get('/operaciones/getTablaReportesDiarios', { params: { empresaId } });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -35,9 +35,9 @@ export const GetTablaReportesDiarios = createAsyncThunk(
 
 export const GetTablaVisualCarga = createAsyncThunk(
   'operaciones/getTablaVisualCarga',
-  async (carga_id: string, { rejectWithValue }) => {
+  async ({ carga_id, empresaId }: { carga_id: string; empresaId: string }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/operaciones/getTablaVisualCarga', { params: { carga_id } });
+      const response = await axiosInstance.get('/operaciones/getTablaVisualCarga', { params: { carga_id, empresaId } });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -65,9 +65,9 @@ export const RegistrarTablaDescarga = createAsyncThunk(
 
 export const GEtTablaDescarga = createAsyncThunk(
   'operaciones/getTablaDescarga',
-  async (carga_id: string, { rejectWithValue }) => {
+  async ({ carga_id, empresaId }: { carga_id: string; empresaId: string }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/operaciones/getTablaDescarga', { params: { carga_id } });
+      const response = await axiosInstance.get('/operaciones/getTablaDescarga', { params: { carga_id, empresaId } });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -95,9 +95,9 @@ export const PostTablaVentas = createAsyncThunk(
 
 export const GetTablaVentas = createAsyncThunk(
   'operaciones/getTablaVentas',
-  async (carga_id: string, { rejectWithValue }) => {
+  async ({ carga_id, empresaId }: { carga_id: string; empresaId: string }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/operaciones/getTablaVentas', { params: { carga_id } });
+      const response = await axiosInstance.get('/operaciones/getTablaVentas', { params: { carga_id, empresaId } });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

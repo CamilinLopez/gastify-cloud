@@ -23,6 +23,7 @@ export interface FormAbastecimiento {
   tipoCilindro: typeCilindro;
   estadoCilindro: typeCilindro;
   modificar?: typeModificar;
+  empresaId: string;
 }
 
 export interface SelectInputType {

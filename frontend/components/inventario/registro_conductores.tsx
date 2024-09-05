@@ -5,11 +5,14 @@ import { crearConductor, getTablaConductores, borrarConductores } from '@/redux/
 import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/reducer';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const Form = () => {
   const [form, setForm] = useState({
     nombre: '',
     licencia: '',
+    empresaId: '',
   });
   const dispatch: AppDispatch = useDispatch();
 
@@ -21,7 +24,13 @@ const Form = () => {
   };
   const registrar = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    dispatch(crearConductor(form));
+    const token = Cookies.get('token');
+
+    if (!token) return undefined;
+
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    dispatch(crearConductor({ ...form, empresaId }));
   };
 
   return (
@@ -69,7 +78,13 @@ const Tabla = () => {
   const dataTable = useSelector((state: RootState) => state.inventario.sectionConductores.tabla);
 
   useEffect(() => {
-    dispatch(getTablaConductores());
+    const token = Cookies.get('token');
+
+    if (!token) return undefined;
+
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    dispatch(getTablaConductores(empresaId));
   }, [dispatch]);
 
   const deleteConductores = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {

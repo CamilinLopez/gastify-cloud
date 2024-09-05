@@ -4,9 +4,14 @@ import axios from 'axios';
 
 export const GetTablaReportes = createAsyncThunk(
   'reportes/getTablaReportes',
-  async ({ fecha, conductor_id }: { fecha: string; conductor_id: string }, { rejectWithValue }) => {
+  async (
+    { fecha, conductor_id, empresaId }: { fecha: string; conductor_id: string; empresaId: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const response = await axiosInstance.get('/reportes/getTablaReportes', { params: { fecha, conductor_id } });
+      const response = await axiosInstance.get('/reportes/getTablaReportes', {
+        params: { fecha, conductor_id, empresaId },
+      });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

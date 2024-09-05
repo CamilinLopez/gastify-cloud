@@ -30,6 +30,8 @@ import { AutocompletableCamiones, AutocompletableConductores } from './desplegab
 import { RootState } from '@/redux/reducer';
 import { getTablaConductores, tablaCamion } from '@/redux/slice/inventario/thunks';
 import { RegistrarTablaDescarga } from '@/redux/slice/operaciones/thunks';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -59,7 +61,7 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
     }));
   };
 
-  const registrar = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const registrar = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const infoCilindrosArray = Object.entries(infoCilindros).map(([tipo, { cantidad, cilindro }]) => ({
       cantidad,
@@ -68,9 +70,15 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado }) => {
         tipo: cilindro.tipo,
       },
     }));
-    const data = { ...estado, carga_cilindros: infoCilindrosArray };
-    dispatch(TablaCargaThunk(data)); //envia la informacion para registrarla
-    dispatch(GetTablaReportesDiarios()); //trae la informacion cada vez que se registra, esto para mstrarla en la tabla reportes diarios
+
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+    const data = { ...estado, carga_cilindros: infoCilindrosArray, empresaId };
+    await dispatch(TablaCargaThunk(data)); //envia la informacion para registrarla
+    await dispatch(GetTablaReportesDiarios(empresaId)); //trae la informacion cada vez que se registra, esto para mstrarla en la tabla reportes diarios
   };
 
   return (
@@ -194,6 +202,10 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
   };
   const registra = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
 
     if (registrar === false) {
       setRegistrar(true); //si se registra informacion cambia de estado para que no pueda modificar
@@ -212,11 +224,12 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
         conductor: datosCarga.conductore,
         camion: datosCarga.camione,
         tablaDescarga: array,
+        empresaId,
       };
       await dispatch(RegistrarTablaDescarga(data));
     }
 
-    await dispatch(GEtTablaDescarga(datosCarga.id)); //llamar a la base de datos para saber si hay cargas asociadas al id en la tabla descarga_camiones
+    await dispatch(GEtTablaDescarga({ carga_id: datosCarga.id, empresaId })); //llamar a la base de datos para saber si hay cargas asociadas al id en la tabla descarga_camiones
   };
 
   return (
@@ -341,11 +354,16 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
   const dispatch: AppDispatch = useDispatch();
   const tabla1 = useSelector((state: RootState) => state.operaciones.responseTablaReportesDiarios.result);
 
+  const token = Cookies.get('token');
+  if (!token) return undefined;
+  const decoded = jwt.decode(token) as JwtPayload | null;
+  const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
   const estadoTablaVentas = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
     e.preventDefault();
     //llamar a la base de datos para saber si hay cargas asociadas al id en la tabla descarga_camiones
-    dispatch(GetTablaVisualCarga(carga.id));
-    dispatch(GetTablaVentas(carga.id));
+    dispatch(GetTablaVisualCarga({ carga_id: carga.id, empresaId }));
+    dispatch(GetTablaVentas({ carga_id: carga.id, empresaId }));
 
     infoCarga.setCarga({
       ...infoCarga.carga,
@@ -369,7 +387,7 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
     e.preventDefault();
 
     //llamar a la base de datos para saber si hay cargas asociadas al id en la tabla descarga_camiones
-    dispatch(GEtTablaDescarga(carga.id));
+    dispatch(GEtTablaDescarga({ carga_id: carga.id, empresaId }));
 
     infoCarga.setCarga({
       ...infoCarga.carga,
@@ -392,7 +410,8 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
     e.preventDefault();
 
     //se hace un get al servidor con el carga_id para obtener el detalle de carga en la tablaVisualcarga
-    dispatch(GetTablaVisualCarga(carga.id));
+
+    dispatch(GetTablaVisualCarga({ carga_id: carga.id, empresaId }));
 
     infoCarga.setCarga({
       ...infoCarga.carga,
@@ -564,6 +583,12 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
 
   const registrar = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
     const array = Object.entries(form).map(([key, value]) => ({
       tipo: key,
       ...value,
@@ -574,10 +599,11 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
       conductor: carga.conductore,
       camion: carga.camione,
       tabla: array,
+      empresaId,
     };
 
     await dispatch(PostTablaVentas(data));
-    await dispatch(GetTablaVentas(carga.id));
+    await dispatch(GetTablaVentas({ carga_id: carga.id, empresaId }));
   };
 
   useEffect(() => {
@@ -682,6 +708,7 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
 
 export default function SectionsOperacion() {
   const dispatch: AppDispatch = useDispatch();
+  const [isClient, setIsClient] = useState(false);
 
   const conductores = useSelector((state: RootState) => state.inventario.sectionConductores.tabla);
   const camiones = useSelector((state: RootState) => state.inventario.sectionCamiones.tabla);
@@ -701,6 +728,7 @@ export default function SectionsOperacion() {
     numero_movil: { id: '', placa: '' },
     nombre_conductor: { id: '', nombre: '' },
     carga_cilindros: [],
+    empresaId: '',
   });
   //carga, se mostrara en la tablaDescargas
   const [carga, setCarga] = useState<InfoReportesDiarios>({
@@ -717,9 +745,16 @@ export default function SectionsOperacion() {
   };
 
   useEffect(() => {
-    dispatch(getTablaConductores());
-    dispatch(tablaCamion());
-    dispatch(GetTablaReportesDiarios());
+    setIsClient(true);
+
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+    dispatch(getTablaConductores(empresaId));
+    dispatch(tablaCamion(empresaId));
+    dispatch(GetTablaReportesDiarios(empresaId));
   }, [dispatch]);
 
   return (
@@ -754,13 +789,13 @@ export default function SectionsOperacion() {
         </label>
       </div>
       <TablaCarga estado={form} setEstado={setForm} />
-      {openTablaOperaciones.openTablaDescarga && (
+      {isClient && openTablaOperaciones.openTablaDescarga && (
         <TablaDescarga datosCarga={carga} estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
       )}
-      {openTablaOperaciones.openTablaCarga && (
+      {isClient && openTablaOperaciones.openTablaCarga && (
         <TablaVisualCarga carga={carga} estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
       )}
-      {openTablaOperaciones.openTablaOperaciones && (
+      {isClient && openTablaOperaciones.openTablaOperaciones && (
         <TablaOperaciones
           infoCarga={infoCarga}
           tabla={TablaOperacionesDiarias}
@@ -768,7 +803,7 @@ export default function SectionsOperacion() {
           setEstado={setOpenTablaOperaciones}
         />
       )}
-      {openTablaOperaciones.openTablaVentas && (
+      {isClient && openTablaOperaciones.openTablaVentas && (
         <TablaVentas carga={carga} estado={openTablaOperaciones} setEstado={setOpenTablaOperaciones} />
       )}
     </div>

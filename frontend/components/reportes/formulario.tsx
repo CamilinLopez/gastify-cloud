@@ -8,6 +8,8 @@ import { RootState } from '@/redux/reducer';
 import { getTablaConductores } from '@/redux/slice/inventario/thunks';
 import { BuscarReportesForm } from '@/types/reportes';
 import { GetTablaReportes } from '@/redux/slice/reportes/thunks';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export default function Formulario() {
   const dispatch: AppDispatch = useDispatch();
@@ -27,12 +29,23 @@ export default function Formulario() {
 
   const buscar = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const data = { fecha: form.fecha, conductor_id: form.conductor.id };
+
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+    const data = { fecha: form.fecha, conductor_id: form.conductor.id, empresaId };
     dispatch(GetTablaReportes(data));
   };
 
   useEffect(() => {
-    dispatch(getTablaConductores());
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+    dispatch(getTablaConductores(empresaId));
   }, [dispatch]);
 
   return (

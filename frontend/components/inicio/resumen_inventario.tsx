@@ -5,6 +5,8 @@ import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTablaInventarioResumen } from '@/redux/slice/inicio/thunks';
 import { RootState } from '@/redux/reducer';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export default function ResumenInventario() {
   const dispatch: AppDispatch = useDispatch();
@@ -13,7 +15,11 @@ export default function ResumenInventario() {
   const maxValueVacios = Math.max(...tabla?.vacios.map((item) => Number(item.totalCantidad)));
 
   useEffect(() => {
-    dispatch(getTablaInventarioResumen());
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    dispatch(getTablaInventarioResumen(empresaId));
   }, [dispatch]);
   return (
     <div className="p-4 w-full">

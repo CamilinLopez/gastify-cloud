@@ -42,6 +42,7 @@ export interface CargaDatos {
   numero_movil: { id: string; placa: string };
   nombre_conductor: { id: string; nombre: string };
   carga_cilindros: TypeCilindrosCantidad[];
+  empresaId: string;
 }
 
 export interface TablaCargaProps {
@@ -124,6 +125,7 @@ export interface cargaDatosTablaDescarga {
   camion: { id: string; placa: string };
   conductor: { id: string; nombre: string };
   tablaDescarga: infoTablaDescarga[];
+  empresaId: string;
 }
 
 export interface ResponseTablaDescarga {
@@ -160,6 +162,7 @@ export interface cargaDatosVentas {
   camion: { id: string; placa: string };
   conductor: { id: string; nombre: string };
   tabla: TablaVentasSend[];
+  empresaId: string;
 }
 
 export interface ResponseTablaVentas {

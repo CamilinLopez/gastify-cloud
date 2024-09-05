@@ -9,10 +9,9 @@ const {
 } = require('../controllers/operacioneControllers');
 
 const realizarOperacionHandler = async (req, res) => {
-  const { numero_movil, nombre_conductor, carga_cilindros } = req.body;
-
+  const { numero_movil, nombre_conductor, carga_cilindros, empresaId } = req.body;
   try {
-    const data = await transfereciaCilindros(numero_movil.id, nombre_conductor.id, carga_cilindros);
+    const data = await transfereciaCilindros(numero_movil.id, nombre_conductor.id, carga_cilindros, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -20,8 +19,9 @@ const realizarOperacionHandler = async (req, res) => {
 };
 
 const getTablaReportesDiariosHandler = async (req, res) => {
+  const { empresaId } = req.query;
   try {
-    const data = await TablaReportesDiarios();
+    const data = await TablaReportesDiarios(empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -29,9 +29,9 @@ const getTablaReportesDiariosHandler = async (req, res) => {
 };
 
 const getTablaVisualCargasHandler = async (req, res) => {
-  const { carga_id } = req.query;
+  const { carga_id, empresaId } = req.query;
   try {
-    const data = await getTeblaVisualCargaDB(carga_id);
+    const data = await getTeblaVisualCargaDB(carga_id, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -39,9 +39,9 @@ const getTablaVisualCargasHandler = async (req, res) => {
 };
 
 const postTablaDescargaHalndler = async (req, res) => {
-  const { carga_id, conductor, camion, tablaDescarga } = req.body;
+  const { carga_id, conductor, camion, tablaDescarga, empresaId } = req.body;
   try {
-    const data = await crearTablaDescargaDB(carga_id, conductor, camion, tablaDescarga);
+    const data = await crearTablaDescargaDB(carga_id, conductor, camion, tablaDescarga, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -49,9 +49,9 @@ const postTablaDescargaHalndler = async (req, res) => {
 };
 
 const getTablaDescargaHandler = async (req, res) => {
-  const { carga_id } = req.query;
+  const { carga_id, empresaId } = req.query;
   try {
-    const data = await obtenerTablaDescargaDB(carga_id);
+    const data = await obtenerTablaDescargaDB(carga_id, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -59,9 +59,9 @@ const getTablaDescargaHandler = async (req, res) => {
 };
 
 const postTablaVentasHandlres = async (req, res) => {
-  const { camion, carga_id, conductor, tabla } = req.body;
+  const { camion, carga_id, conductor, tabla, empresaId } = req.body;
   try {
-    const data = await crearVentasDB(camion, carga_id, conductor, tabla);
+    const data = await crearVentasDB(camion, carga_id, conductor, tabla, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     console.log(error);
@@ -70,10 +70,9 @@ const postTablaVentasHandlres = async (req, res) => {
 };
 
 const getTablaVentas = async (req, res) => {
-  const { carga_id } = req.query;
-  console.log(carga_id, "mama no fuuu")
+  const { carga_id, empresaId } = req.query;
   try {
-    const data = await obtenerTablaVentas(carga_id);
+    const data = await obtenerTablaVentas(carga_id, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });

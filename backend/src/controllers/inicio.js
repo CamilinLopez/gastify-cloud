@@ -1,13 +1,15 @@
 const { Op } = require('sequelize');
 const { tipo_cilindros, ventas, inventario_bodegas, database } = require('../db/index');
+const { generarFechaActual } = require('../utils/generadorId');
 
-const getTablaResumenInventario = async () => {
+const getTablaResumenInventario = async (empresaId) => {
   try {
     const llenos = await inventario_bodegas.findAll({
       attributes: [[database.fn('SUM', database.col('cantidad')), 'totalCantidad']],
       include: [{ model: tipo_cilindros, as: 'tipoCilindro', attributes: ['id', 'tipo'] }],
       where: {
         estadoCilindroId: 1,
+        empresaId,
       },
       group: ['tipoCilindro.id', 'tipoCilindro.tipo'],
     });
@@ -17,6 +19,7 @@ const getTablaResumenInventario = async () => {
       include: [{ model: tipo_cilindros, as: 'tipoCilindro', attributes: ['id', 'tipo'] }],
       where: {
         estadoCilindroId: 2,
+        empresaId,
       },
       group: ['tipoCilindro.id', 'tipoCilindro.tipo'],
     });
@@ -28,8 +31,8 @@ const getTablaResumenInventario = async () => {
   }
 };
 
-const cilindrosVendidosPorDia = async () => {
-  const today = new Date().toISOString().split('T')[0];
+const cilindrosVendidosPorDia = async (empresaId) => {
+  const today = generarFechaActual();
   try {
     const data = await ventas.findAll({
       attributes: [[database.fn('SUM', database.col('cantidad')), 'totalCantidad']],
@@ -38,17 +41,17 @@ const cilindrosVendidosPorDia = async () => {
         fecha: {
           [Op.eq]: today,
         },
+        empresaId,
       },
       group: ['tipoCilindro.id', 'tipoCilindro.tipo'],
     });
     return { message: 'Accion completa', today, result: data };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
 
-const ventarPorMes = async () => {
+const ventarPorMes = async (empresaId) => {
   const _5kgR = new Array(12).fill(0);
   const _11kgR = new Array(12).fill(0);
   const _15kgR = new Array(12).fill(0);
@@ -84,6 +87,7 @@ const ventarPorMes = async () => {
         [database.fn('EXTRACT', database.literal('MONTH FROM "fecha"')), 'ASC'],
         ['tipoCilindroId', 'ASC'],
       ],
+      where: { empresaId },
     });
 
     //agrupar por tipos de cilindros

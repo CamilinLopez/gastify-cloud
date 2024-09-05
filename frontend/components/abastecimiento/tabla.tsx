@@ -5,6 +5,8 @@ import { getTablaStock } from '@/redux/slice/abastecimiento/thunks';
 import { AppDispatch } from '@/redux/store';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export default function Tabla() {
   const dispatch: AppDispatch = useDispatch();
@@ -12,7 +14,12 @@ export default function Tabla() {
   const textTable = ['Tipo de cilindro', 'Stock actual', 'Stock mínimo', 'Alerta'];
 
   useEffect(() => {
-    dispatch(getTablaStock());
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+    dispatch(getTablaStock(empresaId));
   }, [dispatch]);
 
   return (

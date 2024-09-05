@@ -10,6 +10,8 @@ import { crearFormulario } from '@/redux/slice/abastecimiento/thunks';
 import moment from 'moment';
 import { generateId } from '@/utils/generateId';
 import { RootState } from '@/redux/reducer';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCilindros }: SelectInputType) => {
   //estados
@@ -79,6 +81,7 @@ export default function Formulario() {
     tipoCilindro: { id: '', tipo: '' },
     estadoCilindro: { id: '', tipo: '' },
     modificar: { id: '', tipo: '' },
+    empresaId: '',
   });
 
   const dataStatus = useSelector((state: RootState) => state.abastecimiento.status);
@@ -91,8 +94,12 @@ export default function Formulario() {
   };
   const registrarAbastecimiento = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const now = moment();
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
 
+    const now = moment();
     const newId = generateId();
     const newFecha = moment(now).format('YYYY-MM-DD');
     const newHora = moment(now).format('HH:mm:ss');
@@ -103,6 +110,7 @@ export default function Formulario() {
         id: newId,
         fecha: newFecha,
         hora: newHora,
+        empresaId: empresaId,
       }),
     );
   };

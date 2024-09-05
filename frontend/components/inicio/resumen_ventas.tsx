@@ -17,6 +17,8 @@ import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getVentasPorDia, getVentasPorMes } from '@/redux/slice/inicio/thunks';
 import { RootState } from '@/redux/reducer';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const CilindrosPorDia = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -27,7 +29,11 @@ const CilindrosPorDia = () => {
   const maxValue = Math.max(...array?.map((item) => Number(item.totalCantidad)));
 
   useEffect(() => {
-    dispatch(getVentasPorDia());
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    dispatch(getVentasPorDia(empresaId));
   }, [dispatch]);
 
   return (
@@ -40,7 +46,7 @@ const CilindrosPorDia = () => {
         {array.map((item, index) => (
           <div key={index} className="flex flex-col gap-y-2 w-2/3">
             <div
-              className="border-t-[2px] dark:bg-bgDark1 dark:border-bgDark1 border-gris-2 bg-gris-1"
+              className="border-t-[2px] dark:bg-azul dark:border-bgDark1 border-gris-2 bg-gris-1"
               style={{
                 height: `${(Number(item.totalCantidad) / maxValue) * 100}px`,
               }}></div>
@@ -99,7 +105,11 @@ const SalesChart = () => {
   };
 
   useEffect(() => {
-    dispatch(getVentasPorMes());
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    dispatch(getVentasPorMes(empresaId));
   }, [dispatch]);
 
   return (

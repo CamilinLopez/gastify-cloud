@@ -4,9 +4,9 @@ import axios from 'axios';
 
 export const getTablaInventarioResumen = createAsyncThunk(
   'inicio/tablaInventarioResumen',
-  async (_, { rejectWithValue }) => {
+  async (empresaId: string, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/inicio/getTablaResumenInventario');
+      const response = await axiosInstance.get('/inicio/getTablaResumenInventario', { params: { empresaId } });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -17,26 +17,32 @@ export const getTablaInventarioResumen = createAsyncThunk(
   },
 );
 
-export const getVentasPorDia = createAsyncThunk('inicio/ventaPorDia', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.get('/inicio/getReportePorDia');
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return rejectWithValue(error.response?.data || 'Error desconocido del servidor');
+export const getVentasPorDia = createAsyncThunk(
+  'inicio/ventaPorDia',
+  async (empresaId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/inicio/getReportePorDia', { params: { empresaId } });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido del servidor');
+      }
+      return rejectWithValue('Error inesperado');
     }
-    return rejectWithValue('Error inesperado');
-  }
-});
+  },
+);
 
-export const getVentasPorMes = createAsyncThunk('inicio/ventaPorMes', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.get('/inicio/getReportePorMes');
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return rejectWithValue(error.response?.data || 'Error desconocido del servidor');
+export const getVentasPorMes = createAsyncThunk(
+  'inicio/ventaPorMes',
+  async (empresaId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/inicio/getReportePorMes', { params: { empresaId } });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido del servidor');
+      }
+      return rejectWithValue('Error inesperado');
     }
-    return rejectWithValue('Error inesperado');
-  }
-});
+  },
+);

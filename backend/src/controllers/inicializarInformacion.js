@@ -28,7 +28,7 @@ cron.schedule('0 0 * * *', async () => {
   }
 });
 
-const tomarDatosTablaStockAbastecimiento = async () => {
+const tomarDatosTablaStockAbastecimiento = async (empresaId) => {
   try {
     const data = await inventario_bodegas.findAll({
       attributes: ['tipoCilindroId', [literal('SUM("inventario_bodegas"."cantidad")'), 'totalCantidad']],
@@ -45,6 +45,7 @@ const tomarDatosTablaStockAbastecimiento = async () => {
           where: { tipo: 'Lleno' },
         },
       ],
+      where: { empresaId },
       group: ['tipoCilindroId', 'tipoCilindro.id', 'tipoCilindro.tipo', 'estadoCilindro.id', 'estadoCilindro.tipo'],
     });
     const getInfo = data.map((item) => ({
@@ -60,7 +61,7 @@ const tomarDatosTablaStockAbastecimiento = async () => {
   }
 };
 
-const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCilindro, estadoCilindro, modificar }) => {
+const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCilindro, estadoCilindro, modificar, empresaId }) => {
   const { idCilindro, nombreCilindro } = tipoCilindro;
   const { idEstado, nombreEstado } = estadoCilindro;
   const { idModificar, nombreModificar } = modificar;
@@ -72,12 +73,13 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
     cantidad,
     tipoCilindroId: idCilindro,
     estadoCilindroId: idEstado,
+    empresaId,
   };
 
   try {
     if (nombreModificar === 'Agregar') {
       const nuevoRegistro = await inventario_bodegas.create(data);
-      const getInfo = await tomarDatosTablaStockAbastecimiento();
+      const getInfo = await tomarDatosTablaStockAbastecimiento(empresaId);
 
       return { message: 'Datos creados', nuevoRegistro, getInfo };
     }
@@ -97,8 +99,10 @@ const crearActualizarInventarioDB = async ({ id, fecha, hora, cantidad, tipoCili
         cantidad: -cantidad,
         tipoCilindroId: idCilindro,
         estadoCilindroId: idEstado,
+        empresaId,
       });
-      const getInfo = await tomarDatosTablaStockAbastecimiento();
+
+      const getInfo = await tomarDatosTablaStockAbastecimiento(empresaId);
 
       return { message: 'Datos Eliminados', nuevoRegistro, getInfo };
     }

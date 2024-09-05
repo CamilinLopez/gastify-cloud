@@ -1,9 +1,9 @@
 const { conductores, tipo_cilindros, ventas } = require('../db/index');
 const { fn, col, Op } = require('sequelize');
 
-const getTablaResumenReportesDiariosDB = async (fecha, conductor_id) => {
+const getTablaResumenReportesDiariosDB = async (fecha, conductor_id, empresaId) => {
   try {
-    const where = {};
+    const where = { empresaId };
     if (fecha) where.fecha = fecha;
     if (conductor_id) where.conductor_id = conductor_id;
 
@@ -31,7 +31,9 @@ const getTablaResumenReportesDiariosDB = async (fecha, conductor_id) => {
       ],
     });
 
-    const tablaReportes = resultados.map((item) => {
+    const resultFilter = resultados.filter((item) => item.conductor_id !== null);
+
+    const tablaReportes = resultFilter.map((item) => {
       // Inicializar el objeto para cada fila de la tabla
       const reporte = {
         Fecha: item.fecha,
@@ -89,6 +91,7 @@ const getTablaResumenReportesDiariosDB = async (fecha, conductor_id) => {
 
     return { message: 'Accion completa', result: finalResult };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

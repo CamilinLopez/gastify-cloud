@@ -5,6 +5,8 @@ import { AppDispatch } from '@/redux/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTablaBodega } from '@/redux/slice/inventario/thunks';
 import { RootState } from '@/redux/reducer';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const Tabla = () => {
   const data = useSelector((state: RootState) => state.inventario.tablaBodegaFiteredByDate);
@@ -51,7 +53,14 @@ export default function InventarioBodega() {
     const fetchData = async () => {
       const now = moment();
       const date = moment(now).format('YYYY-MM-DD');
-      await dispatch(getTablaBodega(date));
+
+      const token = Cookies.get('token');
+      if (!token) return undefined;
+      const decoded = jwt.decode(token) as JwtPayload | null;
+
+      const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+      await dispatch(getTablaBodega({ fecha: date, empresaId }));
     };
 
     fetchData();
@@ -66,7 +75,13 @@ export default function InventarioBodega() {
   const buscar = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const date = form.fecha;
-    dispatch(getTablaBodega(date));
+
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+    dispatch(getTablaBodega({ fecha: date, empresaId }));
   };
 
   return (

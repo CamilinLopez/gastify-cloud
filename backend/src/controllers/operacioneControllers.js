@@ -13,18 +13,19 @@ const {
 } = require('../db/index');
 const { generateId, generarFechaActual, generarHoraActual } = require('../utils/generadorId');
 
-async function obtenerCantidadTotalBodega(tipoCilindroId, estadoCilindroId) {
+async function obtenerCantidadTotalBodega(tipoCilindroId, estadoCilindroId, empresaId) {
   const resultado = await inventario_bodegas.findAll({
     attributes: [[database.fn('SUM', database.col('cantidad')), 'totalCantidad']],
     where: {
       tipoCilindroId,
       estadoCilindroId,
+      empresaId,
     },
   });
   return resultado[0].get('totalCantidad');
 }
 
-const TablaReportesDiarios = async () => {
+const TablaReportesDiarios = async (empresaId) => {
   try {
     const data = await cargas.findAll({
       attributes: ['fecha', 'hora', 'id'],
@@ -38,6 +39,7 @@ const TablaReportesDiarios = async () => {
           attributes: ['placa', 'id'],
         },
       ],
+      where: { empresaId },
     });
 
     return { message: 'Accion comleta', result: data };
@@ -47,7 +49,7 @@ const TablaReportesDiarios = async () => {
   }
 };
 
-const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros) => {
+const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros, empresaId) => {
   //iniciar transaccion
   const transaction = await database.transaction();
   const cilindrosAceptados = [];
@@ -57,7 +59,7 @@ const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros
 
   try {
     for (const carga of carga_cilindros) {
-      const cantidadBodega = await obtenerCantidadTotalBodega(carga.cilindro.id, 1);
+      const cantidadBodega = await obtenerCantidadTotalBodega(carga.cilindro.id, 1, empresaId);
       if (cantidadBodega >= carga.cantidad)
         cilindrosAceptados.push({ cantidadBodega, cantidadCarga: carga.cantidad, tipoClinindroId: carga.cilindro.id });
       if (cantidadBodega < carga.cantidad)
@@ -72,6 +74,7 @@ const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros
           hora: generarHoraActual(),
           camion_id: String(numero_movil),
           conductor_id: id_conductor,
+          empresaId,
         },
         { transaction },
       );
@@ -84,6 +87,7 @@ const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros
             tipoCilindroId: Number(detalleCarga.tipoClinindroId),
             estadoCilindroId: 1, //solo cilindros llenos. El id para cilindros llenos es 1
             cantidad: detalleCarga.cantidadCarga,
+            empresaId,
           },
           { transaction },
         );
@@ -95,6 +99,7 @@ const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros
             cantidad: -Number(detalleCarga.cantidadCarga),
             tipoCilindroId: Number(detalleCarga.tipoClinindroId),
             estadoCilindroId: 1,
+            empresaId,
           },
           { transaction },
         );
@@ -107,6 +112,7 @@ const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros
             camionId: numero_movil,
             tipoCilindroId: Number(detalleCarga.tipoClinindroId),
             estadoCilindroId: 1,
+            empresaId,
           },
           { transaction },
         );
@@ -124,11 +130,11 @@ const transfereciaCilindros = async (numero_movil, id_conductor, carga_cilindros
   }
 };
 
-const getTeblaVisualCargaDB = async (carga_id) => {
+const getTeblaVisualCargaDB = async (carga_id, empresaId) => {
   try {
     const totalCargas = await detalle_cargas.findAll({
       attributes: ['id', 'carga_id', 'cantidad'],
-      where: { carga_id },
+      where: { carga_id, empresaId },
       include: { model: tipo_cilindros, attributes: ['tipo'] },
     });
 
@@ -140,8 +146,7 @@ const getTeblaVisualCargaDB = async (carga_id) => {
   }
 };
 
-const crearTablaDescargaDB = async (carga_id, conductor, camion, tablaDescarga) => {
-  const idDescarga = generateId();
+const crearTablaDescargaDB = async (carga_id, conductor, camion, tablaDescarga, empresaId) => {
   try {
     for (const descarga of tablaDescarga) {
       await descarga_camiones.create({
@@ -154,6 +159,7 @@ const crearTablaDescargaDB = async (carga_id, conductor, camion, tablaDescarga) 
         cantidad: Number(descarga.cantidad === '' ? 0 : descarga.cantidad),
         tipo_cilindros: Number(descarga.tipoCilindroId),
         estado_cilindros: Number(descarga.estadoCilindroId),
+        empresaId,
       });
 
       await inventario_bodegas.create({
@@ -163,20 +169,20 @@ const crearTablaDescargaDB = async (carga_id, conductor, camion, tablaDescarga) 
         cantidad: Number(descarga.cantidad === '' ? 0 : descarga.cantidad),
         tipoCilindroId: Number(descarga.tipoCilindroId),
         estadoCilindroId: Number(descarga.estadoCilindroId),
+        empresaId,
       });
     }
     return { message: 'Accion completa', result: [] };
   } catch (error) {
-    console.log(error, 'mamama');
     throw error;
   }
 };
 
-const obtenerTablaDescargaDB = async (carga_id) => {
+const obtenerTablaDescargaDB = async (carga_id, empresaId) => {
   try {
     const data = await descarga_camiones.findAll({
       attributes: ['id', 'fecha', 'hora', 'carga_id', 'camion_id', 'conductor_id', 'cantidad'],
-      where: { carga_id },
+      where: { carga_id, empresaId },
       include: [
         {
           model: tipo_cilindros,
@@ -229,7 +235,7 @@ const obtenerTablaDescargaDB = async (carga_id) => {
   }
 };
 
-const crearVentasDB = async (camion, carga_id, conductor, tabla) => {
+const crearVentasDB = async (camion, carga_id, conductor, tabla, empresaId) => {
   try {
     for (const venta of tabla) {
       await ventas.create({
@@ -242,6 +248,7 @@ const crearVentasDB = async (camion, carga_id, conductor, tabla) => {
         tipoCilindroId: Number(venta.tipoCilindroId),
         cantidad: Number(venta.cantidad),
         valor: Number(venta.valor),
+        empresaId,
       });
     }
     return { message: 'Accion completa', result: [] };
@@ -250,11 +257,11 @@ const crearVentasDB = async (camion, carga_id, conductor, tabla) => {
   }
 };
 
-const obtenerTablaVentas = async (carga_id) => {
+const obtenerTablaVentas = async (carga_id, empresaId) => {
   try {
     const data = await ventas.findAll({
       attributes: ['cantidad', 'valor'],
-      where: { carga_id },
+      where: { carga_id, empresaId },
       include: [
         {
           model: tipo_cilindros,

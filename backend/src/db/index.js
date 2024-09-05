@@ -73,6 +73,7 @@ const {
   detalle_cargas,
   descarga_camiones,
   ventas,
+  stockcilindros,
 } = database.models;
 
 //inventario_bodegas / tipo_cilindros N/1
@@ -172,7 +173,6 @@ roles.hasMany(usuarios, {
   as: 'usuarios',
 });
 
-
 empresas.belongsTo(roles, {
   foreignKey: 'rolId',
   as: 'rol',
@@ -183,7 +183,33 @@ roles.hasMany(empresas, {
   as: 'empresas',
 });
 
-// console.log(Object.keys(database.models));
+//relaciones de empresa con el resti de tablas
+inventario_bodegas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(inventario_bodegas, { foreignKey: 'empresaId', as: 'inventarioBodegas' });
+
+inventario_camiones.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(inventario_camiones, { foreignKey: 'empresaId', as: 'inventarioCamiones' });
+
+ventas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(ventas, { foreignKey: 'empresaId', as: 'ventas' });
+
+conductores.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(conductores, { foreignKey: 'empresaId', as: 'conductores' });
+
+camiones.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(camiones, { foreignKey: 'empresaId', as: 'camiones' });
+
+cargas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(cargas, { foreignKey: 'empresaId', as: 'cargas' });
+
+descarga_camiones.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(descarga_camiones, { foreignKey: 'empresaId', as: 'descargas' });
+
+detalle_cargas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(detalle_cargas, { foreignKey: 'empresaId', as: 'detalleCargas' });
+
+stockcilindros.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
+empresas.hasMany(stockcilindros, { foreignKey: 'empresaId', as: 'stockCilindros' });
 
 module.exports = {
   ...database.models,

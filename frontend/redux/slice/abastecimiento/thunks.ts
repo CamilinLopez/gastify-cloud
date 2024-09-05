@@ -18,15 +18,17 @@ export const crearFormulario = createAsyncThunk(
   },
 );
 
-export const getTablaStock = createAsyncThunk('abastecimiento/getTablaStock', async (_, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.get('/abastecimiento/getTablaStock');
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return rejectWithValue(error.response?.data || 'Error desconocido del servidor');
+export const getTablaStock = createAsyncThunk(
+  'abastecimiento/getTablaStock',
+  async (empresaId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get('/abastecimiento/getTablaStock', { params: { empresaId } });
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return rejectWithValue(error.response?.data || 'Error desconocido del servidor');
+      }
+      return rejectWithValue('Error inesperado');
     }
-    return rejectWithValue('Error inesperado');
-  }
-});
-
+  },
+);

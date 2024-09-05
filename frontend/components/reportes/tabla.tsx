@@ -5,13 +5,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/reducer';
 import { AppDispatch } from '@/redux/store';
 import { GetTablaReportes } from '@/redux/slice/reportes/thunks';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 export default function Tabla() {
   const dispatch: AppDispatch = useDispatch();
   const tabla = useSelector((state: RootState) => state.reportes.responseTablaReportes.result);
 
   useEffect(() => {
-    dispatch(GetTablaReportes({ fecha: '', conductor_id: '' }));
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    dispatch(GetTablaReportes({ fecha: '', conductor_id: '', empresaId }));
   }, [dispatch]);
 
   const textTable = ['Fecha', 'Nombre Conductor', '5kg', '11kg', '15kg', '45kg', 'H15', 'Total kilos vendidos'];

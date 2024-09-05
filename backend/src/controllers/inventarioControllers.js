@@ -2,7 +2,7 @@ const { estado_cilindros, tipo_cilindros, inventario_bodegas, conductores, camio
 const { literal, Op, where } = require('sequelize');
 const { generateId, generarFechaActual, generarHoraActual } = require('../utils/generadorId');
 
-const getTablaInventarioBodegaDB = async (fecha) => {
+const getTablaInventarioBodegaDB = async ({ fecha, empresaId }) => {
   try {
     let today;
 
@@ -27,6 +27,7 @@ const getTablaInventarioBodegaDB = async (fecha) => {
         fecha: {
           [Op.lte]: today,
         },
+        empresaId,
       },
       group: ['tipoCilindroId', 'tipoCilindro.id', 'tipoCilindro.tipo', 'estadoCilindro.id', 'estadoCilindro.tipo'],
     });
@@ -55,11 +56,12 @@ const getTablaInventarioBodegaDB = async (fecha) => {
 
     return { message: 'Accion completa', result };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
 
-const registrarConductorDB = async (nombreConductor, licencia) => {
+const registrarConductorDB = async (nombreConductor, licencia, empresaId) => {
   try {
     const data = await conductores.create({
       id: generateId(),
@@ -67,10 +69,12 @@ const registrarConductorDB = async (nombreConductor, licencia) => {
       licencia,
       fecha: generarFechaActual(),
       hora: generarHoraActual(),
+      empresaId,
     });
-    const tabla = await conductores.findAll({ where: { activo: true } });
+    const tabla = await conductores.findAll({ where: { activo: true, empresaId } });
     return { message: 'Conductor creado', result: tabla };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
@@ -94,15 +98,14 @@ const eliminarCamionDB = async (id) => {
 
     return { message: 'Accion completa', result: dataTabla };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
 
-const getTablaConductores = async () => {
+const getTablaConductores = async (empresaId) => {
   try {
     const data = await conductores.findAll({
-      where: { activo: true },
+      where: { activo: true, empresaId },
     });
     return { message: 'Accion exitosa', result: data };
   } catch (error) {
@@ -110,14 +113,14 @@ const getTablaConductores = async () => {
   }
 };
 
-const registrarCamionesDB = async (marca, modelo, placa, capacidad_carga) => {
+const registrarCamionesDB = async (marca, modelo, placa, capacidad_carga, empresaId) => {
   try {
     const [camion, created] = await camiones.findOrCreate({
       where: { placa },
-      defaults: { id: generateId(), fecha: generarFechaActual(), marca, modelo, placa, capacidad_carga },
+      defaults: { id: generateId(), fecha: generarFechaActual(), marca, modelo, placa, capacidad_carga, empresaId },
     });
 
-    const dataTabla = await camiones.findAll({ where: { activo: true } });
+    const dataTabla = await camiones.findAll({ where: { activo: true, empresaId } });
 
     if (created)
       return {
@@ -130,11 +133,12 @@ const registrarCamionesDB = async (marca, modelo, placa, capacidad_carga) => {
   }
 };
 
-const tomarTablaCamionesDB = async () => {
+const tomarTablaCamionesDB = async (empresaId) => {
   try {
-    const data = await camiones.findAll({ where: { activo: true } });
+    const data = await camiones.findAll({ where: { activo: true, empresaId } });
     return { message: 'Acción completa.', result: data };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

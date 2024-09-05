@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { crearCamion, tablaCamion, borrarCamiones } from '@/redux/slice/inventario/thunks';
 import { DatosCamiones } from '@/types/inventario_camiones';
 import { RootState } from '@/redux/reducer';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const Form = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -15,6 +17,7 @@ const Form = () => {
     modelo: '',
     capacidad_carga: 0,
     placa: '',
+    empresaId: '',
   });
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +29,14 @@ const Form = () => {
 
   const registrar = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    dispatch(crearCamion(form));
+    const token = Cookies.get('token');
+
+    if (!token) return undefined;
+
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
+    dispatch(crearCamion({ ...form, empresaId }));
   };
 
   return (
@@ -105,7 +115,13 @@ const Tabla = () => {
   ];
 
   useEffect(() => {
-    dispatch(tablaCamion());
+    const token = Cookies.get('token');
+
+    if (!token) return undefined;
+
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    dispatch(tablaCamion(empresaId));
   }, [dispatch]);
 
   const deleteCamones = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {

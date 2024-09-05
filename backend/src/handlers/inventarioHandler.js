@@ -29,9 +29,9 @@ const eliminarCamionHandler = async (req, res) => {
 };
 
 const getTablaInventarioBodegaHandler = async (req, res) => {
-  const fecha = req.query.fecha;
+  const { fecha, empresaId } = req.query;
   try {
-    const data = await getTablaInventarioBodegaDB(fecha);
+    const data = await getTablaInventarioBodegaDB({ fecha, empresaId });
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -39,9 +39,9 @@ const getTablaInventarioBodegaHandler = async (req, res) => {
 };
 
 const crearConductorHandler = async (req, res) => {
-  const { nombre, licencia } = req.body;
+  const { nombre, licencia, empresaId } = req.body;
   try {
-    const data = await registrarConductorDB(nombre, licencia);
+    const data = await registrarConductorDB(nombre, licencia, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -49,8 +49,9 @@ const crearConductorHandler = async (req, res) => {
 };
 
 const tomarTablaConductores = async (req, res) => {
+  const { empresaId } = req.query;
   try {
-    const data = await getTablaConductores();
+    const data = await getTablaConductores(empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -58,9 +59,9 @@ const tomarTablaConductores = async (req, res) => {
 };
 
 const crearCamionesHandler = async (req, res) => {
-  const { marca, modelo, placa, capacidad_carga } = req.body;
+  const { marca, modelo, placa, capacidad_carga, empresaId } = req.body;
   try {
-    const data = await registrarCamionesDB(marca, modelo, placa, capacidad_carga);
+    const data = await registrarCamionesDB(marca, modelo, placa, capacidad_carga, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
@@ -68,8 +69,9 @@ const crearCamionesHandler = async (req, res) => {
 };
 
 const tomarTablaCamiones = async (req, res) => {
+  const { empresaId } = req.query;
   try {
-    const data = await tomarTablaCamionesDB();
+    const data = await tomarTablaCamionesDB(empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });

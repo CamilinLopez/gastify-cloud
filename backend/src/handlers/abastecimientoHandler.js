@@ -16,7 +16,7 @@ const inicializarDatos = async (req, res) => {
 
 const crearAbastecimiento = async (req, res) => {
   try {
-    const { id, fecha, hora, cantidad, tipoCilindro, estadoCilindro, modificar } = req.body;
+    const { id, fecha, hora, cantidad, tipoCilindro, estadoCilindro, modificar, empresaId } = req.body;
     const data = await crearActualizarInventarioDB({
       id,
       fecha,
@@ -28,6 +28,7 @@ const crearAbastecimiento = async (req, res) => {
         nombreEstado: estadoCilindro.tipo,
       },
       modificar: { idModificar: modificar.id, nombreModificar: modificar.tipo },
+      empresaId,
     });
     res.status(200).json({ data });
   } catch (error) {
@@ -45,8 +46,9 @@ const getAbastacemiento = async (req, res) => {
 };
 
 const getTablaStockAbastecimiento = async (req, res) => {
+  const { empresaId } = req.query;
   try {
-    const getInfo = await tomarDatosTablaStockAbastecimiento();
+    const getInfo = await tomarDatosTablaStockAbastecimiento(empresaId);
     res.status(200).json({ data: { getInfo } });
   } catch (error) {
     res.status(400).json({ errors: error });
