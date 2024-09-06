@@ -3,6 +3,8 @@
 import { tipoCilindros } from '@/arraysObjects/dataCilindros';
 import { axiosInstance } from '@/config/axios';
 import { ChangeEvent, useState } from 'react';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import Cookies from 'js-cookie';
 
 export default function AlarmasCilindros() {
   const [from, setFrom] = useState({
@@ -25,11 +27,17 @@ export default function AlarmasCilindros() {
   };
   const registrar = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    const token = Cookies.get('token');
+    if (!token) return undefined;
+    const decoded = jwt.decode(token) as JwtPayload | null;
+    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+
     const data = Object.values(from).filter((cilindro) => Number(cilindro.minStock) !== 0);
 
     setResponse({ ...response, status: 'loading' });
     axiosInstance
-      .post('/alarmas/crearAlarmasCilindros', { array: data })
+      .post('/alarmas/crearAlarmasCilindros', { array: data, empresaId })
       .then((data) => {
         setResponse({ ...response, status: 'succeeded', message: data.data.data.message });
       })

@@ -38,7 +38,6 @@ import { validate } from './validate';
 const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors }) => {
   const dispatch: AppDispatch = useDispatch();
   const response = useSelector((state: RootState) => state.operaciones.status);
-  console.log(response);
 
   const [infoCilindros, setInfoCilindros] = useState<nameCilindro>({
     '5kg': { cantidad: '0', cilindro: { id: '1', tipo: '5kg' } },
@@ -255,7 +254,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
             <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
               <th>Identificador Único de Carga</th>
               <th>Fecha</th>
-              <th>Número de Móvil (Camión)</th>
+              <th>Patente de Camión</th>
               <th>Nombre del Conductor</th>
               <th>Acciones</th>
             </tr>
@@ -508,7 +507,7 @@ const TablaVisualCarga: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEs
             <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
               <th>Identificador Único de Carga</th>
               <th>Fecha</th>
-              <th>Número de Móvil (Camión)</th>
+              <th>Patente de Camión</th>
               <th>Nombre del Conductor</th>
               <th>Acciones</th>
             </tr>
@@ -637,7 +636,7 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
             <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
               <th>Identificador Único de Carga</th>
               <th>Fecha</th>
-              <th>Número de Móvil (Camión)</th>
+              <th>Patente de Camión</th>
               <th>Nombre del Conductor</th>
               <th>Acciones</th>
             </tr>

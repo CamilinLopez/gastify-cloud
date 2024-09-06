@@ -105,15 +105,18 @@ export const Alertas = ({ name }: SelectOptionType) => {
   });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleDropdown = () => setOpen(!open);
+  const toggleDropdown = () => {
+    setOpen(!open);
+    if (!open) {
+      axiosInstance
+        .get('/alarmas/getAlarmaCilindros')
+        .then((data) => setResponse({ ...response, result: data.data.data.result, status: 'succeeded' }))
+        .catch((error) => setResponse({ ...response, status: 'failed' }));
+    }
+  };
 
   // Cerrar el dropdown si se hace clic fuera de él
   useEffect(() => {
-    axiosInstance
-      .get('/alarmas/getAlarmaCilindros')
-      .then((data) => setResponse({ ...response, result: data.data.data.result, status: 'succeeded' }))
-      .catch((error) => console.log(error));
-
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpen(false);
