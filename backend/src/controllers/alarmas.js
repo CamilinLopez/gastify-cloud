@@ -44,7 +44,7 @@ const alarmaCilindros = async () => {
   }
 };
 
-const registrarAlarmasCilindros = async (alarmasCilindros) => {
+const registrarAlarmasCilindros = async (alarmasCilindros, empresaId) => {
   try {
     for (const alarma of alarmasCilindros) {
       const [stockCilindro, created] = await stockcilindros.findOrCreate({
@@ -54,6 +54,7 @@ const registrarAlarmasCilindros = async (alarmasCilindros) => {
         defaults: {
           tipoCilindroId: alarma.tipoCilindroId,
           minStock: alarma.minStock,
+          empresaId,
         },
       });
       if (!created) {
@@ -62,7 +63,7 @@ const registrarAlarmasCilindros = async (alarmasCilindros) => {
             minStock: alarma.minStock,
           },
           {
-            where: { tipoCilindroId: alarma.tipoCilindroId },
+            where: { tipoCilindroId: alarma.tipoCilindroId, empresaId },
           },
         );
       }
@@ -70,6 +71,7 @@ const registrarAlarmasCilindros = async (alarmasCilindros) => {
 
     return { message: 'Accion completa', result: [] };
   } catch (error) {
+    console.log(error)
     throw error;
   }
 };

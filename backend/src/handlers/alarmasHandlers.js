@@ -11,9 +11,10 @@ const alarmasCilindrosHandlers = async (req, res) => {
 };
 
 const crearAlarmasCilindrosHandler = async (req, res) => {
-  const { array } = req.body;
+  const { array, empresaId } = req.body;
+
   try {
-    const data = await registrarAlarmasCilindros(array);
+    const data = await registrarAlarmasCilindros(array, empresaId);
     res.status(200).json({ data });
   } catch (error) {
     res.status(400).json({ errors: error });
