@@ -16,11 +16,11 @@ const {
 const { modelPermisos, modelRoles, modelRolesPermisos } = require('./models/roles/index');
 const { modelEmpresa, modelUsuario } = require('./models/empresa/index');
 
-const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
-// const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
+// const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
+const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
-const database = new Sequelize(`${urlLocal}`, {
+const database = new Sequelize(`${urlDocker}`, {
   logging: false,
   native: false,
 });
