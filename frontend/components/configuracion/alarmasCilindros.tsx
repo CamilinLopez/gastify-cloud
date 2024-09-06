@@ -63,7 +63,7 @@ export default function AlarmasCilindros() {
         <button
           onClick={(e) => registrar(e)}
           className="w-5/12 h-12 bg-azul dark:text-textDark  rounded-xl font-Inter font-[500] text-blanco">
-          {response.status === 'loading' ? '...' : 'Registrar'}
+          {response.status === 'loading' ? 'Cargando...' : 'Registrar'}
         </button>
       </form>
     </div>

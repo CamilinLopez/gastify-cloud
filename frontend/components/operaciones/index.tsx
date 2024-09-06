@@ -362,7 +362,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
 };
 
 const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, estado, setEstado }) => {
-  const textTable = ['ID', 'Fecha', 'Número de Móvil', 'Nombre del Conductor', 'Acciones'];
+  const textTable = ['ID', 'Fecha', 'Número de patente', 'Nombre del Conductor', 'Acciones'];
   const dispatch: AppDispatch = useDispatch();
   const tabla1 = useSelector((state: RootState) => state.operaciones.responseTablaReportesDiarios.result);
 
@@ -776,7 +776,7 @@ export default function SectionsOperacion() {
 
       <div className="flex flex-col gap-5 ">
         <label>
-          <p className="text-16px  py-2 dark:text-textDark">Número de movil</p>
+          <p className="text-16px  py-2 dark:text-textDark">Número de patente</p>
           <div>
             <AutocompletableCamiones
               camiones={camiones}
