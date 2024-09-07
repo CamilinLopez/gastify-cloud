@@ -8,6 +8,7 @@ import { axiosInstance } from '@/config/axios';
 import { useTheme } from '@/context/ThemeContext';
 import { useRouter } from 'next/navigation'; // Importar useRouter para redirigir
 import Cookies from 'js-cookie'; // Importar js-cookie para gestionar cookies
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 type UsuarioType = {
   id: string;
@@ -108,8 +109,12 @@ export const Alertas = ({ name }: SelectOptionType) => {
   const toggleDropdown = () => {
     setOpen(!open);
     if (!open) {
+      const token = Cookies.get('token');
+      if (!token) return undefined;
+      const decoded = jwt.decode(token) as JwtPayload | null;
+      const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
       axiosInstance
-        .get('/alarmas/getAlarmaCilindros')
+        .get('/alarmas/getAlarmaCilindros', { params: { empresaId } })
         .then((data) => setResponse({ ...response, result: data.data.data.result, status: 'succeeded' }))
         .catch((error) => setResponse({ ...response, status: 'failed' }));
     }

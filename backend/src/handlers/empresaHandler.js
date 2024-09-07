@@ -3,10 +3,11 @@ const jwt = require('jsonwebtoken');
 const { SECRET_KEY, PAGE_URL } = require('../config/env');
 const { invateUser, eliminarInvitacion } = require('../controllers/empresasControllers');
 const { verifyToken, generateToken } = require('../helpers/generateToken');
+const { stockcilindros } = require('../db/index');
 
 const crearEmpresa = async (req, res, next) => {
   try {
-    passport.authenticate('registrar', { session: false }, (err, user, info) => {
+    passport.authenticate('registrar', { session: false }, async (err, user, info) => {
       if (err) {
         // Imprimir el error si existe
         return res.status(500).json({ message: 'Error interno del servidor' });
@@ -17,6 +18,40 @@ const crearEmpresa = async (req, res, next) => {
       }
       // Rescatando los valores de empresa y token
       const { empresa, token } = user;
+
+      //crear alarmas para cilindros
+      await stockcilindros.bulkCreate([
+        {
+          id: 1,
+          minStock: 0,
+          tipoCilindroId: 1,
+          empresaId: empresa.id,
+        },
+        {
+          id: 2,
+          minStock: 0,
+          tipoCilindroId: 2,
+          empresaId: empresa.id,
+        },
+        {
+          id: 3,
+          minStock: 0,
+          tipoCilindroId: 3,
+          empresaId: empresa.id,
+        },
+        {
+          id: 4,
+          minStock: 0,
+          tipoCilindroId: 4,
+          empresaId: empresa.id,
+        },
+        {
+          id: 5,
+          minStock: 0,
+          tipoCilindroId: 5,
+          empresaId: empresa.id,
+        },
+      ]);
 
       return res.json({
         message: 'Registro exitoso',
@@ -32,7 +67,6 @@ const crearEmpresa = async (req, res, next) => {
 
 const signinEmpresa = async (req, res, next) => {
   passport.authenticate('signin', async (err, user, info) => {
-
     try {
       if (err || !user) {
         return res.status(400).json({ errors: info.message });
@@ -45,7 +79,11 @@ const signinEmpresa = async (req, res, next) => {
         const token = jwt.sign(body, SECRET_KEY);
 
         // return res.redirect(`${PAGE_URL}/dashboard/inicio`);
-        return res.json({ dashboard: `${PAGE_URL}/dashboard/inicio`, token, user: user.empresa.dataValues || user.usuario.dataValues });
+        return res.json({
+          dashboard: `${PAGE_URL}/dashboard/inicio`,
+          token,
+          user: user.empresa.dataValues || user.usuario.dataValues,
+        });
       });
     } catch (e) {
       console.error(e);
@@ -57,8 +95,8 @@ const signinEmpresa = async (req, res, next) => {
 const invitarUsuario = async (req, res, next) => {
   try {
     const { rolId, email } = req.body;
-  
-    const data = await invateUser({ rolId, email, empresaId:req.user.id });
+
+    const data = await invateUser({ rolId, email, empresaId: req.user.id });
     res.status(200).json({ message: data.message, usuario: data.usuarioData });
   } catch (error) {
     res.status(400).json({ errors: error.message });
@@ -81,11 +119,10 @@ const verificarToken = async (req, res, next) => {
   }
 };
 
-
 const cancelarInvitacion = async (req, res, next) => {
-  const { idInvitacion } = req.params
+  const { idInvitacion } = req.params;
   try {
-    const data = await eliminarInvitacion({eliminarInvitacion:idInvitacion});
+    const data = await eliminarInvitacion({ eliminarInvitacion: idInvitacion });
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ errors: error.message });
@@ -96,5 +133,5 @@ module.exports = {
   signinEmpresa,
   invitarUsuario,
   verificarToken,
-  cancelarInvitacion
+  cancelarInvitacion,
 };

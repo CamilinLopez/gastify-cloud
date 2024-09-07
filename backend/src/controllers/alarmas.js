@@ -1,8 +1,8 @@
 const { inventario_bodegas, tipo_cilindros, estado_cilindros, stockcilindros } = require('../db/index');
-const { literal } = require('sequelize');
+const { literal, where } = require('sequelize');
 const { generarFechaActual } = require('../utils/generadorId');
 
-const alarmaCilindros = async () => {
+const alarmaCilindros = async (empresaId) => {
   let arrayAlarmas = [];
   try {
     const data = await inventario_bodegas.findAll({
@@ -22,7 +22,9 @@ const alarmaCilindros = async () => {
       ],
       group: ['tipoCilindroId', 'tipoCilindro.id', 'tipoCilindro.tipo', 'estadoCilindro.id', 'estadoCilindro.tipo'],
     });
-    const alarmas = await stockcilindros.findAll();
+    const alarmas = await stockcilindros.findAll({
+      where: { empresaId },
+    });
 
     for (let k = 0; k < data.length; k++) {
       for (let k1 = 0; k1 < alarmas.length; k1++) {
@@ -50,6 +52,7 @@ const registrarAlarmasCilindros = async (alarmasCilindros, empresaId) => {
       const [stockCilindro, created] = await stockcilindros.findOrCreate({
         where: {
           tipoCilindroId: alarma.tipoCilindroId,
+          empresaId,
         },
         defaults: {
           tipoCilindroId: alarma.tipoCilindroId,
@@ -75,7 +78,17 @@ const registrarAlarmasCilindros = async (alarmasCilindros, empresaId) => {
   }
 };
 
+const leerAlarmas = async (empresaId) => {
+  try {
+    const data = await stockcilindros.findAll({ where: { empresaId } });
+    return { message: 'Accion completa', result: data };
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   alarmaCilindros,
   registrarAlarmasCilindros,
+  leerAlarmas,
 };
