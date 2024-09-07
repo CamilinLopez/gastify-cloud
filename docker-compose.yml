@@ -33,8 +33,8 @@ services:
 
   frontend:
     build: ./frontend
-    volumes:
-      - ./frontend:/appfront
+    # volumes:
+    #   - ./frontend:/appfront 
     depends_on:
       - database
       - server
