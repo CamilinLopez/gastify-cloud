@@ -10,7 +10,7 @@ const server = express();
 
 // Configuración de CORS
 const corsOptions = {
-  origin: 'http://localhost:3000', // Tu dominio
+  origin: 'http://54.160.156.69:3000', // Tu dominio
   credentials: true, // Habilita el envío de cookies y encabezados de autenticación
   allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
   exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Encabezados expuestos
