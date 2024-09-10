@@ -4,7 +4,7 @@ import https from 'https';
 
 // Crear una instancia de Axios
 export const axiosInstance = axios.create({
-  baseURL: 'http://54.160.156.69:3001',
+  baseURL: 'https://gastify-cloud.onrender.com',
   // Puedes descomentar el httpsAgent si estás usando un servidor con un certificado autofirmado
   // httpsAgent: new https.Agent({
   //   rejectUnauthorized: false,
