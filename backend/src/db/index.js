@@ -19,8 +19,6 @@ const { modelEmpresa, modelUsuario } = require('./models/empresa/index');
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
 const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
-
-
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
 // const database = new Sequelize(`${urlDocker}`, {
 //   logging: false,
@@ -28,7 +26,7 @@ const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 // });
 
 const database = new Sequelize(
-  'postgresql://protolylab:P78G9chAlYgGmquL3IBifLTLCzuRNzEy@dpg-crfph2jqf0us73dabvo0-a/gastifycloud_azfp',
+  'postgresql://protolylab:ewdsfe&fe54ew21f@gastifycloud-1.cpe6o0weclq6.us-east-1.rds.amazonaws.com/postgres',
   {
     dialect: 'postgres',
     logging: false,
