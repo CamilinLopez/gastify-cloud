@@ -18,27 +18,25 @@ const { modelEmpresa, modelUsuario } = require('./models/empresa/index');
 
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
 const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
+const urlDatabase = process.env.NEXT_PUBLIC_API_URL;
 
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
-// const database = new Sequelize(`${urlDocker}`, {
+const database = new Sequelize(`${urlLocal}`, {
+  logging: false,
+  native: false,
+});
+
+// const database = new Sequelize(`${urlDatabase}`, {
+//   dialect: 'postgres',
 //   logging: false,
 //   native: false,
+//   dialectOptions: {
+//     ssl: {
+//       require: true,
+//       rejectUnauthorized: false,
+//     },
+//   },
 // });
-
-const database = new Sequelize(
-  'postgresql://protolylab:ewdsfe&fe54ew21f@gastifycloud-1.cpe6o0weclq6.us-east-1.rds.amazonaws.com/postgres',
-  {
-    dialect: 'postgres',
-    logging: false,
-    native: false,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
-  },
-);
 
 //llamar modelos
 modelEstadocilindro(database);

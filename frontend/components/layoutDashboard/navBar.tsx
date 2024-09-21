@@ -6,39 +6,8 @@ import { Usuarios, Alertas, Configuracion } from './dropdown';
 import Menu from './menu';
 
 export default function NavBar() {
-  const [, setCount] = useState<number>(0);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [counter, setCounter] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // const handleClickArrows = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-  //   event.preventDefault();
-  //   const buttonName = event.currentTarget.name;
-  //   const container = document.getElementById('printTextContainer');
-  //   if (intervalId) {
-  //     clearInterval(intervalId);
-  //     setIntervalId(null);
-  //   }
-  //   if (!container) return;
-
-  //   const id: NodeJS.Timeout = setInterval(() => {
-  //     setIntervalId(id);
-  //     setCount((prevCount) => {
-  //       if (buttonName === 'startRight' && prevCount < container.clientWidth) {
-  //         container.scrollLeft = prevCount;
-  //         return prevCount + 1;
-  //       }
-  //       if (buttonName === 'startLeft' && prevCount > 0) {
-  //         container.scrollLeft = prevCount - 200;
-  //         return prevCount - 1;
-  //       } else {
-  //         clearInterval(id);
-  //         setIntervalId(null);
-  //         return prevCount;
-  //       }
-  //     });
-  //   }, 2);
-  // };
 
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const nameButton = event.currentTarget.name;

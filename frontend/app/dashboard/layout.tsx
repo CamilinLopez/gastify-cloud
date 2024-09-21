@@ -3,13 +3,17 @@
 import Footer from '@/components/layoutDashboard/footer';
 import Menu from '@/components/layoutDashboard/menu';
 import NavBar from '@/components/layoutDashboard/navBar';
+import NavBarMovil from '@/components/layoutDashboard/navBarMovil';
 
 export default function LayoutDashboard({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col h-screen dark:bg-bgDark1">
       <div className="border-b-[1px] dark:border-borderDarck">
-        <div className="px-10 dark:bg-bgDark">
+        <div className="px-10 dark:bg-bgDark movile:block hidden">
           <NavBar />
+        </div>
+        <div className="px-10 dark:bg-bgDark movile:hidden block">
+          <NavBarMovil />
         </div>
       </div>
       <div className="flex flex-grow overflow-auto px-6 py-5 w-screen">

@@ -4,10 +4,11 @@ import Cookies from 'js-cookie';
 
 export async function middleware(request: NextRequest) {
   const jwt = request.cookies.get('token');
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   try {
     if (request.nextUrl.pathname.startsWith('/dashboard')) {
       if (!jwt) return NextResponse.redirect(new URL('/signin', request.url));
-      const response = await fetch('https://gastify-cloud.onrender.com/empresa/verificar-token', {
+      const response = await fetch(`${apiUrl}/empresa/verificar-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
