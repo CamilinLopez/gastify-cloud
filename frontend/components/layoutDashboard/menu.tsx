@@ -28,21 +28,6 @@ export default function Menu() {
     }
   }, [dispatch, status]);
 
-  // useEffect(() => {
-  //   const fetchPermissions = async () => {
-  //     try {
-  //       const res = await axiosInstance.get(`/roles/roles-permisos`);
-  //       const permisos = res.data.data.rol.permisos.map((p: any) => p.nombre);
-  //       const filtered:any= filterRoutes(RoutesMenu, permisos);
-  //       setFilteredMenu(filtered);
-  //     } catch (error) {
-  //       console.error('Error obteniendo permisos del usuario:', error);
-  //     }
-  //   };
-
-  //   fetchPermissions();
-  // }, []);
-
   const filterRoutes = (routes: any[], permisos: string[]) => {
     return routes.filter((route) => {
       // Si no hay permisos requeridos, se muestra por defecto.

@@ -57,7 +57,7 @@ export const AutocompletableConductores = ({
   };
 
   return (
-    <div className="relative w-5/12">
+    <div className="relative w-full movile:w-5/12">
       <input
         name={name}
         value={form.conductor.nombre}

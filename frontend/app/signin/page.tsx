@@ -7,6 +7,7 @@ import { RootState } from '@/redux/store';
 import { LoginThunk } from '@/redux/slice/usuarios/thunks';
 import { AppDispatch } from '@/redux/store';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Form = () => {
   const router = useRouter();
@@ -71,6 +72,8 @@ const Form = () => {
 };
 
 export default function Signin() {
+  const apiUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+
   return (
     <div className="w-full flex flex-col">
       <div className="border-b-[1px]">
@@ -95,8 +98,10 @@ export default function Signin() {
       <div className="movile:px-40 px-5 w-full">
         <Form />
       </div>
-      <div className="w-full flex items-center justify-center my-4">
-        <button className="text-secondary-14px">Forgot your password?</button>
+      <div className="w-full flex items-center justify-center my-20 movile:my-4">
+        <Link className="text-secondary-14px" href={`${apiUrl}/registrar`}>
+          Registrar
+        </Link>
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ const SelectInput = ({ name, formAbastecimiento, setFormAbastecimiento, arrayCil
   };
 
   return (
-    <div className="relative w-10/12">
+    <div className="relative w-full movile:w-10/12">
       <input
         name={name}
         value={getName(name)}
@@ -131,8 +131,8 @@ export default function Formulario() {
 
       <div className="w-full">
         <form className="w-full flex flex-col gap-y-5" action="">
-          <div className="w-full flex">
-            <div className="w-1/2 flex flex-col gap-y-3 ">
+          <div className="w-full flex flex-col movile:flex-row">
+            <div className="w-full movile:w-1/2 flex flex-col gap-y-3 ">
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2 dark:text-textDark">Estado de cilindro</p>
                 <SelectInput
@@ -155,14 +155,14 @@ export default function Formulario() {
               </div>
             </div>
 
-            <div className="w-1/2  flex flex-col gap-y-3 ">
+            <div className="w-full movile:w-1/2  flex flex-col gap-y-3 ">
               <div className="w-full flex flex-col gap-y-2">
                 <p className="text-16px py-2 dark:text-textDark">Cantidad recibida</p>
                 <input
                   name="cantidad"
                   value={formAbastecimiento.cantidad}
                   onChange={handleOnChange}
-                  className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-10/12"
+                  className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-full movile:w-10/12"
                   type="number"
                   min="0"
                   placeholder="Ingresar cantidad"
@@ -189,7 +189,7 @@ export default function Formulario() {
           <div className="flex flex-col">
             <button
               onClick={(e) => registrarAbastecimiento(e)}
-              className="w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] dark:text-textDark text-blanco">
+              className="w-full movile:w-5/12 h-12 bg-azul rounded-xl font-Inter font-[500] dark:text-textDark text-blanco">
               {dataStatus === 'loading' ? <p>Cargando...</p> : 'Registrar'}
             </button>
             <p className="font-mono text-[15px] text-red-500">{dataStatus === 'failed' && 'Error en el servidor'}</p>

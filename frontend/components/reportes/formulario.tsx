@@ -49,7 +49,7 @@ export default function Formulario() {
   }, [dispatch]);
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-2 movile:p-4 w-full">
       <h3 className="text-18px py-6 dark:text-textDark" id="filtro_reportes_diarios">
         Filtro de Reportes Diarios
       </h3>
@@ -62,7 +62,7 @@ export default function Formulario() {
               name="fecha"
               value={form.fecha}
               onChange={handleOnChange}
-              className="p-4 h-14 dark:text-textDark dark:bg-bgDark1 bg-gris-1 rounded-xl w-5/12"
+              className="p-4 h-14 dark:text-textDark dark:bg-bgDark1 bg-gris-1 rounded-xl w-full movile:w-5/12"
               type="date"
             />
           </div>
@@ -78,7 +78,7 @@ export default function Formulario() {
           </div>
           <button
             onClick={(e) => buscar(e)}
-            className="my-6 w-5/12 h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco">
+            className="my-6 w-full movile:w-5/12 h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco">
             Buscar
           </button>
         </form>

@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'; // Importar useRouter para redirigi
 import Cookies from 'js-cookie'; // Importar js-cookie para gestionar cookies
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-type UsuarioType = {
+export type UsuarioType = {
   id: string;
   nombre: string;
   email: string;
@@ -222,7 +222,7 @@ export const Configuracion = () => {
 
       {open && (
         <div className="dark:bg-bgDark absolute z-10 mt-3 w-80 bg-white border border-gray-300 rounded-md shadow-lg right-0">
-          <div className="p-4">
+          <div className="p-0 movile:p-4">
             <p className="text-16px dark:text-[#CFCFCF]">Modo visual</p>
             <div className="mt-4 flex flex-col gap-y-1">
               <div className="flex gap-x-3 items-center">
@@ -253,6 +253,43 @@ export const Configuracion = () => {
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+export const SectionConfuguracion = ({ setIsOpen1 }: { setIsOpen1: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const { theme, setTheme } = useTheme();
+
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value as 'system' | 'light' | 'dark';
+
+    setTheme(value);
+  };
+  const closeOptioneMenu = () => setIsOpen1(false);
+
+  return (
+    <div className="p-0 movile:p-4">
+      <p className="text-16px dark:text-[#CFCFCF]">Modo visual</p>
+      <div className="mt-4 flex flex-col gap-y-1">
+        <div className="flex gap-x-3 items-center">
+          <input type="radio" name="theme" value="system" checked={theme === 'system'} onChange={handleOnChange} />
+          <p className="text-14px dark:text-[#CFCFCF]">Predeterminado del navegador</p>
+        </div>
+        <div className="flex gap-x-3 items-center">
+          <input type="radio" name="theme" value="light" checked={theme === 'light'} onChange={handleOnChange} />
+          <p className="text-14px dark:text-[#CFCFCF]">Claro</p>
+        </div>
+        <div className="flex gap-x-3 items-center">
+          <input type="radio" name="theme" value="dark" checked={theme === 'dark'} onChange={handleOnChange} />
+          <p className="text-14px dark:text-[#CFCFCF]">Oscuro</p>
+        </div>
+      </div>
+      <hr className="w-full border-t border-gray-300 my-3" />
+      <div>
+        <Link onClick={closeOptioneMenu} href={'/dashboard/configuracion'} className="text-14px dark:text-[#CFCFCF]">
+          Más ajustes de la configuración de usuario
+        </Link>
+      </div>
     </div>
   );
 };

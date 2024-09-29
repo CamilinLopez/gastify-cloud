@@ -12,11 +12,11 @@ export default function LayoutDashboard({ children }: { children: React.ReactNod
         <div className="px-10 dark:bg-bgDark movile:block hidden">
           <NavBar />
         </div>
-        <div className="px-10 dark:bg-bgDark movile:hidden block">
+        <div className="px-3 movile:px-10 dark:bg-bgDark movile:hidden block">
           <NavBarMovil />
         </div>
       </div>
-      <div className="flex flex-grow overflow-auto px-6 py-5 w-screen">
+      <div className="flex flex-grow overflow-auto px-1 movile:px-6 py-5 w-screen">
         <div className="sticky top-0 h-full w-3/12 xl:block hidden">
           <Menu />
         </div>

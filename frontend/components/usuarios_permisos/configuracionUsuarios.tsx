@@ -93,7 +93,7 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
       {status === 'failed' && <p className="text-red-500">{error?.toString()}</p>}
 
       <button
-        className="w-5/12 h-12 dark:text-textDark bg-azul rounded-xl font-Inter font-[500] text-blanco"
+        className="w-full movile:w-5/12 h-12 dark:text-textDark bg-azul rounded-xl font-Inter font-[500] text-blanco"
         onClick={handleSaveChanges}
         disabled={!formValues.rolId} // Deshabilita el botón si no se selecciona un rol
       >
@@ -138,7 +138,7 @@ export default function ConfiguracionUsuarios() {
       <div className="w-full flex flex-col gap-y-5">
         <div className="w-full">
           <p className="text-16px dark:text-textDark">Rol</p>
-          <div className="relative w-5/12">
+          <div className="relative w-full movile:w-5/12">
             <CustomSelect options={roles} selectedValue={formValues.rolId} onChange={handleSelectChange} />
           </div>
         </div>

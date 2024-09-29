@@ -69,7 +69,7 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
         <div className="w-full flex flex-col gap-y-2">
           <p className="text-16px dark:text-textDark">ID usuario</p>
           <input
-            className="p-4 h-14 bg-gris-1 rounded-xl w-5/12 dark:bg-bgDark1 dark:text-textDark"
+            className="p-4 h-14 bg-gris-1 rounded-xl w-full movile:w-5/12 dark:bg-bgDark1 dark:text-textDark"
             placeholder="5879954"
             type="text"
             name="id"
@@ -80,7 +80,7 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
         <div className="w-full flex flex-col gap-y-2 ">
           <p className="text-16px dark:text-textDark">Correo Electrónico</p>
           <input
-            className="p-4 h-14 bg-gris-1 rounded-xl w-5/12 pl-4 pr-24 dark:bg-bgDark1 dark:text-textDark"
+            className="p-4 h-14 bg-gris-1 rounded-xl w-full movile:w-5/12 pl-4 pr-24 dark:bg-bgDark1 dark:text-textDark"
             placeholder="carlos569@gmail.com"
             type="text"
             name="email"
@@ -91,14 +91,14 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
 
         <div className="w-full">
           <p className="text-16px py-2 dark:text-textDark">Rol</p>
-          <div className="relative w-5/12">
+          <div className="relative w-full movile:w-5/12">
             <CustomSelect options={roles} selectedValue={formValues.rolId} onChange={handleSelectChange} />
           </div>
         </div>
 
         <button
           type="submit"
-          className="w-5/12  h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco">
+          className="w-full movile:w-5/12  h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco">
           Buscar
         </button>
       </form>
@@ -148,8 +148,8 @@ export default function GestionUsuarios() {
   };
 
   return (
-    <div className="w-full p-4 dark:bg-bgDark">
-      <h1 className="text-18px py-6 dark:text-textDark" id="gestion_usuarios">
+    <div className="w-full p-2 movile:p-4 dark:bg-bgDark">
+      <h1 className="text-18px py-3 movile:py-6 dark:text-textDark" id="gestion_usuarios">
         Gestión de usuarios
       </h1>
       <div className="flex flex-col gap-y-6">

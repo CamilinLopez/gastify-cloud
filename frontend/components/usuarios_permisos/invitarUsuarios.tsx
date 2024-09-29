@@ -88,11 +88,11 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
   return (
     <div className="w-full">
       <form className="w-full" onSubmit={handleFormSubmit}>
-        <div className="w-full flex items-end">
-          <div className="w-8/12">
+        <div className="w-full flex flex-col movile:flex-row items-end justify-start">
+          <div className="w-full movile:w-8/12">
             <p className="text-16px py-2 dark:text-textDark">correo electrónico</p>
             <input
-              className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-8/12"
+              className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-full movile:w-8/12 "
               type="email"
               placeholder="arturo369@gmail.com"
               name="email"
@@ -101,13 +101,13 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
               required
             />
           </div>
-          <div className="w-6/12">
+          <div className="w-full movile:w-6/12">
             <p className="text-16px py-2 dark:text-textDark">Rol</p>
             <CustomSelect options={roles} selectedValue={formValues.rolId} onChange={handleSelectChange} />
           </div>
           <button
             type="submit"
-            className="ml-5 w-full sm:w-1/4 h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco"
+            className="ml-5 my-3 movile:my-0 w-full sm:w-1/4 h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco"
             disabled={status === 'loading' || isSubmitting}>
             {status === 'loading' || isSubmitting ? 'Enviando...' : 'Enviar invitación'}
           </button>
@@ -188,8 +188,8 @@ export default function InvitarUsuarios() {
   };
 
   return (
-    <div className="w-full p-4 dark:bg-bgDark">
-      <h1 className="text-18px py-6 dark:text-textDark" id="invitar_usuarios">
+    <div className="w-full p-4  dark:bg-bgDark">
+      <h1 className="text-18px py-2 movile:py-6 dark:text-textDark" id="invitar_usuarios">
         Invitar usuarios
       </h1>
 
@@ -200,7 +200,7 @@ export default function InvitarUsuarios() {
             <thead className="bg-blanco dark:bg-bgDark1">
               <tr>
                 {textTable.map((item) => (
-                  <th key={item} className="px-6 py-3 text-left text-xs text-14px dark:text-textDark">
+                  <th key={item} className="px-6 py-3 text-left text-xs text-13px dark:text-textDark">
                     {item}
                   </th>
                 ))}
@@ -250,18 +250,18 @@ export default function InvitarUsuarios() {
             </tbody>
           </table>
 
-          <div className="flex justify-between py-4 px-1">
+          <div className="flex justify-between items-center py-4 px-1">
             <button
-              className="bg-gray-300 px-4 py-2 rounded-lg dark:bg-azul dark:text-textDark"
+              className="bg-gray-300 px-2 py-1 movile:px-4 movile:py-2 text-13px  rounded-lg dark:bg-azul dark:text-textDark"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}>
               Anterior
             </button>
-            <span className="text-gray-700 dark:text-textDark">
+            <span className="text-gray-700 movile:text-14px text-14px  dark:text-textDark">
               Página {currentPage} de {Math.ceil(usersInvited.length / itemsPerPage)}
             </span>
             <button
-              className="bg-gray-300 px-4 py-2 rounded-lg dark:bg-azul dark:text-textDark"
+              className="bg-gray-300 px-2 py-1 movile:px-4 movile:py-2 text-13px text-13px rounded-lg dark:bg-azul dark:text-textDark"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === Math.ceil(usersInvited.length / itemsPerPage)}>
               Siguiente

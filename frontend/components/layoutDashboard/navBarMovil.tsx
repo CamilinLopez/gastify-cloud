@@ -1,14 +1,21 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Close, Menu, User } from '../svg/svgImages';
-import { Usuarios, Alertas, Configuracion } from './dropdown';
+import { useState } from 'react';
+import { Menu, User } from '../svg/svgImages';
+
+import { TransitionMenuMovil, TransitionOptionsMovil } from '../transition';
 
 export default function NavBarMovil() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen1, setIsOpen1] = useState(false);
+
+  const openMovileMenu = () => setIsOpen(true);
+  const openOptionsMenu = () => setIsOpen1(true);
+
   return (
     <div className="bg-blanco h-16 dark:bg-bgDark">
       <div className="flex h-full justify-between items-center">
-        <button className="border-[1px] dark:border-borderDarck p-2 rounded-md">
+        <button onClick={openMovileMenu} className="border-[1px] dark:border-borderDarck p-2 rounded-md">
           <Menu />
         </button>
         <div className="flex gap-x-[16px] items-center">
@@ -23,10 +30,12 @@ export default function NavBarMovil() {
           </svg>
           <h1 className="text-18px dark:text-textDark">Gastify Cloud</h1>
         </div>
-        <button className="border-[1px] dark:border-borderDarck p-2 rounded-md">
+        <button onClick={openOptionsMenu} className="border-[1px] dark:border-borderDarck p-2 rounded-md">
           <User />
         </button>
       </div>
+      <TransitionMenuMovil isOpen={isOpen} setIsOpen={setIsOpen} />
+      <TransitionOptionsMovil isOpen1={isOpen1} setIsOpen1={setIsOpen1} />
     </div>
   );
 }
