@@ -68,6 +68,7 @@ const SalesChart = () => {
 
   const options: ChartOptions<'line'> = {
     responsive: true,
+    maintainAspectRatio: false, // Permitir que se ajuste a la altura del contenedor
     plugins: {
       legend: {
         display: true,
@@ -83,9 +84,9 @@ const SalesChart = () => {
         },
         ticks: {
           font: {
-            family: 'Inter', // Cambia 'Inter' al tipo de letra que desees
-            weight: 700, // Puedes usar 'normal', 'bold', 'lighter', etc.
-            size: 13,
+            family: 'Inter',
+            weight: 700,
+            size: window.innerWidth < 768 ? 10 : 13, // Ajuste del tamaño de la fuente según el tamaño de la pantalla
           },
         },
       },
@@ -94,7 +95,13 @@ const SalesChart = () => {
           display: false,
         },
         suggestedMin: 0,
-        suggestedMax: 100,
+        suggestedMax: 100, // Ajusta según los valores reales de los datos para evitar compresión
+        ticks: {
+          stepSize: 20, // Esto creará divisiones más claras en el eje Y
+          font: {
+            size: window.innerWidth < 768 ? 10 : 13,
+          },
+        },
       },
     },
   };
@@ -115,7 +122,11 @@ const SalesChart = () => {
   return (
     <div className="w-full flex flex-col gap-y-5">
       <div className="text-16px dark:text-textDark">Ventas mensuales</div>
-      <Line data={data1} options={options} />
+      <div className="w-full max-w-[1000px] h-[400px] md:h-[500px]">
+        {' '}
+        {/* Aumentar la altura */}
+        <Line data={data1} options={options} />
+      </div>
     </div>
   );
 };

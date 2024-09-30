@@ -100,7 +100,7 @@ export default function Signin() {
       </div>
       <div className="w-full flex items-center justify-center my-20 movile:my-4">
         <Link className="text-secondary-14px" href={`${apiUrl}/registrar`}>
-          Registrar
+          Registrarse
         </Link>
       </div>
     </div>

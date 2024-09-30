@@ -12,27 +12,37 @@ const Tabla = () => {
   const data = useSelector((state: RootState) => state.inventario.tablaBodegaFiteredByDate);
 
   return (
-    <div className="overflow-x-auto border-[1px] dark:border-borderDarck rounded-xl max-w-4xl ">
+    <div className="overflow-x-auto border-[1px] dark:border-borderDarck rounded-xl max-w-4xl">
       <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
-        <thead className="bg-blanco">
-          <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark dark:bg-bgDark1">
-            <th>Fecha</th>
-            <th>Tipo de cilindro</th>
-            <th>Llenos</th>
-            <th>Vacios</th>
-            <th>Fallados</th>
-            <th>Prestados</th>
+        <thead className="bg-blanco dark:bg-bgDark1">
+          <tr className="[&>*]:text-center [&>*]:py-4 [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
+            <th className="px-6 py-4 whitespace-nowrap">Fecha</th>
+            <th className="px-6 py-4 whitespace-nowrap">Tipo de cilindro</th>
+            <th className="px-6 py-4 whitespace-nowrap">Llenos</th>
+            <th className="px-6 py-4 whitespace-nowrap">Vacios</th>
+            <th className="px-6 py-4 whitespace-nowrap">Fallados</th>
+            <th className="px-6 py-4 whitespace-nowrap">Prestados</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 dark:bg-bgDark1 dark:divide-borderDarck">
           {data?.tipos.map((row, index) => (
             <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-              <td className="text-14px dark:text-textDark">{data?.fecha}</td>
-              <td className="text-secondary-14px text-center dark:text-textDark">{row.tipoCilindro}</td>
-              <td className="text-secondary-14px dark:text-textDark">{row.estados?.Lleno || 0}</td>
-              <td className="text-secondary-14px dark:text-textDark">{row.estados?.Vacío || 0}</td>
-              <td className="text-secondary-14px dark:text-textDark">{row.estados?.Fallado || 0}</td>
-              <td className="text-secondary-14px text-center dark:text-textDark">{row.estados?.Prestado || 0}</td>
+              <td className="px-6 py-4 text-14px dark:text-textDark whitespace-nowrap">{data?.fecha}</td>
+              <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
+                {row.tipoCilindro}
+              </td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                {row.estados?.Lleno || 0}
+              </td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                {row.estados?.Vacío || 0}
+              </td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                {row.estados?.Fallado || 0}
+              </td>
+              <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
+                {row.estados?.Prestado || 0}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -85,7 +95,7 @@ export default function InventarioBodega() {
   };
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-2 movile:p-4 w-full">
       <h3 className="text-18px py-4 dark:text-textDark" id="inventario_bodegas">
         Inventario de Bodega
       </h3>
@@ -93,9 +103,9 @@ export default function InventarioBodega() {
       <p className="text-18px pb-4 dark:text-textDark">Buscar Por Fecha y Hora</p>
 
       <form>
-        <div className="flex">
-          <div className="flex w-full gap-4 max-w-xl items-center ">
-            <div className=" flex flex-col w-60">
+        <div className="flex flex-col movile:flex-row">
+          <div className="flex flex-col movile:flex-row w-full gap-4 max-w-xl items-center ">
+            <div className=" flex flex-col w-full movile:w-60">
               <p className="text-16px py-2 dark:text-textDark">Fecha</p>
               <input
                 name="fecha"
@@ -105,7 +115,7 @@ export default function InventarioBodega() {
                 type="date"
               />
             </div>
-            <div className=" flex flex-col w-60">
+            <div className=" flex flex-col w-full movile:w-60">
               <p className="text-16px py-2 dark:text-textDark">Hora</p>
               <input type="text" className="p-4 h-14 bg-gris-1 dark:bg-bgDark1 rounded-xl" placeholder="Hora" />
             </div>

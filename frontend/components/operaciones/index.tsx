@@ -97,10 +97,10 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors })
       <div className="overflow-x-auto border-[1px] rounded-xl max-w-4xl dark:border-borderDarck">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
           <thead className="bg-blanco dark:bg-bgDark1">
-            <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
-              <th>Tipo de cilindro</th>
-              <th>Cantidad Cargada</th>
-              <th>Observaciones</th>
+            <tr className="[&>*]:text-center [&>*]:py-4 [&>*]:text-xs [&>*]:text-14px  dark:text-textDark">
+              <th className="movile:px-0 movile:py-0 px-6 py-4 whitespace-nowrap">Tipo de cilindro</th>
+              <th className="movile:px-0 movile:py-0 px-6 py-4 whitespace-nowrap">Cantidad Cargada</th>
+              <th className="movile:px-0 movile:py-0 px-6 py-4 whitespace-nowrap">Observaciones</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:bg-bgDark1 dark:divide-borderDarck">
@@ -114,14 +114,14 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors })
                     value={infoCilindros[row.tipo]?.cantidad}
                     onChange={handleOnChange}
                     type="number"
-                    className="w-10 text-black overflow-hidden dark:bg-bgDark dark:text-textDark"
+                    className="w-16 sm:w-full text-black overflow-hidden dark:bg-bgDark dark:text-textDark"
                     placeholder="0"
                   />
                 </td>
                 <td className="text-secondary-14px text-center">
                   <input
                     type="text"
-                    className="text-black overflow-hidden md:ml-12 dark:bg-bgDark dark:text-textDark"
+                    className="w-full sm:ml-0 md:ml-12 text-black dark:bg-bgDark dark:text-textDark"
                     placeholder="Ingrese sus Observaciones"
                   />
                 </td>
@@ -130,6 +130,7 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors })
           </tbody>
         </table>
       </div>
+
       <div>
         <button
           onClick={(e) => registrar(e)}
@@ -252,18 +253,18 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
         <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
           <thead>
             <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
-              <th>Identificador Único de Carga</th>
-              <th>Fecha</th>
-              <th>Patente de Camión</th>
-              <th>Nombre del Conductor</th>
-              <th>Acciones</th>
+              {/* <th className='whitespace-nowrap' >Identificador Único de Carga</th> */}
+              <th className="whitespace-nowrap px-6 py-2">Fecha</th>
+              <th className="whitespace-nowrap px-6 py-2">Patente de Camión</th>
+              <th className="whitespace-nowrap px-6 py-2">Nombre del Conductor</th>
+              <th className="whitespace-nowrap px-6 py-2">Acciones</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:bg-bgDark1 dark:divide-borderDarck">
             <tr className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              {/* <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
                 {datosCarga.id}
-              </td>
+              </td> */}
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
                 {datosCarga.fecha}
               </td>
@@ -285,11 +286,11 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
 
           <thead className="bg-blanco dark:bg-bgDark1">
             <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
-              <th>Tipo de cilindro</th>
-              <th>Cantidad de Fallados</th>
-              <th>Cantidad prestados</th>
-              <th>Cantidad Vacios</th>
-              <th>Cantidad Llenos</th>
+              <th className="whitespace-nowrap px-6 py-2">Tipo de cilindro</th>
+              <th className="whitespace-nowrap px-6 py-2">Cantidad de Fallados</th>
+              <th className="whitespace-nowrap px-6 py-2">Cantidad prestados</th>
+              <th className="whitespace-nowrap px-6 py-2">Cantidad Vacios</th>
+              <th className="whitespace-nowrap px-6 py-2">Cantidad Llenos</th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-bgDark1 dark:divide-borderDarck divide-y divide-gray-200">
@@ -361,7 +362,7 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
 };
 
 const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, estado, setEstado }) => {
-  const textTable = ['ID', 'Fecha', 'Número de patente', 'Nombre del Conductor', 'Acciones'];
+  const textTable = ['Fecha', 'Número de patente', 'Nombre del Conductor', 'Acciones'];
   const dispatch: AppDispatch = useDispatch();
   const tabla1 = useSelector((state: RootState) => state.operaciones.responseTablaReportesDiarios.result);
 
@@ -451,7 +452,7 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
           <thead className="bg-blanco dark:bg-bgDark1">
             <tr>
               {textTable.map((item) => (
-                <th key={item} className="px-6 py-3 text-left text-xs text-14px dark:text-textDark">
+                <th key={item} className="px-10 py-3 text-left text-xs text-14px dark:text-textDark whitespace-nowrap">
                   {item}
                 </th>
               ))}
@@ -460,18 +461,22 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
           <tbody className="bg-white dark:bg-bgDark1 dark:divide-borderDarck divide-y divide-gray-200">
             {tabla1?.map((item) => (
               <tr key={item.id}>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.id}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.fecha}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.camione.placa}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.conductore.nombre}</td>
-                <td className="px-6 py-4 text-secondary-14px flex flex-col">
-                  <button onClick={(e) => estadoTablaDescarga(e, item)} className="text-start underline">
+                {/* <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.id}</td> */}
+                <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.fecha}</td>
+                <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.camione.placa}</td>
+                <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.conductore.nombre}</td>
+                <td className="px-10 py-4 text-secondary-14px flex flex-col">
+                  <button
+                    onClick={(e) => estadoTablaDescarga(e, item)}
+                    className="text-start underline whitespace-nowrap">
                     Abrir Tabla de Descarga
                   </button>
-                  <button onClick={(e) => estadoTablacarga(e, item)} className="text-start underline">
+                  <button onClick={(e) => estadoTablacarga(e, item)} className="text-start underline whitespace-nowrap">
                     Abrir Tabla de Carga
                   </button>
-                  <button className="text-start underline" onClick={(e) => estadoTablaVentas(e, item)}>
+                  <button
+                    className="text-start underline whitespace-nowrap"
+                    onClick={(e) => estadoTablaVentas(e, item)}>
                     Abrir Tabla de Ventas
                   </button>
                 </td>
@@ -505,28 +510,28 @@ const TablaVisualCarga: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEs
         <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
           <thead>
             <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
-              <th>Identificador Único de Carga</th>
-              <th>Fecha</th>
-              <th>Patente de Camión</th>
-              <th>Nombre del Conductor</th>
-              <th>Acciones</th>
+              <th className="px-6 py-4 whitespace-nowrap">Identificador Único de Carga</th>
+              <th className="px-6 py-4 whitespace-nowrap">Fecha</th>
+              <th className="px-6 py-4 whitespace-nowrap">Patente de Camión</th>
+              <th className="px-6 py-4 whitespace-nowrap">Nombre del Conductor</th>
+              <th className="px-6 py-4 whitespace-nowrap">Acciones</th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-bgDark1 divide-y divide-gray-200">
             <tr className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 {carga.id}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 {carga.fecha}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 {carga.camione.placa}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 {carga.conductore.nombre}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 <button
                   onClick={(e) => estadoTablas(e)}
                   className="bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco py-1 px-2">
@@ -634,11 +639,11 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
         <table className="min-w-full divide-y dark:divide-borderDarck divide-gray-200 ">
           <thead>
             <tr className="[&>*]:text-center [&>*]:py-4  [&>*]:text-xs [&>*]:text-14px dark:text-textDark">
-              <th>Identificador Único de Carga</th>
-              <th>Fecha</th>
-              <th>Patente de Camión</th>
-              <th>Nombre del Conductor</th>
-              <th>Acciones</th>
+              <th className="px-6 py-4 whitespace-nowrap">Identificador Único de Carga</th>
+              <th className="px-6 py-4 whitespace-nowrap">Fecha</th>
+              <th className="px-6 py-4 whitespace-nowrap">Patente de Camión</th>
+              <th className="px-6 py-4 whitespace-nowrap">Nombre del Conductor</th>
+              <th className="px-6 py-4 whitespace-nowrap">Acciones</th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-bgDark1 divide-y divide-gray-200">
@@ -646,16 +651,16 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
               <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
                 {carga.id}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 {carga.fecha}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 {carga.camione.placa}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 {carga.conductore.nombre}
               </td>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px]">
+              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] dark:text-textDark text-[14px] whitespace-nowrap">
                 <button
                   onClick={(e) => estadoTablas(e)}
                   className="bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco py-1 px-2">
@@ -770,7 +775,7 @@ export default function SectionsOperacion() {
   }, [dispatch]);
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-2 movile:p-4 w-full">
       <h3 className="text-18px py-4 dark:text-textDark">Operaciones</h3>
 
       <div className="flex flex-col gap-5 ">

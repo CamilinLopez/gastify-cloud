@@ -26,8 +26,8 @@ export default function ResumenInventario() {
       <h3 className="text-18px py-4 dark:text-textDark" id="resumen_inventario">
         Resumen de Inventario
       </h3>
-      <div className="flex w-full gap-x-8">
-        <div className="w-1/2">
+      <div className="flex flex-col movile:flex-row w-full gap-x-8 space-y-4 movile:space-y-0">
+        <div className="w-full movile:w-1/2">
           <h4 className="text-16px dark:text-textDark">Cantidad de cilindros llenos por tipo</h4>
           {tabla.llenos.map((item, index) => (
             <div key={index} className="py-1">
@@ -44,7 +44,7 @@ export default function ResumenInventario() {
             </div>
           ))}
         </div>
-        <div className="w-1/2">
+        <div className="w-full movile:w-1/2">
           <h4 className="text-16px dark:text-textDark">Cantidad de cilindros vacíos por tipo</h4>
           {tabla.vacios.map((item) => (
             <div key={item.tipoCilindro.tipo} className="py-1">

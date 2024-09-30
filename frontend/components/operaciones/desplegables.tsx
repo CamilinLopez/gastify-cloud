@@ -66,7 +66,7 @@ export const AutocompletableConductores = ({
   };
 
   return (
-    <div className="relative w-5/12">
+    <div className="relative w-full movile:w-5/12">
       <input
         name={name}
         value={form.nombre_conductor.nombre}
@@ -141,7 +141,7 @@ export const AutocompletableCamiones = ({
   };
 
   return (
-    <div className="relative w-5/12">
+    <div className="relative w-full movile:w-5/12">
       <input
         name={name}
         value={form.numero_movil.placa}

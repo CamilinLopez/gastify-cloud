@@ -54,15 +54,15 @@ const Form = () => {
   return (
     <div className="w-full">
       <form className="w-full" action="">
-        <div className="w-full flex">
-          <div className="w-1/2 flex flex-col md:flex-row gap-x-2">
+        <div className="w-full flex flex-col movile:flex-row">
+          <div className="w-full movile:w-1/2 flex flex-col md:flex-row gap-x-2">
             <div className="w-full">
               <p className="text-16px py-2 dark:text-textDark">Nombre</p>
               <input
                 name="nombre"
                 value={form.nombre}
                 onChange={handleOnCahnge}
-                className="p-4 h-14 bg-gris-1 rounded-xl dark:bg-bgDark1 dark:text-textDark"
+                className="p-4 h-14 bg-gris-1 w-full rounded-xl dark:bg-bgDark1 dark:text-textDark"
                 type="text"
                 placeholder="Nombre"
               />
@@ -74,7 +74,7 @@ const Form = () => {
                 name="licencia"
                 value={form.licencia}
                 onChange={handleOnCahnge}
-                className="p-4 h-14 bg-gris-1 rounded-xl dark:bg-bgDark1 dark:text-textDark"
+                className="p-4 h-14 bg-gris-1 w-full rounded-xl dark:bg-bgDark1 dark:text-textDark"
                 type="text"
                 placeholder="Licencia"
               />
@@ -84,7 +84,7 @@ const Form = () => {
         </div>
         <button
           onClick={(e) => registrar(e)}
-          className="my-6 w-4/12 h-12 bg-azul rounded-xl font-Inter dark:text-textDark font-[500] text-blanco">
+          className="my-6 w-full movile:w-4/12 h-12 bg-azul rounded-xl font-Inter dark:text-textDark font-[500] text-blanco">
           Registrar
         </button>
       </form>
@@ -118,7 +118,7 @@ const Tabla = () => {
         <thead className="bg-blanco dark:bg-bgDark1">
           <tr>
             {textTable.map((item) => (
-              <th key={item} className="px-6 py-3 text-center text-xs text-14px dark:text-textDark">
+              <th key={item} className="px-6 py-3 text-center text-xs text-14px dark:text-textDark whitespace-nowrap">
                 {item}
               </th>
             ))}
@@ -127,11 +127,11 @@ const Tabla = () => {
         <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
           {dataTable?.map((item, i) => (
             <tr key={i} className="text-center ">
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.fecha}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.id}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.nombre}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.licencia}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark">
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.fecha}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.id}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.nombre}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.licencia}</td>
+              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
                 <button
                   onClick={(e) => deleteConductores(e, item.id)}
                   className="bg-azul rounded-xl dark:text-textDark font-Inter font-[500] text-blanco py-1 px-2">
