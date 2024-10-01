@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const { generateId } = require('../../../utils/generadorId')
 
+// creacion de empresas
 const Empresa = (sequelize) => {
   const EmpresaModel = sequelize.define(
     'empresas',
