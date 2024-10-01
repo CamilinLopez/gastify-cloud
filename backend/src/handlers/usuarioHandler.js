@@ -25,7 +25,7 @@ const ingresarPassword = async (req, res) => {
 
 const todosUsuarios = async (req, res) => {
   try {
-    const data = await obtenerTodosUsuarios();
+    const data = await obtenerTodosUsuarios({req});
 
     res.status(200).json({ data });
   } catch (error) {
@@ -49,7 +49,6 @@ const todosUsuariosFiltrado = async (req, res) => {
 const usuarioAutenticado = async (req, res) => {
   try {
     userId = req.user.id
-    console.log(userId)
     const data = await infoUserAutenthicate({ id:userId });
 
     res.status(200).json(data);

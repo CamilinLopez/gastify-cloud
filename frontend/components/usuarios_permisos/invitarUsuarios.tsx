@@ -42,14 +42,26 @@ const Form: React.FC<FormProps> = ({ setUsersInvited }) => {
     // event.preventDefault();
 
     const send = await dispatch(SendInviteThunk(formValues));
+    if (send.payload.errors && Array.isArray(send.payload.errors)) {
+      send.payload.errors.forEach((error:any) => {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: error.msg, 
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      });
+      return;
+    }
+   
     await setUsersInvited((prevUsers) => [...prevUsers, send.payload.usuario]);
-
     Swal.fire({
       position: 'center',
       icon: 'success',
       title: `${send.payload.message}`,
       showConfirmButton: false,
-      timer: 2000,
+      timer: 2500,
     });
   };
 

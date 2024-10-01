@@ -14,7 +14,6 @@ import { fetchPermisos } from '@/redux/slice/usuarios/usuarios-permisos';
 export default function Menu() {
   const dispatch: AppDispatch = useDispatch();
   const { filteredRoutes, status } = useSelector((state: RootState) => state.permisosUser);
-
   // const [filteredMenu, setFilteredMenu] = useState([]);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });

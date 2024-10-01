@@ -4,11 +4,16 @@ const RolesPermisos = (sequelize) => {
   sequelize.define(
     'roles_permisos',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+      },
       rolId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'roles', // Nombre de la tabla roles
+          model: 'roles',
           key: 'id',
         },
       },
@@ -16,16 +21,15 @@ const RolesPermisos = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'permisos', // Nombre de la tabla permissions
+          model: 'permisos',
           key: 'id',
         },
-      },
+      }
     },
     {
       timestamps: false,
-    },
+    }
   );
 };
 
 module.exports = RolesPermisos;
-
