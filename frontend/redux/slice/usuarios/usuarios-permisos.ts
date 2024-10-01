@@ -23,7 +23,7 @@ export const fetchPermisos = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await axiosInstance.get(`/roles/roles-permisos`);
-      return res.data.data.rol.permisos.map((p: any) => p.nombre);
+      return res.data.data;
     } catch (error) {
       return rejectWithValue('Error obteniendo permisos');
     }
@@ -32,11 +32,13 @@ export const fetchPermisos = createAsyncThunk(
 
 // Función para filtrar rutas
 const filterRoutes = (routes: any[], permisos: string[]) => {
+
+  let nombrePermisos = permisos.map((p:any)=>p.nombre)
   return routes.filter((route) => {
     if (!route.permisos || route.permisos.length === 0) {
       return true;
     }
-    return permisos.includes(route.permisos);
+    return nombrePermisos.includes(route.permisos);
   });
 };
 
@@ -52,6 +54,7 @@ const permisosSlice = createSlice({
       })
       .addCase(fetchPermisos.fulfilled, (state, action: PayloadAction<string[]>) => {
         state.permisos = action.payload;
+        console.log(action)
         state.filteredRoutes = filterRoutes(RoutesMenu, action.payload);
         state.status = 'succeeded';
       })

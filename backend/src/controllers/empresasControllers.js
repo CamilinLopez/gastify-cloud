@@ -1,4 +1,4 @@
-const { usuarios, empresas, roles } = require('../db/index');
+const { usuarios, empresas, roles, usuario_permiso } = require('../db/index');
 const { generateToken } = require('../helpers/generateToken')
 const sendMailerVerificationLink = require('../helpers/sendEmail')
 const { SECRET_KEY, WEBS_URL } = require('../config/env')
@@ -87,7 +87,6 @@ const invateUser = async (data) => {
     }
     throw new Error('usuario no encontrado');
   } catch (error) {
-    console.log(error)
     throw error;
   }
 };
@@ -109,7 +108,6 @@ const eliminarInvitacion = async ({eliminarInvitacion}) => {
     return { message: 'Invitación cancelada y usuario eliminado', usuario };
  
   } catch (error) {
-    console.log(error)
     throw error;
   }
 };

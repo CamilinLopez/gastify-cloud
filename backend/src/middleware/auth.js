@@ -1,40 +1,64 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const { empresas, roles, usuarios } = require('../db/index')
+const { empresas, roles, usuarios, usuario_permiso } = require('../db/index')
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const { SECRET_KEY } = require('../config/env')
 const { generateToken } = require('../helpers/generateToken')
-const { generateId } = require('../utils/generadorId')
 
-passport.use('registrar',new LocalStrategy({
+passport.use('registrar', new LocalStrategy({
   usernameField: 'email', 
   passwordField: 'password',
   passReqToCallback: true,
-}, async(req, email, password, done)=>{
-  try{
-    const { nombre } = req.body; // Aquí obtienes el campo nombre del request
+}, async(req, email, password, done) => {
+  try {
+    const { nombre } = req.body; // Aquí obtienes el campo nombre y tipoEntidad del request
+    
+    // Verifica si el email ya está registrado en empresas
+    const empresa = await empresas.findOne({ where: { email } });
 
-    const empresa = await empresas.findOne({where:{email}});
-
-    if(empresa){
-      return done(null, false, {message: 'El email ya está registrado'});
+    if (empresa) {
+      return done(null, false, { message: 'El email ya está registrado como empresa' });
     }
-    
-    const rol = await roles.findOne({where:{nombre:'Administrador'}});
-    
-    if(!rol){
+
+    // Verifica si el email ya está registrado en usuarios
+    const usuario = await usuarios.findOne({ where: { email } });
+
+    if (usuario) {
+      return done(null, false, { message: 'El email ya está registrado como usuario' });
+    }
+
+    // Obtener el rol de Administrador
+    const rolAdmin = await roles.findOne({ where: { nombre: 'Administrador' } });
+
+    if (!rolAdmin) {
       throw new Error('Rol de Administrador no encontrado');
     }
-    const newEmpresa = await empresas.create({nombre, email, password, rolId: rol.id});
 
-    const { authentication } = generateToken({ id: newEmpresa.id }, SECRET_KEY);
+      // Crear empresa
+      let nuevaEmpresa = await empresas.create({ nombre, email, password, rolId: rolAdmin.id });
+
+      let permisosAdmin = await rolAdmin.getPermisos();
+      
+      // Asignar permisos a la empresa
+      for (const permiso of permisosAdmin) {
+        await usuario_permiso.create({
+          empresaId: nuevaEmpresa.id,
+          permisoId: permiso.id,
+          rolId: rolAdmin.id
+        });
+    } 
+
+    // Generar token
+    const { authentication } = generateToken({ id: nuevaEmpresa.id }, SECRET_KEY);
     
-    return done(null, { empresa: newEmpresa, token: authentication });
-  }catch(error){
-    done(error);
+    return done(null, { nuevaEmpresa, token: authentication });
+  } catch (error) {
+    console.log(error);
+    return done(error);
   }
-}))
+}));
+
 
 passport.use('signin', new LocalStrategy({
   usernameField: 'email',

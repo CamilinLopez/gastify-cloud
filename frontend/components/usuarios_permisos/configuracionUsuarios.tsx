@@ -33,13 +33,56 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
     fetchData();
   }, [dispatch]);
 
-  useEffect(() => {
-    const rolSeleccionado = roles.find((rol) => rol.id === formValues.rolId);
-    if (rolSeleccionado) {
-      const permisosDelRol = rolSeleccionado.permisos.map((permiso: any) => permiso.id);
-      setSelectedPermissions(permisosDelRol);
-    }
+   // Sincroniza permisos del rol seleccionado y permisos globales
+   useEffect(() => {
+    const obtenerPermisosYFiltrar = async () => {
+      const rolSeleccionado = roles.find((rol) => rol.id === formValues.rolId);
+
+      if (rolSeleccionado) {
+        const permisosFiltrados = await obtenerPermisos(rolSeleccionado);
+        const permisosDelRol = permisosFiltrados.map((permiso: any) => permiso.id);
+        setSelectedPermissions(permisosDelRol);
+      } else {
+        setSelectedPermissions([]); // Limpia los permisos si no hay rol seleccionado
+      }
+    };
+
+    obtenerPermisosYFiltrar();
   }, [formValues.rolId, roles]);
+
+  // Filtra los permisos del rol seleccionado en base a los permisos disponibles
+  const obtenerPermisos = async (rolSeleccionado: any) => {
+    try {
+      const response = await dispatch(fetchPermisos());
+      const permisosDisponibles = response.payload; // Permisos disponibles desde la API
+  
+      // Filtra los permisos que coinciden con el rol seleccionado
+      const permisosFiltrados = permisosDisponibles
+        .filter((rolUser: { rolId: string, permisoId: string, nombre: string }) => {
+          // Si el rolId del permiso coincide con el rol seleccionado
+          if (rolUser.rolId === rolSeleccionado.id) {
+  
+            // Filtra los permisos del rol seleccionado que coinciden con los permisos disponibles
+            const permisosDelRol = rolSeleccionado.permisos.filter((permiso: { nombre: string }) =>
+              permisosDisponibles.some((permisoDisponible: any) => permisoDisponible.nombre === permiso.nombre)
+            );
+  
+            // Retorna los nombres de los permisos filtrados
+            return permisosDelRol.map((permiso: { nombre: string }) => permiso.nombre);
+          }
+  
+          return false; // Si no coincide el rol, excluye este permiso
+        });
+  
+      // Retorna los permisos filtrados
+      return permisosFiltrados.flat(); // Usa flat() para aplanar el array si es necesario
+  
+    } catch (error) {
+      console.error('Error obteniendo permisos:', error);
+      return [];
+    }
+  };
+  
 
   const handleCheckboxChange = (permisoId: string) => {
     setSelectedPermissions((prevSelected) =>
@@ -54,9 +97,7 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
       const res = await axiosInstance.put(`/roles/asignar-permiso/${rolSeleccionado.id}`, {
         permisos: selectedPermissions,
       });
-
-      await setRoles((prevRoles) => prevRoles.map((rol) => (rol.id === res.data.data.id ? res.data.data : rol)));
-
+    console.log(res)
       dispatch(fetchPermisos());
 
       Swal.fire({
@@ -68,11 +109,10 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
       });
     } catch (error) {}
   };
-
   return (
     <div className="w-full">
       {permisos.length > 0 ? (
-        permisos.map((permiso) => (
+        permisos.map((permiso:any) => (
           <div key={permiso.id} className="flex gap-x-2 my-3">
             <input
               type="checkbox"
@@ -95,21 +135,20 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
       <button
         className="w-full movile:w-5/12 h-12 dark:text-textDark bg-azul rounded-xl font-Inter font-[500] text-blanco"
         onClick={handleSaveChanges}
-        disabled={!formValues.rolId} // Deshabilita el botón si no se selecciona un rol
+        disabled={!formValues.rolId} 
       >
         Guardar Cambios
       </button>
     </div>
   );
-};
+}
 
 export default function ConfiguracionUsuarios() {
   const dispatch = useDispatch<AppDispatch>();
   const [formValues, setFormValues] = useState({
     rolId: '',
   });
-  const [roles, setRoles] = useState<any[]>([]); // Asegúrate de tipar correctamente el estado
-  // const { roles, status, error } = useSelector((state: RootState) => state.roles);
+  const [roles, setRoles] = useState<any[]>([]); 
 
   useEffect(() => {
     const fetchData = async () => {

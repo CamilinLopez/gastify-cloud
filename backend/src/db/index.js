@@ -13,7 +13,7 @@ const {
   modelStockCilindros,
 } = require('./models/inventario/index');
 
-const { modelPermisos, modelRoles, modelRolesPermisos } = require('./models/roles/index');
+const { modelPermisos, modelRoles, modelRolesPermisos, modelPermisosUsuarios } = require('./models/roles/index');
 const { modelEmpresa, modelUsuario } = require('./models/empresa/index');
 
 const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
@@ -53,6 +53,7 @@ modelVentas(database);
 modelRoles(database);
 modelPermisos(database);
 modelRolesPermisos(database);
+modelPermisosUsuarios(database)
 
 modelEmpresa(database);
 modelUsuario(database);
@@ -136,6 +137,46 @@ tipo_cilindros.hasMany(ventas, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro
 ventas.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro' });
 // Modelos de roles y permisos
 const { roles, permisos, roles_permisos } = database.models;
+// Modelos de empresas
+const { empresas, usuarios, usuario_permiso } = database.models;
+
+
+
+permisos.hasMany(usuario_permiso, {
+  foreignKey: 'permisoId',
+  as: 'permiso'
+});
+usuario_permiso.belongsTo(permisos, {
+  foreignKey: 'permisoId',
+  as: 'permiso'
+});
+
+roles.hasMany(usuario_permiso, {
+  foreignKey: 'rolId',
+  as: 'rol'
+});
+usuario_permiso.belongsTo(roles, {
+  foreignKey: 'rolId',
+  as: 'rol'
+});
+
+empresas.hasMany(usuario_permiso, {
+  foreignKey: 'empresaId',
+  as: 'empresa'
+});
+usuario_permiso.belongsTo(empresas, {
+  foreignKey: 'empresaId',
+  as: 'empresa'
+});
+
+usuarios.hasMany(usuario_permiso, {
+  foreignKey: 'usuarioId',
+  as: 'usuario'
+});
+usuario_permiso.belongsTo(usuarios, {
+  foreignKey: 'usuarioId',
+  as: 'usuario'
+});
 
 // Relaciones de roles y permisos
 roles.belongsToMany(permisos, {
@@ -152,8 +193,8 @@ permisos.belongsToMany(roles, {
   as: 'roles', // Alias para acceder a los roles desde el permiso
 });
 
-// Modelos de empresas
-const { empresas, usuarios } = database.models;
+
+
 
 // Relaciones de empresas y usuarios
 empresas.hasMany(usuarios, { foreignKey: 'empresaId', as: 'usuarios' });
