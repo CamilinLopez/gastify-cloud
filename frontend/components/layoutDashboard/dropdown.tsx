@@ -9,20 +9,21 @@ import { useTheme } from '@/context/ThemeContext';
 import { useRouter } from 'next/navigation'; // Importar useRouter para redirigir
 import Cookies from 'js-cookie'; // Importar js-cookie para gestionar cookies
 
-type UsuarioType = {
-  id: string;
-  nombre: string;
-  email: string;
-  rol: {
-    nombre: string;
-  };
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsuarioData } from '@/redux/slice/usuarios/usuario-data';
+import { RootState, AppDispatch } from '@/redux/store';
+
+
+
 
 export const Usuarios = ({ name }: SelectOptionType) => {
   const router = useRouter();
 
-  const [usuario, setUsuario] = useState<UsuarioType | null>(null);
+  const dispatch: AppDispatch = useDispatch();
+  const usuario = useSelector((state: RootState) => state.dataUser.usuario);
+  const status = useSelector((state: RootState) => state.dataUser.status);
 
+  
   const [open, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -30,17 +31,10 @@ export const Usuarios = ({ name }: SelectOptionType) => {
 
   // Cerrar el dropdown si se hace clic fuera de él
   useEffect(() => {
-    const fetchUsuarioData = async () => {
-      try {
-        const response = await axiosInstance.get('/usuario/get-usuario-data');
-        setUsuario(response.data.empresa || response.data.usuario); // Asignar los datos obtenidos del usuario al estado
-      } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
-      }
-    };
-
-    fetchUsuarioData();
-
+    if (status === 'idle') {
+      dispatch(fetchUsuarioData());
+    }
+    
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpen(false);
@@ -51,7 +45,7 @@ export const Usuarios = ({ name }: SelectOptionType) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [dispatch, status]);
 
   const handleLogout = async () => {
     try {

@@ -1,14 +1,44 @@
 'use client';
 
-import React, { ChangeEvent, useState } from 'react';
+import { axiosInstance } from '@/config/axios';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsuarioData } from '@/redux/slice/usuarios/usuario-data';
+import { RootState, AppDispatch } from '@/redux/store';
+
+type UsuarioType = {
+  id: string;
+  nombre: string;
+  email: string;
+  rol: {
+    nombre: string;
+  };
+};
 export default function SectionCuenta() {
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   const [form, setForm] = useState({
-    Nombre: '',
-    Correo: '',
-    Contraseña: '',
+    nombre: '',
+    correo: '',
+    password: '',
   });
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchUsuarioData());
+    }
+  }, [status, dispatch]);
+
+  useEffect(() => {
+    if (usuario) {
+      setForm({
+        nombre: usuario.nombre || '',
+        correo: usuario.email || '',
+        password: '', 
+      });
+    }
+  }, [usuario]);
+
 
   const toggleDropdown = () => setOpen(!open);
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,13 +47,32 @@ export default function SectionCuenta() {
       [e.target.name]: e.target.value,
     });
   };
-  const registrar = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
 
-    //eviar formulario para actualizar cuaneta
+ const registrar = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.preventDefault();
+
+  try {
+    const response = await axiosInstance.put(`/empresa/update-user/${usuario?.id}`, {
+      nombre: form.nombre,
+      email: form.correo,
+      password: form.password,
+    });
+    // console.log(response.data);
+
+    setForm({
+      nombre: response.data.data.nombre || '',
+      correo: response.data.data.email || '',
+      password: '', // Resetea la contraseña después de la actualización
+    });
+    dispatch(fetchUsuarioData());
+
 
     toggleDropdown();
-  };
+  } catch (error) {
+    console.error('Error al actualizar los datos del usuario:', error);
+    // Puedes manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
+  }
+};
 
   return (
     <div className="p-4 w-full dark:bg-bgDark">
@@ -42,15 +91,15 @@ export default function SectionCuenta() {
         <div className="flex flex-col gap-y-4">
           <div className="flex flex-col justify-start">
             <p className="font-Inter text-[14px] font-semibold dark:text-textDark">ID de cuenta</p>
-            <p className="font-Inter text-[14px] font-normal dark:text-textDark">479224a4</p>
+            <p className="font-Inter text-[14px] font-normal dark:text-textDark">{usuario?.id}</p>
           </div>
           <div className="flex flex-col justify-start">
             <p className="font-Inter text-[14px] font-semibold dark:text-textDark">Nombre de la cuenta</p>
-            <p className="font-Inter text-[14px] font-normal dark:text-textDark">SuperGas</p>
+            <p className="font-Inter text-[14px] font-normal dark:text-textDark">{usuario?.nombre}</p>
           </div>
           <div className="flex flex-col justify-start">
             <p className="font-Inter text-[14px] font-semibold dark:text-textDark">Correo electrónico:</p>
-            <p className="font-Inter text-[14px] font-normal dark:text-textDark">supergas@gmail.com</p>
+            <p className="font-Inter text-[14px] font-normal dark:text-textDark">{usuario?.email}</p>
           </div>
           <div className="flex flex-col justify-start">
             <p className="font-Inter text-[14px] font-semibold dark:text-textDark">Contraseña</p>
@@ -66,11 +115,11 @@ export default function SectionCuenta() {
             <div className="flex flex-col justify-start">
               <p className="text-16px py-2 dark:text-textDark">Nombre:</p>
               <input
-                name="Nombre"
-                value={form.Nombre}
+                name="nombre"
+                value={form.nombre}
                 onChange={handleOnChange}
                 className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-4/12"
-                type="number"
+                type="text"
                 min="0"
                 placeholder="supergas"
               />
@@ -78,11 +127,11 @@ export default function SectionCuenta() {
             <div className="flex flex-col justify-start">
               <p className="text-16px py-2 dark:text-textDark">Correo electrónico:</p>
               <input
-                name="Correo"
-                value={form.Correo}
+                name="correo"
+                value={form.correo}
                 onChange={handleOnChange}
                 className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-4/12"
-                type="number"
+                type="email"
                 min="0"
                 placeholder="supergas@gmail.com"
               />
@@ -90,11 +139,11 @@ export default function SectionCuenta() {
             <div className="flex flex-col justify-start">
               <p className="text-16px py-2 dark:text-textDark">Contraseña:</p>
               <input
-                name="Contraseña"
-                value={form.Contraseña}
+                name="password"
+                value={form.password}
                 onChange={handleOnChange}
                 className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-4/12"
-                type="number"
+                type="password"
                 min="0"
                 placeholder="********"
               />

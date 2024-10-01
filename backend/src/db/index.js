@@ -13,10 +13,10 @@ const {
   modelStockCilindros,
 } = require('./models/inventario/index');
 
-const { modelPermisos, modelRoles, modelRolesPermisos } = require('./models/roles/index');
+const { modelPermisos, modelRoles, modelRolesPermisos, modelPermisosUsuarios } = require('./models/roles/index');
 const { modelEmpresa, modelUsuario } = require('./models/empresa/index');
 
-const urlLocal = 'postgres://postgres:camilo1998@localhost:5432/gastifycloud';
+const urlLocal = 'postgres://postgres:1010@localhost:5432/gastifycloud';
 // const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
@@ -55,6 +55,7 @@ modelVentas(database);
 modelRoles(database);
 modelPermisos(database);
 modelRolesPermisos(database);
+modelPermisosUsuarios(database)
 
 modelEmpresa(database);
 modelUsuario(database);
@@ -138,6 +139,46 @@ tipo_cilindros.hasMany(ventas, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro
 ventas.belongsTo(tipo_cilindros, { foreignKey: 'tipoCilindroId', as: 'tipoCilindro' });
 // Modelos de roles y permisos
 const { roles, permisos, roles_permisos } = database.models;
+// Modelos de empresas
+const { empresas, usuarios, usuario_permiso } = database.models;
+
+
+
+permisos.hasMany(usuario_permiso, {
+  foreignKey: 'permisoId',
+  as: 'permiso'
+});
+usuario_permiso.belongsTo(permisos, {
+  foreignKey: 'permisoId',
+  as: 'permiso'
+});
+
+roles.hasMany(usuario_permiso, {
+  foreignKey: 'rolId',
+  as: 'rol'
+});
+usuario_permiso.belongsTo(roles, {
+  foreignKey: 'rolId',
+  as: 'rol'
+});
+
+empresas.hasMany(usuario_permiso, {
+  foreignKey: 'empresaId',
+  as: 'empresa'
+});
+usuario_permiso.belongsTo(empresas, {
+  foreignKey: 'empresaId',
+  as: 'empresa'
+});
+
+usuarios.hasMany(usuario_permiso, {
+  foreignKey: 'usuarioId',
+  as: 'usuario'
+});
+usuario_permiso.belongsTo(usuarios, {
+  foreignKey: 'usuarioId',
+  as: 'usuario'
+});
 
 // Relaciones de roles y permisos
 roles.belongsToMany(permisos, {
@@ -154,8 +195,8 @@ permisos.belongsToMany(roles, {
   as: 'roles', // Alias para acceder a los roles desde el permiso
 });
 
-// Modelos de empresas
-const { empresas, usuarios } = database.models;
+
+
 
 // Relaciones de empresas y usuarios
 empresas.hasMany(usuarios, { foreignKey: 'empresaId', as: 'usuarios' });
@@ -183,33 +224,8 @@ roles.hasMany(empresas, {
   as: 'empresas',
 });
 
-//relaciones de empresa con el resti de tablas
-inventario_bodegas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(inventario_bodegas, { foreignKey: 'empresaId', as: 'inventarioBodegas' });
 
-inventario_camiones.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(inventario_camiones, { foreignKey: 'empresaId', as: 'inventarioCamiones' });
-
-ventas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(ventas, { foreignKey: 'empresaId', as: 'ventas' });
-
-conductores.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(conductores, { foreignKey: 'empresaId', as: 'conductores' });
-
-camiones.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(camiones, { foreignKey: 'empresaId', as: 'camiones' });
-
-cargas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(cargas, { foreignKey: 'empresaId', as: 'cargas' });
-
-descarga_camiones.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(descarga_camiones, { foreignKey: 'empresaId', as: 'descargas' });
-
-detalle_cargas.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(detalle_cargas, { foreignKey: 'empresaId', as: 'detalleCargas' });
-
-stockcilindros.belongsTo(empresas, { foreignKey: 'empresaId', as: 'empresas' });
-empresas.hasMany(stockcilindros, { foreignKey: 'empresaId', as: 'stockCilindros' });
+// console.log(Object.keys(database.models));
 
 module.exports = {
   ...database.models,

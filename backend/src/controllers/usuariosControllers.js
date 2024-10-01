@@ -1,47 +1,110 @@
-const { usuarios, roles, empresas } = require('../db/index');
+const { usuarios, roles, empresas, usuario_permiso, permisos } = require('../db/index');
 const bcrypt = require('bcrypt');
 const { generarFechaActual } = require('../utils/generadorId')
 
-const crearUsuarioPasswordDB = async ({email, password, empresa,nombre}) => {
+const crearUsuarioPasswordDB = async ({ email, password, empresa, nombre }) => {
   try {
-    const usuario = await usuarios.findOne({where:{email, empresaId:empresa}}) 
+    // Buscar al usuario en la base de datos
+    const usuario = await usuarios.findOne({
+      where: { email, empresaId: empresa, activo: true }
+    });
+    
+    // Si el usuario no existe, lanzar un error
     if (!usuario) {
       throw new Error('Usuario no encontrado');
     }
 
-    if(!usuario.verificado){
+    // Si el usuario no ha sido verificado, proceder con la verificación
+    if (usuario) {
+      // Encriptar la contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
 
+      // Actualizar los datos del usuario
       usuario.password = hashedPassword;
       usuario.verificado = true;
-      usuario.nombre = nombre
+      usuario.nombre = nombre;
       await usuario.save();
-      return usuario
 
+      // Buscar los permisos asignados al rol del usuario en la empresa
+      let permisosRol = await usuario_permiso.findAll({
+        where: {
+          empresaId: usuario.empresaId,  // Empresa a la que pertenece el usuario
+          rolId: usuario.rolId           // Rol asignado al usuario
+        },
+        include: [
+          { model: permisos, as: 'permiso' },  // Incluir el modelo de permisos
+          { model: roles, as: 'rol' }          // Incluir el modelo de roles
+        ]
+      });
+
+      // Si no hay permisos asignados al rol, asignar permisos por defecto
+      if (!permisosRol || permisosRol.length === 0) {
+        await usuario_permiso.create({ 
+            empresaId:usuario.empresaId, 
+            permisoId: 1, 
+            usuarioId:usuario.id, 
+            rolId: usuario.rolId  } )
+      }else{
+        // Crear un array con los permisos para asignar al usuario
+        const permisosUsuario = permisosRol.map((data) => ({
+          empresaId: usuario.empresaId,
+          usuarioId: usuario.id,
+          permisoId: data.permisoId || data.permiso.id,  // ID del permiso asignado o por defecto
+          rolId: usuario.rolId                           // Rol del usuario
+        }));
+        // Insertar los permisos en la tabla usuario_permiso para este usuario
+        await usuario_permiso.bulkCreate(permisosUsuario);
+      }
+
+      
+
+      // Devolver el usuario actualizado
+      return usuario;
     }
-    throw new Error('El usuario ya está verificado');
 
+    // Si el usuario ya está verificado, lanzar un error
+    throw new Error('El usuario ya está verificado');
   } catch (error) {
+    // Manejo de errores
     throw error;
   }
 };
 
 
 
-const obtenerTodosUsuarios = async () => {
+
+const obtenerTodosUsuarios = async ({req}) => {
   try {
-    // const id = req.usuario.id
-    const usuariosData = await usuarios.findAll({
-      where: { activo: true }, 
-      attributes: { exclude: ['rolId','password','empresaId'] }, 
-      include: [
-        {
-          model: roles,
-          as: 'rol', // Alias for the relationship
-          attributes: ['nombre'], // Select specific fields if needed
-        },
-      ],
-    });
+    const id = req.user.id
+
+    const empresa = await empresas.findOne({where: {id}}) || await usuarios.findOne({where: {id, activo:true}})
+    let usuariosData
+    if(empresa){
+      usuariosData = await usuarios.findAll({
+        where: { activo: true, empresaId:empresa.id }, 
+        attributes: { exclude: ['rolId','password','empresaId'] }, 
+        include: [
+          {
+            model: roles,
+            as: 'rol', // Alias for the relationship
+            attributes: ['nombre'], // Select specific fields if needed
+          },
+        ],
+      });
+    } else {
+      usuariosData = await usuarios.findAll({
+        where: { activo: true, empresaId:empresa.empresaId }, 
+        attributes: { exclude: ['rolId','password','empresaId'] }, 
+        include: [
+          {
+            model: roles,
+            as: 'rol', // Alias for the relationship
+            attributes: ['nombre'], // Select specific fields if needed
+          },
+        ],
+      });
+    }
+    
 
     return usuariosData
 
@@ -126,7 +189,7 @@ const fetchEntity = async (model, id) => {
       {
         model: roles,
         as: 'rol',
-        attributes: ['nombre'],
+        attributes: ['nombre','id'],
       },
     ],
   });

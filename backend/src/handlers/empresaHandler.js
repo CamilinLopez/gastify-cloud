@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const { SECRET_KEY, PAGE_URL } = require('../config/env');
 const { invateUser, eliminarInvitacion } = require('../controllers/empresasControllers');
 const { verifyToken, generateToken } = require('../helpers/generateToken');
+const { usuarios, empresas } = require('../db/index');
+const bcrypt = require('bcrypt');
+
 
 const crearEmpresa = async (req, res, next) => {
   try {
@@ -91,10 +94,49 @@ const cancelarInvitacion = async (req, res, next) => {
     res.status(400).json({ errors: error.message });
   }
 };
+
+
+const actualizarDatos = async (req, res, next) => {
+  const { idUser } = req.params;
+  const { nombre, email, password } = req.body;
+
+  try {
+    // Buscar el usuario o empresa por idUser
+    let usuarioOempresa = await usuarios.findByPk(idUser, {
+      include: ['rol']  
+    }) || await empresas.findByPk(idUser, {
+      include: ['rol']  
+    });
+    if (!usuarioOempresa) {
+      return res.status(404).json({ message: 'Usuario o empresa no encontrado' });
+    }
+
+    // Actualizar nombre y email
+    usuarioOempresa.nombre = nombre || usuarioOempresa.nombre;
+    usuarioOempresa.email = email || usuarioOempresa.email;
+
+    // Si hay una nueva contraseña, hashearla antes de guardarla
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      usuarioOempresa.password = await bcrypt.hash(password, salt);
+    }
+
+    // Guardar los cambios
+    await usuarioOempresa.save();
+
+    res.status(200).json({ message: 'Datos actualizados correctamente', data: usuarioOempresa });
+  } catch (error) {
+    res.status(400).json({ errors: error.message });
+  }
+};
+
+
+
 module.exports = {
   crearEmpresa,
   signinEmpresa,
   invitarUsuario,
   verificarToken,
-  cancelarInvitacion
+  cancelarInvitacion,
+  actualizarDatos
 };

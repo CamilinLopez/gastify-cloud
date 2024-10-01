@@ -4,7 +4,7 @@ import https from 'https';
 
 // Crear una instancia de Axios
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
   // Puedes descomentar el httpsAgent si estás usando un servidor con un certificado autofirmado
   // httpsAgent: new https.Agent({
   //   rejectUnauthorized: false,
