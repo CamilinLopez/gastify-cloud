@@ -1,7 +1,6 @@
 const { estado_cilindros, tipo_cilindros, inventario_bodegas, ventas } = require('../db/index');
 const { literal } = require('sequelize');
 const { inventarioInicial, VentasInicial } = require('../utils/cargainicialInventaio');
-const cron = require('node-cron');
 
 const crearDatosDB = async () => {
   const tipos = [{ tipo: '5kg' }, { tipo: '11kg' }, { tipo: '15kg' }, { tipo: '45kg' }, { tipo: 'H15' }];
@@ -10,23 +9,13 @@ const crearDatosDB = async () => {
   try {
     await tipo_cilindros.bulkCreate(tipos);
     await estado_cilindros.bulkCreate(estados);
-    await inventario_bodegas.bulkCreate(inventarioInicial);
-    await ventas.bulkCreate(VentasInicial);
+
     return 'Tipos y estados de cilindros creados';
   } catch (error) {
     throw error;
   }
 };
 
-cron.schedule('0 0 * * *', async () => {
-  try {
-    // Lógica para crear información en la base de datos
-    await ventas.bulkCreate(VentasInicial);
-    console.log('Datos creados exitosamente.');
-  } catch (error) {
-    console.error('Error al crear datos:', error);
-  }
-});
 
 const tomarDatosTablaStockAbastecimiento = async (empresaId) => {
   try {

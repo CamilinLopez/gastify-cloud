@@ -4,8 +4,12 @@ const { SECRET_KEY, PAGE_URL } = require('../config/env');
 const { invateUser, eliminarInvitacion } = require('../controllers/empresasControllers');
 const { verifyToken, generateToken } = require('../helpers/generateToken');
 const { stockcilindros } = require('../db/index');
-const { usuarios, empresas } = require('../db/index');
+const { usuarios, empresas, inventario_bodegas, ventas } = require('../db/index');
+const { VentasInicial, inventarioInicial } = require('../utils/cargainicialInventaio');
+const cron = require('node-cron');
 const bcrypt = require('bcrypt');
+
+let empresaIdGlobal = null;
 
 
 const crearEmpresa = async (req, res, next) => {
@@ -20,7 +24,9 @@ const crearEmpresa = async (req, res, next) => {
         return res.status(401).json({ message: info.message || 'Unauthorized' });
       }
       // Rescatando los valores de empresa y token
-      const { empresa, token } = user;
+      const { nuevaEmpresa, token } = user;
+      const empresas = nuevaEmpresa.dataValues;
+      empresaIdGlobal = empresas.id;
 
       //crear alarmas para cilindros
       await stockcilindros.bulkCreate([
@@ -28,37 +34,39 @@ const crearEmpresa = async (req, res, next) => {
           id: 1,
           minStock: 0,
           tipoCilindroId: 1,
-          empresaId: empresa.id,
+          empresaId: empresas.id,
         },
         {
           id: 2,
           minStock: 0,
           tipoCilindroId: 2,
-          empresaId: empresa.id,
+          empresaId: empresas.id,
         },
         {
           id: 3,
           minStock: 0,
           tipoCilindroId: 3,
-          empresaId: empresa.id,
+          empresaId: empresas.id,
         },
         {
           id: 4,
           minStock: 0,
           tipoCilindroId: 4,
-          empresaId: empresa.id,
+          empresaId: empresas.id,
         },
         {
           id: 5,
           minStock: 0,
           tipoCilindroId: 5,
-          empresaId: empresa.id,
+          empresaId: empresas.id,
         },
       ]);
+      await inventario_bodegas.bulkCreate(inventarioInicial(empresas.id));
+      await ventas.bulkCreate(VentasInicial(empresas.id));
 
       return res.json({
         message: 'Registro exitoso',
-        empresa,
+        empresas,
         token,
         dashboard: `${PAGE_URL}/dashboard/inicio`,
       });
@@ -67,6 +75,16 @@ const crearEmpresa = async (req, res, next) => {
     res.status(400).json({ errors: error.message });
   }
 };
+
+cron.schedule('0 0 * * *', async (req, res) => {
+  try {
+    // Lógica para crear información en la base de datos
+    await ventas.bulkCreate(VentasInicial(empresaIdGlobal));
+    console.log('Datos creados exitosamente.');
+  } catch (error) {
+    console.error('Error al crear datos:', error);
+  }
+});
 
 const signinEmpresa = async (req, res, next) => {
   passport.authenticate('signin', async (err, user, info) => {
@@ -132,18 +150,19 @@ const cancelarInvitacion = async (req, res, next) => {
   }
 };
 
-
 const actualizarDatos = async (req, res, next) => {
   const { idUser } = req.params;
   const { nombre, email, password } = req.body;
 
   try {
     // Buscar el usuario o empresa por idUser
-    let usuarioOempresa = await usuarios.findByPk(idUser, {
-      include: ['rol']  
-    }) || await empresas.findByPk(idUser, {
-      include: ['rol']  
-    });
+    let usuarioOempresa =
+      (await usuarios.findByPk(idUser, {
+        include: ['rol'],
+      })) ||
+      (await empresas.findByPk(idUser, {
+        include: ['rol'],
+      }));
     if (!usuarioOempresa) {
       return res.status(404).json({ message: 'Usuario o empresa no encontrado' });
     }
@@ -167,13 +186,11 @@ const actualizarDatos = async (req, res, next) => {
   }
 };
 
-
-
 module.exports = {
   crearEmpresa,
   signinEmpresa,
   invitarUsuario,
   verificarToken,
   cancelarInvitacion,
-  actualizarDatos
+  actualizarDatos,
 };

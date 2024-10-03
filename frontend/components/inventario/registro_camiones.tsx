@@ -109,7 +109,7 @@ const Form = () => {
         <button
           onClick={(e) => registrar(e)}
           className="my-6 w-full movile:w-4/12 h-12 bg-azul dark:text-textDark rounded-xl font-Inter font-[500] text-blanco">
-          {response === 'loading' ? 'Cargando...' : 'Resgistrar'}
+          {response === 'loading' ? 'Cargando...' : 'Registrar'}
         </button>
       </form>
     </div>

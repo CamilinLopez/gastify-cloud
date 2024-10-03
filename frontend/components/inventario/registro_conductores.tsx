@@ -64,19 +64,19 @@ const Form = () => {
                 onChange={handleOnCahnge}
                 className="p-4 h-14 bg-gris-1 w-full rounded-xl dark:bg-bgDark1 dark:text-textDark"
                 type="text"
-                placeholder="Nombre"
+                placeholder="Carlos Morales"
               />
               <p className="font-mono text-[15px] text-red-500">{errors.nombre}</p>
             </div>
             <div className="w-full">
-              <p className="text-16px py-2 dark:text-textDark">Licencia</p>
+              <p className="text-16px py-2 dark:text-textDark">Número de teléfono</p>
               <input
                 name="licencia"
                 value={form.licencia}
                 onChange={handleOnCahnge}
                 className="p-4 h-14 bg-gris-1 w-full rounded-xl dark:bg-bgDark1 dark:text-textDark"
                 type="text"
-                placeholder="Licencia"
+                placeholder="4566866"
               />
               <p className="font-mono text-[15px] text-red-500">{errors.licencia}</p>
             </div>

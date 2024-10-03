@@ -37,22 +37,32 @@ export default function Tabla() {
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-bgDark1 dark:divide-borderDarck divide-y divide-gray-200">
-            {tabla?.map((item, i) => (
-              <tr key={i}>
-                <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px] dark:text-textDark">
-                  {item.Fecha}
+          {tabla.length ? (
+            <tbody className="bg-white dark:bg-bgDark1 dark:divide-borderDarck divide-y divide-gray-200">
+              {tabla?.map((item, i) => (
+                <tr key={i}>
+                  <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px] dark:text-textDark">
+                    {item.Fecha}
+                  </td>
+                  <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['ID Conductor']}</td>
+                  <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['5kg']}</td>
+                  <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['11kg']}</td>
+                  <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['15kg']}</td>
+                  <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['45kg']}</td>
+                  <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.H15}</td>
+                  <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['Total kilos vendidos']}</td>
+                </tr>
+              ))}
+            </tbody>
+          ) : (
+            <tbody className="bg-white dark:bg-bgDark1">
+              <tr>
+                <td colSpan={8} className="px-6 py-4 text-center align-middle text-secondary-14px dark:text-textDark">
+                  No hay datos
                 </td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['ID Conductor']}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['5kg']}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['11kg']}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['15kg']}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['45kg']}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.H15}</td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['Total kilos vendidos']}</td>
               </tr>
-            ))}
-          </tbody>
+            </tbody>
+          )}
         </table>
       </div>
     </div>

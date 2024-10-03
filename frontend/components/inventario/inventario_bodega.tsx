@@ -104,7 +104,7 @@ export default function InventarioBodega() {
 
       <form>
         <div className="flex flex-col movile:flex-row">
-          <div className="flex flex-col movile:flex-row w-full gap-4 max-w-xl items-center ">
+          <div className="flex flex-col movile:flex-row w-full gap-4 max-w-xl items-end">
             <div className=" flex flex-col w-full movile:w-60">
               <p className="text-16px py-2 dark:text-textDark">Fecha</p>
               <input
@@ -115,17 +115,15 @@ export default function InventarioBodega() {
                 type="date"
               />
             </div>
-            <div className=" flex flex-col w-full movile:w-60">
-              <p className="text-16px py-2 dark:text-textDark">Hora</p>
-              <input type="text" className="p-4 h-14 bg-gris-1 dark:bg-bgDark1 rounded-xl" placeholder="Hora" />
+            <div className="flex flex-col w-full">
+              <button
+                onClick={(e) => buscar(e)}
+                className="bg-azul dark:text-textDark  text-white max-w-lg rounded-xl w-full  py-4 md:px-10 font-bold">
+                Buscar
+              </button>
             </div>
           </div>
         </div>
-        <button
-          onClick={(e) => buscar(e)}
-          className="bg-azul dark:text-textDark  text-white max-w-lg rounded-xl w-full my-4 py-3 md:px-10 font-bold">
-          Buscar
-        </button>
       </form>
 
       <div className="py-3">
