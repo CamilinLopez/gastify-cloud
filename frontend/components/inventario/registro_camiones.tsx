@@ -155,28 +155,38 @@ const Tabla = () => {
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
-          {data.map((item, i) => (
-            <tr key={i}>
-              <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px] dark:text-textDark whitespace-nowrap">
-                {item.fecha}
-              </td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.marca}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.modelo}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
-                {item.capacidad_carga}
-              </td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.placa}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
-                <button
-                  onClick={(e) => deleteCamones(e, item.id)}
-                  className="bg-azul rounded-xl font-Inter font-[500] text-blanco py-2 px-4">
-                  Eliminar
-                </button>
+        {data.length ? (
+          <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
+            {data.map((item, i) => (
+              <tr key={i}>
+                <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px] dark:text-textDark whitespace-nowrap">
+                  {item.fecha}
+                </td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.marca}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.modelo}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                  {item.capacidad_carga}
+                </td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.placa}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                  <button
+                    onClick={(e) => deleteCamones(e, item.id)}
+                    className="bg-azul rounded-xl font-Inter font-[500] text-blanco py-2 px-4">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        ) : (
+          <tbody className="bg-white dark:bg-bgDark1">
+            <tr>
+              <td colSpan={6} className="px-6 py-4 text-center align-middle text-secondary-14px dark:text-textDark">
+                No hay datos disponibles
               </td>
             </tr>
-          ))}
-        </tbody>
+          </tbody>
+        )}
       </table>
     </div>
   );

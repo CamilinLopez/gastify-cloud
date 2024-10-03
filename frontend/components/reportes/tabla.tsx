@@ -58,7 +58,7 @@ export default function Tabla() {
             <tbody className="bg-white dark:bg-bgDark1">
               <tr>
                 <td colSpan={8} className="px-6 py-4 text-center align-middle text-secondary-14px dark:text-textDark">
-                  No hay datos
+                  No hay datos disponibles
                 </td>
               </tr>
             </tbody>

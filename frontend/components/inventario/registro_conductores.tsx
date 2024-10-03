@@ -94,7 +94,7 @@ const Form = () => {
 
 const Tabla = () => {
   const dispatch: AppDispatch = useDispatch();
-  const textTable = ['Fecha De Registro', 'ID', 'Nombre de Conductor', 'Licencia', 'Acciones'];
+  const textTable = ['Fecha De Registro', 'ID', 'Nombre de Conductor', 'Número de teléfono', 'Acciones'];
   const dataTable = useSelector((state: RootState) => state.inventario.sectionConductores.tabla);
 
   useEffect(() => {
@@ -124,23 +124,33 @@ const Tabla = () => {
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
-          {dataTable?.map((item, i) => (
-            <tr key={i} className="text-center ">
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.fecha}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.id}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.nombre}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.licencia}</td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
-                <button
-                  onClick={(e) => deleteConductores(e, item.id)}
-                  className="bg-azul rounded-xl dark:text-textDark font-Inter font-[500] text-blanco py-1 px-2">
-                  Eliminar
-                </button>
+        {dataTable.length ? (
+          <tbody className="bg-white divide-y divide-gray-200 dark:divide-borderDarck dark:bg-bgDark1">
+            {dataTable?.map((item, i) => (
+              <tr key={i} className="text-center ">
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.fecha}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.id}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.nombre}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">{item.licencia}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                  <button
+                    onClick={(e) => deleteConductores(e, item.id)}
+                    className="bg-azul rounded-xl dark:text-textDark font-Inter font-[500] text-blanco py-1 px-2">
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        ) : (
+          <tbody className="bg-white dark:bg-bgDark1">
+            <tr>
+              <td colSpan={5} className="px-6 py-4 text-center align-middle text-secondary-14px dark:text-textDark">
+                No hay datos disponibles
               </td>
             </tr>
-          ))}
-        </tbody>
+          </tbody>
+        )}
       </table>
     </div>
   );

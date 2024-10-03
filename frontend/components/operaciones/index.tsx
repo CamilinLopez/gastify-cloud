@@ -458,31 +458,43 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-bgDark1 dark:divide-borderDarck divide-y divide-gray-200">
-            {tabla1?.map((item) => (
-              <tr key={item.id}>
-                {/* <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.id}</td> */}
-                <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.fecha}</td>
-                <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.camione.placa}</td>
-                <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.conductore.nombre}</td>
-                <td className="px-10 py-4 text-secondary-14px flex flex-col">
-                  <button
-                    onClick={(e) => estadoTablaDescarga(e, item)}
-                    className="text-start underline whitespace-nowrap">
-                    Abrir Tabla de Descarga
-                  </button>
-                  <button onClick={(e) => estadoTablacarga(e, item)} className="text-start underline whitespace-nowrap">
-                    Abrir Tabla de Carga
-                  </button>
-                  <button
-                    className="text-start underline whitespace-nowrap"
-                    onClick={(e) => estadoTablaVentas(e, item)}>
-                    Abrir Tabla de Ventas
-                  </button>
+          {tabla1.length ? (
+            <tbody className="bg-white dark:bg-bgDark1 dark:divide-borderDarck divide-y divide-gray-200">
+              {tabla1?.map((item) => (
+                <tr key={item.id}>
+                  {/* <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item.id}</td> */}
+                  <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.fecha}</td>
+                  <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.camione.placa}</td>
+                  <td className="px-10 py-4 text-secondary-14px dark:text-textDark">{item.conductore.nombre}</td>
+                  <td className="px-10 py-4 text-secondary-14px flex flex-col">
+                    <button
+                      onClick={(e) => estadoTablaDescarga(e, item)}
+                      className="text-start underline whitespace-nowrap">
+                      Abrir Tabla de Descarga
+                    </button>
+                    <button
+                      onClick={(e) => estadoTablacarga(e, item)}
+                      className="text-start underline whitespace-nowrap">
+                      Abrir Tabla de Carga
+                    </button>
+                    <button
+                      className="text-start underline whitespace-nowrap"
+                      onClick={(e) => estadoTablaVentas(e, item)}>
+                      Abrir Tabla de Ventas
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          ) : (
+            <tbody className="bg-white dark:bg-bgDark1">
+              <tr>
+                <td colSpan={4} className="px-6 py-4 text-center align-middle text-secondary-14px dark:text-textDark">
+                  No hay datos disponibles
                 </td>
               </tr>
-            ))}
-          </tbody>
+            </tbody>
+          )}
         </table>
       </div>
     </div>
