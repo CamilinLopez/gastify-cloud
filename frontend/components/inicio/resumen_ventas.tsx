@@ -86,7 +86,7 @@ const SalesChart = () => {
           font: {
             family: 'Inter',
             weight: 700,
-            size: window.innerWidth < 768 ? 10 : 13, // Ajuste del tamaño de la fuente según el tamaño de la pantalla
+            // size: window.innerWidth < 768 ? 10 : 13, // Ajuste del tamaño de la fuente según el tamaño de la pantalla
           },
         },
       },
@@ -99,7 +99,7 @@ const SalesChart = () => {
         ticks: {
           stepSize: 20, // Esto creará divisiones más claras en el eje Y
           font: {
-            size: window.innerWidth < 768 ? 10 : 13,
+            // size: window.innerWidth < 768 ? 10 : 13,
           },
         },
       },
