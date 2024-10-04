@@ -32,7 +32,7 @@ export default function Tabla() {
           <thead className="bg-blanco dark:bg-bgDark1">
             <tr className="[&>*]:text-center [&>*]:py-4">
               {textTable.map((item) => (
-                <th key={item} className="px-6 py-3 text-left text-xs text-14px dark:text-textDark whitespace-nowrap">
+                <th key={item} className="px-6 py-3 text-left text-xs text-14px dark:text-textDark">
                   {item}
                 </th>
               ))}
@@ -40,19 +40,13 @@ export default function Tabla() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:bg-bgDark1 dark:divide-borderDarck">
             {data.map((item, i) => (
-              <tr key={i} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-                <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px] dark:text-textDark whitespace-nowrap">
+              <tr key={i} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center ">
+                <td className="px-6 py-4 font-Inter font-[400] text-[#121417] text-[14px] dark:text-textDark">
                   {item['Tipo de cilindro']}
                 </td>
-                <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
-                  {item['Stock actual']}
-                </td>
-                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
-                  {item['Stock mínimo']}
-                </td>
-                <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
-                  {item['Alerta']}
-                </td>
+                <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark">{item['Stock actual']}</td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark">{item['Stock mínimo']}</td>
+                <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark">{item['Alerta']}</td>
               </tr>
             ))}
           </tbody>
