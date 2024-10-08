@@ -12,7 +12,6 @@ import { validateCamiones } from './validate';
 const Form = () => {
   const dispatch: AppDispatch = useDispatch();
   const response = useSelector((state: RootState) => state.inventario.status);
-  console.log(response);
 
   const [form, setForm] = useState<DatosCamiones>({
     id: '',
@@ -38,7 +37,9 @@ const Form = () => {
     if (!token) return undefined;
 
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
     const validateErrors = validateCamiones(form);
     setErrors(validateErrors);
@@ -133,7 +134,9 @@ const Tabla = () => {
     if (!token) return undefined;
 
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
     dispatch(tablaCamion(empresaId));
   }, [dispatch]);
 

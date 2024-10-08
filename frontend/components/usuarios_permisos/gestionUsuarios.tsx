@@ -8,6 +8,8 @@ import { FilterUsers } from '@/redux/slice/usuarios/thunks';
 import { CustomSelect } from './customSelect';
 import { axiosInstance } from '@/config/axios';
 import Swal from 'sweetalert2';
+import Cookies from 'js-cookie';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 interface FormProps {
   setDataFilter: React.Dispatch<React.SetStateAction<any[]>>;
@@ -15,6 +17,14 @@ interface FormProps {
 
 const Form: React.FC<FormProps> = ({ setDataFilter }) => {
   const dispatch = useDispatch<AppDispatch>();
+
+  //obtener el token del id de la empresa
+  const token = Cookies.get('token');
+  if (!token) return undefined;
+  const decoded = jwt.decode(token) as JwtPayload | null;
+  let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+  const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+  if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
   const { roles, status, error } = useSelector((state: RootState) => state.roles);
 
@@ -46,8 +56,9 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const res = await dispatch(FilterUsers(formValues));
+      const res = await dispatch(FilterUsers({ ...formValues, empresaId }));
       if (res.payload && res.payload.data) {
         setDataFilter(res.payload.data);
       }

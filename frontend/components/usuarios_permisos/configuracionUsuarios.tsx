@@ -97,7 +97,6 @@ const PrintCheckbox: React.FC<PrintCheckboxProps> = ({ roles, formValues, setRol
       const res = await axiosInstance.put(`/roles/asignar-permiso/${rolSeleccionado.id}`, {
         permisos: selectedPermissions,
       });
-    console.log(res)
       dispatch(fetchPermisos());
 
       Swal.fire({

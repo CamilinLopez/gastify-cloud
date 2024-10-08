@@ -71,7 +71,7 @@ export default function NavBar() {
             <Alertas name={'Alarmas'} />
           </div>
           <div>
-            <Usuarios name={'Camilo'} />
+            <Usuarios name={''} />
           </div>
         </div>
       </div>

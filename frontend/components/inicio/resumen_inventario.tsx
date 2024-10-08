@@ -18,7 +18,9 @@ export default function ResumenInventario() {
     const token = Cookies.get('token');
     if (!token) return undefined;
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
     dispatch(getTablaInventarioResumen(empresaId));
   }, [dispatch]);
   return (

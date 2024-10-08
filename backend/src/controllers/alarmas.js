@@ -1,5 +1,5 @@
 const { inventario_bodegas, tipo_cilindros, estado_cilindros, stockcilindros } = require('../db/index');
-const { literal, where } = require('sequelize');
+const { literal } = require('sequelize');
 const { generarFechaActual } = require('../utils/generadorId');
 
 const alarmaCilindros = async (empresaId) => {

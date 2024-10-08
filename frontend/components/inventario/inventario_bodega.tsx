@@ -24,28 +24,38 @@ const Tabla = () => {
             <th className="px-6 py-4 whitespace-nowrap">Prestados</th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200 dark:bg-bgDark1 dark:divide-borderDarck">
-          {data?.tipos.map((row, index) => (
-            <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
-              <td className="px-6 py-4 text-14px dark:text-textDark whitespace-nowrap">{data?.fecha}</td>
-              <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
-                {row.tipoCilindro}
-              </td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
-                {row.estados?.Lleno || 0}
-              </td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
-                {row.estados?.Vacío || 0}
-              </td>
-              <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
-                {row.estados?.Fallado || 0}
-              </td>
-              <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
-                {row.estados?.Prestado || 0}
+        {data?.tipos.length ? (
+          <tbody className="bg-white divide-y divide-gray-200 dark:bg-bgDark1 dark:divide-borderDarck">
+            {data?.tipos.map((row, index) => (
+              <tr key={index} className="[&>*]:py-6 [&>*]:font-medium [&>*]:text-center">
+                <td className="px-6 py-4 text-14px dark:text-textDark whitespace-nowrap">{data?.fecha}</td>
+                <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
+                  {row.tipoCilindro}
+                </td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                  {row.estados?.Lleno || 0}
+                </td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                  {row.estados?.Vacío || 0}
+                </td>
+                <td className="px-6 py-4 text-secondary-14px dark:text-textDark whitespace-nowrap">
+                  {row.estados?.Fallado || 0}
+                </td>
+                <td className="px-6 py-4 text-secondary-14px text-center dark:text-textDark whitespace-nowrap">
+                  {row.estados?.Prestado || 0}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        ) : (
+          <tbody className="bg-white dark:bg-bgDark1">
+            <tr>
+              <td colSpan={6} className="px-6 py-4 text-center align-middle text-secondary-14px dark:text-textDark">
+                No hay datos disponibles
               </td>
             </tr>
-          ))}
-        </tbody>
+          </tbody>
+        )}
       </table>
     </div>
   );
@@ -67,8 +77,9 @@ export default function InventarioBodega() {
       const token = Cookies.get('token');
       if (!token) return undefined;
       const decoded = jwt.decode(token) as JwtPayload | null;
-
-      const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+      let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+      const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+      if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
       await dispatch(getTablaBodega({ fecha: date, empresaId }));
     };
@@ -89,7 +100,9 @@ export default function InventarioBodega() {
     const token = Cookies.get('token');
     if (!token) return undefined;
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
     dispatch(getTablaBodega({ fecha: date, empresaId }));
   };

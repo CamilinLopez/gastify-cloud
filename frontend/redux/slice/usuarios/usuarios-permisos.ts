@@ -54,7 +54,6 @@ const permisosSlice = createSlice({
       })
       .addCase(fetchPermisos.fulfilled, (state, action: PayloadAction<string[]>) => {
         state.permisos = action.payload;
-        console.log(action)
         state.filteredRoutes = filterRoutes(RoutesMenu, action.payload);
         state.status = 'succeeded';
       })

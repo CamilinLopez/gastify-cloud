@@ -77,7 +77,9 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors })
     const token = Cookies.get('token');
     if (!token) return undefined;
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
     const validationErrors = validate(estado);
     setErrors(validationErrors);
@@ -98,9 +100,15 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors })
         <table className="min-w-full divide-y divide-gray-200 dark:divide-borderDarck">
           <thead className="bg-blanco dark:bg-bgDark1">
             <tr className="[&>*]:text-center [&>*]:py-4 [&>*]:text-xs [&>*]:text-14px  dark:text-textDark">
-              <th className="movile:px-0 movile:py-0 px-6 py-4 whitespace-nowrap">Tipo de cilindro</th>
-              <th className="movile:px-0 movile:py-0 px-6 py-4 whitespace-nowrap">Cantidad Cargada</th>
-              <th className="movile:px-0 movile:py-0 px-6 py-4 whitespace-nowrap">Observaciones</th>
+              <th className="px-6 py-3 text-left text-xs text-14px dark:text-textDark whitespace-nowrap">
+                Tipo de cilindro
+              </th>
+              <th className="px-6 py-3 text-left text-xs text-14px dark:text-textDark whitespace-nowrap">
+                Cantidad Cargada
+              </th>
+              <th className="px-6 py-3 text-left text-xs text-14px dark:text-textDark whitespace-nowrap">
+                Observaciones
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200 dark:bg-bgDark1 dark:divide-borderDarck">
@@ -114,14 +122,14 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors })
                     value={infoCilindros[row.tipo]?.cantidad}
                     onChange={handleOnChange}
                     type="number"
-                    className="w-16 sm:w-full text-black overflow-hidden dark:bg-bgDark dark:text-textDark"
+                    className="w-16 sm:w-10 text-black overflow-hidden dark:bg-bgDark dark:text-textDark"
                     placeholder="0"
                   />
                 </td>
                 <td className="text-secondary-14px text-center">
                   <input
                     type="text"
-                    className="w-full sm:ml-0 md:ml-12 text-black dark:bg-bgDark dark:text-textDark"
+                    className="w-48 movile:w-52 sm:ml-0 md:ml-12 text-black dark:bg-bgDark dark:text-textDark"
                     placeholder="Ingrese sus Observaciones"
                   />
                 </td>
@@ -217,7 +225,9 @@ const TablaDescarga: React.FC<TypeTablaDescarga> = ({ datosCarga, estado, setEst
     const token = Cookies.get('token');
     if (!token) return undefined;
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
     if (registrar === false) {
       setRegistrar(true); //si se registra informacion cambia de estado para que no pueda modificar
@@ -369,7 +379,9 @@ const TablaOperaciones: React.FC<TablaReportesDiarias> = ({ infoCarga, tabla, es
   const token = Cookies.get('token');
   if (!token) return undefined;
   const decoded = jwt.decode(token) as JwtPayload | null;
-  const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+  let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+  const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+  if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
   const estadoTablaVentas = (e: React.MouseEvent<HTMLButtonElement>, carga: InfoReportesDiarios) => {
     e.preventDefault();
@@ -615,7 +627,9 @@ const TablaVentas: React.FC<TypeTablaVisualCarga> = ({ carga, estado, setEstado 
     const token = Cookies.get('token');
     if (!token) return undefined;
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
     const array = Object.entries(form).map(([key, value]) => ({
       tipo: key,
@@ -779,7 +793,9 @@ export default function SectionsOperacion() {
     const token = Cookies.get('token');
     if (!token) return undefined;
     const decoded = jwt.decode(token) as JwtPayload | null;
-    const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+    const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+    if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
 
     dispatch(getTablaConductores(empresaId));
     dispatch(tablaCamion(empresaId));

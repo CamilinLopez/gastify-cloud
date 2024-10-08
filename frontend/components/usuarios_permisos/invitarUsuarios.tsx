@@ -212,7 +212,7 @@ export default function InvitarUsuarios() {
             <thead className="bg-blanco dark:bg-bgDark1">
               <tr>
                 {textTable.map((item) => (
-                  <th key={item} className="px-6 py-3 text-left text-xs text-13px dark:text-textDark">
+                  <th key={item} className="px-6 py-3 text-left text-xs text-13px dark:text-textDark whitespace-nowrap">
                     {item}
                   </th>
                 ))}

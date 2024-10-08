@@ -11,7 +11,6 @@ const bcrypt = require('bcrypt');
 
 let empresaIdGlobal = null;
 
-
 const crearEmpresa = async (req, res, next) => {
   try {
     passport.authenticate('registrar', { session: false }, async (err, user, info) => {
@@ -31,31 +30,26 @@ const crearEmpresa = async (req, res, next) => {
       //crear alarmas para cilindros
       await stockcilindros.bulkCreate([
         {
-          id: 1,
           minStock: 0,
           tipoCilindroId: 1,
           empresaId: empresas.id,
         },
         {
-          id: 2,
           minStock: 0,
           tipoCilindroId: 2,
           empresaId: empresas.id,
         },
         {
-          id: 3,
           minStock: 0,
           tipoCilindroId: 3,
           empresaId: empresas.id,
         },
         {
-          id: 4,
           minStock: 0,
           tipoCilindroId: 4,
           empresaId: empresas.id,
         },
         {
-          id: 5,
           minStock: 0,
           tipoCilindroId: 5,
           empresaId: empresas.id,
@@ -95,10 +89,8 @@ const signinEmpresa = async (req, res, next) => {
 
       req.login(user, { session: false }, async (err) => {
         if (err) return next(err);
-        const body = { id: user.empresa.dataValues.id || user.usuario.dataValues.id };
-
+        const body = { id: user.empresa.dataValues.id || user.usuario.dataValues.id, empresaId: user.empresa?.empresaId };
         const token = jwt.sign(body, SECRET_KEY);
-
         // return res.redirect(`${PAGE_URL}/dashboard/inicio`);
         return res.json({
           dashboard: `${PAGE_URL}/dashboard/inicio`,

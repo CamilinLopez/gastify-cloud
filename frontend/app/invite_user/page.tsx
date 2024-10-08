@@ -112,7 +112,7 @@ useEffect(() => {
           </div>
 
           <div className="flex flex-col gap-y-5">
-            <p className="text-secondary-14px">Nombre de usuario: {usuario}</p>
+            <p className="text-secondary-14px">Correo de usuario: {usuario}</p>
             <form className="flex flex-col gap-y-6" onSubmit={handleFormSubmit}>
             <div className="flex flex-col">
                 <p className="text-16px">Nombre</p>

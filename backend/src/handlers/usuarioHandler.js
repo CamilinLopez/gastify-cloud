@@ -3,21 +3,19 @@ const {
   obtenerTodosUsuarios,
   obtenerTodosUsuariosFiltrado,
   infoUserAutenthicate,
-  deleteUser 
+  deleteUser,
 } = require('../controllers/usuariosControllers');
-const { generateToken } = require('../helpers/generateToken')
-const { PAGE_URL, SECRET_KEY } = require('../config/env')
-
+const { generateToken } = require('../helpers/generateToken');
+const { PAGE_URL, SECRET_KEY } = require('../config/env');
 
 const ingresarPassword = async (req, res) => {
   try {
-    const {email, password, empresa, nombre}= req.body;
-    const data = await crearUsuarioPasswordDB({email, password, empresa, nombre});
+    const { email, password, empresa, nombre } = req.body;
+    const data = await crearUsuarioPasswordDB({ email, password, empresa, nombre });
 
     const token = await generateToken({ id: data.id }, SECRET_KEY);
 
-    res.status(200).json({ token:token.authentication ,usuario:data, dashboard:`${PAGE_URL}/dashboard/inicio` });
-
+    res.status(200).json({ token: token.authentication, usuario: data, dashboard: `${PAGE_URL}/dashboard/inicio` });
   } catch (error) {
     res.status(400).json({ errors: error.message });
   }
@@ -25,7 +23,7 @@ const ingresarPassword = async (req, res) => {
 
 const todosUsuarios = async (req, res) => {
   try {
-    const data = await obtenerTodosUsuarios({req});
+    const data = await obtenerTodosUsuarios({ req });
 
     res.status(200).json({ data });
   } catch (error) {
@@ -33,11 +31,10 @@ const todosUsuarios = async (req, res) => {
   }
 };
 
-
 const todosUsuariosFiltrado = async (req, res) => {
   try {
-    const { id, email, rolId } = req.body;
-    const data = await obtenerTodosUsuariosFiltrado({ id, email, rolId });
+    const { id, email, rolId, empresaId } = req.body;
+    const data = await obtenerTodosUsuariosFiltrado({ id, email, rolId, empresaId });
 
     res.status(200).json({ data });
   } catch (error) {
@@ -45,11 +42,10 @@ const todosUsuariosFiltrado = async (req, res) => {
   }
 };
 
-
 const usuarioAutenticado = async (req, res) => {
   try {
-    userId = req.user.id
-    const data = await infoUserAutenthicate({ id:userId });
+    userId = req.user.id;
+    const data = await infoUserAutenthicate({ id: userId });
 
     res.status(200).json(data);
   } catch (error) {
@@ -57,11 +53,10 @@ const usuarioAutenticado = async (req, res) => {
   }
 };
 
-
 const eliminarUsuario = async (req, res) => {
   try {
-    const {userId} = req.params;
-    const data = await deleteUser({ id:userId });
+    const { userId } = req.params;
+    const data = await deleteUser({ id: userId });
 
     res.status(200).json(data);
   } catch (error) {
@@ -73,5 +68,5 @@ module.exports = {
   todosUsuarios,
   todosUsuariosFiltrado,
   usuarioAutenticado,
-  eliminarUsuario
+  eliminarUsuario,
 };

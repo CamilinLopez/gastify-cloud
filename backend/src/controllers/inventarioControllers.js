@@ -25,7 +25,7 @@ const getTablaInventarioBodegaDB = async ({ fecha, empresaId }) => {
       ],
       where: {
         fecha: {
-          [Op.lte]: today,
+          [Op.eq]: today,
         },
         empresaId,
       },
