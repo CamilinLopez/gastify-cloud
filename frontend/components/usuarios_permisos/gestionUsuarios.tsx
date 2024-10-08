@@ -19,14 +19,14 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   //obtener el token del id de la empresa
+  const { roles, status, error } = useSelector((state: RootState) => state.roles);
+
   const token = Cookies.get('token');
   if (!token) return undefined;
   const decoded = jwt.decode(token) as JwtPayload | null;
   let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
   const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
   if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
-
-  const { roles, status, error } = useSelector((state: RootState) => state.roles);
 
   const [formValues, setFormValues] = useState({
     id: '',
