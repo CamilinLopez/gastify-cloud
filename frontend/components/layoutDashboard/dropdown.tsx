@@ -22,9 +22,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsuarioData } from '@/redux/slice/usuarios/usuario-data';
 import { RootState, AppDispatch } from '@/redux/store';
 
-
-
-
 export const Usuarios = ({ name }: SelectOptionType) => {
   const router = useRouter();
 
@@ -32,7 +29,6 @@ export const Usuarios = ({ name }: SelectOptionType) => {
   const usuario = useSelector((state: RootState) => state.dataUser.usuario);
   const status = useSelector((state: RootState) => state.dataUser.status);
 
-  
   const [open, setOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -43,7 +39,7 @@ export const Usuarios = ({ name }: SelectOptionType) => {
     if (status === 'idle') {
       dispatch(fetchUsuarioData());
     }
-    
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setOpen(false);
@@ -114,7 +110,10 @@ export const Alertas = ({ name }: SelectOptionType) => {
       const token = Cookies.get('token');
       if (!token) return undefined;
       const decoded = jwt.decode(token) as JwtPayload | null;
-      const empresaId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+      let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+      const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+      if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
+
       axiosInstance
         .get('/alarmas/getAlarmaCilindros', { params: { empresaId } })
         .then((data) => setResponse({ ...response, result: data.data.data.result, status: 'succeeded' }))

@@ -44,22 +44,28 @@ const CilindrosPorDia = () => {
         <p className="text-16px dark:text-textDark">Cantidad de cilindros vendidos en este día</p>
         <p className="text-32px dark:dark:text-textDark">{today}</p>
       </div>
-      <div className="flex h-40 items-end gap-x-3 w-full">
-        {array.map((item, index) => (
-          <div key={index} className="flex flex-col gap-y-2 w-2/3">
-            <div
-              className="border-t-[2px] dark:bg-azul dark:border-bgDark1 border-gris-2 bg-gris-1"
-              style={{
-                height: `${(Number(item.totalCantidad) / maxValue) * 100}px`,
-              }}></div>
-            <div className="flex items-center">
-              <p className="text-13px dark:text-textDark">{item.tipoCilindro.tipo}</p>
-              <p className="dark:text-textDark">-</p>
-              <p className="text-13px dark:text-textDark ">{item.totalCantidad}</p>
+      {array.length ? (
+        <div className="flex h-40 items-end gap-x-3 w-full">
+          {array.map((item, index) => (
+            <div key={index} className="flex flex-col gap-y-2 w-2/3">
+              <div
+                className="border-t-[2px] dark:bg-azul dark:border-bgDark1 border-gris-2 bg-gris-1"
+                style={{
+                  height: `${(Number(item.totalCantidad) / maxValue) * 100}px`,
+                }}></div>
+              <div className="flex items-center">
+                <p className="text-13px dark:text-textDark">{item.tipoCilindro.tipo}</p>
+                <p className="dark:text-textDark">-</p>
+                <p className="text-13px dark:text-textDark ">{item.totalCantidad}</p>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className='h-40 flex items-center justify-center' >
+          <h1 className="text-32px dark:text-textDark">Sin ventas</h1>
+        </div>
+      )}
     </div>
   );
 };

@@ -40,11 +40,11 @@ const TablaCarga: React.FC<TablaCargaProps> = ({ estado, setEstado, setErrors })
   const response = useSelector((state: RootState) => state.operaciones.status);
 
   const [infoCilindros, setInfoCilindros] = useState<nameCilindro>({
-    '5kg': { cantidad: '', cilindro: { id: '1', tipo: '5kg' } },
-    '11kg': { cantidad: '', cilindro: { id: '2', tipo: '11kg' } },
-    '15kg': { cantidad: '', cilindro: { id: '3', tipo: '15kg' } },
-    '45kg': { cantidad: '', cilindro: { id: '4', tipo: '45kg' } },
-    H15: { cantidad: '', cilindro: { id: '5', tipo: 'H15' } },
+    '5kg': { cantidad: '0', cilindro: { id: '1', tipo: '5kg' } },
+    '11kg': { cantidad: '0', cilindro: { id: '2', tipo: '11kg' } },
+    '15kg': { cantidad: '0', cilindro: { id: '3', tipo: '15kg' } },
+    '45kg': { cantidad: '0', cilindro: { id: '4', tipo: '45kg' } },
+    H15: { cantidad: '0', cilindro: { id: '5', tipo: 'H15' } },
   });
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {

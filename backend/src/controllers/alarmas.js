@@ -1,5 +1,5 @@
 const { inventario_bodegas, tipo_cilindros, estado_cilindros, stockcilindros } = require('../db/index');
-const { literal } = require('sequelize');
+const { literal, where } = require('sequelize');
 const { generarFechaActual } = require('../utils/generadorId');
 
 const alarmaCilindros = async (empresaId) => {
@@ -20,6 +20,7 @@ const alarmaCilindros = async (empresaId) => {
           where: { tipo: 'Lleno' },
         },
       ],
+      where: { empresaId },
       group: ['tipoCilindroId', 'tipoCilindro.id', 'tipoCilindro.tipo', 'estadoCilindro.id', 'estadoCilindro.tipo'],
     });
     const alarmas = await stockcilindros.findAll({
