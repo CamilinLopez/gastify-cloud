@@ -20,28 +20,11 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
 
   //obtener el token del id de la empresa
   const { roles, status, error } = useSelector((state: RootState) => state.roles);
-
-  const token = Cookies.get('token');
-  if (!token) return undefined;
-  const decoded = jwt.decode(token) as JwtPayload | null;
-  let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
-  const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
-  if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
-
   const [formValues, setFormValues] = useState({
     id: '',
     email: '',
     rolId: '',
   });
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = event.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,6 +36,23 @@ const Form: React.FC<FormProps> = ({ setDataFilter }) => {
 
     fetchData();
   }, [dispatch]);
+
+  const token = Cookies.get('token');
+  if (!token) return undefined;
+  const decoded = jwt.decode(token) as JwtPayload | null;
+  let empresaId = typeof decoded === 'object' && decoded !== null ? decoded.empresaId : undefined;
+  const userId = typeof decoded === 'object' && decoded !== null ? decoded.id : undefined;
+  if (!empresaId) empresaId = userId; // en caso de que empresaId no tenga nada, el id de la empresa se queda en userId
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

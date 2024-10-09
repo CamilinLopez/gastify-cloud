@@ -1,3 +1,33 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended" // Asegúrate de incluir esta línea
+  ],
+  "parser": "@typescript-eslint/parser", // Si usas TypeScript, de lo contrario omite esta línea
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint" // Si usas TypeScript, de lo contrario omite esta línea
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off", // No necesario con React 17+
+    "react-hooks/rules-of-hooks": "error", // Reglas de los hooks
+    "react-hooks/exhaustive-deps": "warn" // Avisa sobre dependencias en useEffect
+  },
+  "settings": {
+    "react": {
+      "version": "detect" // Detecta automáticamente la versión de React
+    }
+  }
 }
