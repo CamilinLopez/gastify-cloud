@@ -20,7 +20,7 @@ export default function SectionCuenta() {
   const usuario = useSelector((state: RootState) => state.dataUser.usuario);
   const status = useSelector((state: RootState) => state.dataUser.status);
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
   const [form, setForm] = useState({
     nombre: '',
     correo: '',
@@ -38,11 +38,10 @@ export default function SectionCuenta() {
       setForm({
         nombre: usuario.nombre || '',
         correo: usuario.email || '',
-        password: '', 
+        password: '',
       });
     }
   }, [usuario]);
-
 
   const toggleDropdown = () => setOpen(!open);
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -52,31 +51,30 @@ export default function SectionCuenta() {
     });
   };
 
- const registrar = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  e.preventDefault();
+  const registrar = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
-  try {
-    const response = await axiosInstance.put(`/empresa/update-user/${usuario?.id}`, {
-      nombre: form.nombre,
-      email: form.correo,
-      password: form.password,
-    });
-    // console.log(response.data);
+    try {
+      const response = await axiosInstance.put(`/empresa/update-user/${usuario?.id}`, {
+        nombre: form.nombre,
+        email: form.correo,
+        password: form.password,
+      });
+      // console.log(response.data);
 
-    setForm({
-      nombre: response.data.data.nombre || '',
-      correo: response.data.data.email || '',
-      password: '', // Resetea la contraseña después de la actualización
-    });
-    dispatch(fetchUsuarioData());
+      setForm({
+        nombre: response.data.data.nombre || '',
+        correo: response.data.data.email || '',
+        password: '', // Resetea la contraseña después de la actualización
+      });
+      dispatch(fetchUsuarioData());
 
-
-    toggleDropdown();
-  } catch (error) {
-    console.error('Error al actualizar los datos del usuario:', error);
-    // Puedes manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
-  }
-};
+      toggleDropdown();
+    } catch (error) {
+      console.error('Error al actualizar los datos del usuario:', error);
+      // Puedes manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
+    }
+  };
 
   return (
     <div className="p-4 w-full dark:bg-bgDark">
@@ -122,7 +120,7 @@ export default function SectionCuenta() {
                 name="nombre"
                 value={form.nombre}
                 onChange={handleOnChange}
-                className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-4/12"
+                className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-full movile:w-4/12"
                 type="text"
                 min="0"
                 placeholder="supergas"
@@ -134,7 +132,7 @@ export default function SectionCuenta() {
                 name="correo"
                 value={form.correo}
                 onChange={handleOnChange}
-                className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-4/12"
+                className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-full movile:w-4/12"
                 type="email"
                 min="0"
                 placeholder="supergas@gmail.com"
@@ -146,7 +144,7 @@ export default function SectionCuenta() {
                 name="password"
                 value={form.password}
                 onChange={handleOnChange}
-                className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-4/12"
+                className="p-4 h-14 bg-gris-1 dark:text-textDark dark:bg-bgDark1 rounded-xl w-full movile:w-4/12"
                 type="password"
                 min="0"
                 placeholder="********"
@@ -154,7 +152,7 @@ export default function SectionCuenta() {
             </div>
             <button
               onClick={(e) => registrar(e)}
-              className="w-4/12 h-12 bg-azul rounded-xl font-Inter font-[500] dark:text-textDark text-blanco">
+              className="w-full movile:w-4/12 h-12 bg-azul rounded-xl font-Inter font-[500] dark:text-textDark text-blanco">
               Registrar
             </button>
           </form>
