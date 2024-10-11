@@ -7,9 +7,9 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export const axiosInstance = axios.create({
   baseURL: `${apiUrl}`,
   // Puedes descomentar el httpsAgent si estás usando un servidor con un certificado autofirmado
-  // httpsAgent: new https.Agent({
-  //   rejectUnauthorized: false,
-  // }),
+  httpsAgent: new https.Agent({
+    rejectUnauthorized: false,
+  }),
 });
 
 axiosInstance.interceptors.request.use(
