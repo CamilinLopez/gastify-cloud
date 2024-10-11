@@ -2,7 +2,6 @@ const server = require('./src/app');
 const { database } = require('./src/db/index');
 require('dotenv').config();
 
-
 const initializeDatabase = async () => {
   try {
     await database.authenticate();
@@ -11,7 +10,7 @@ const initializeDatabase = async () => {
     await database.sync({ force: false });
     console.log(`Connected to ${database.getDatabaseName()} database`);
 
-    server.listen(3001, () => console.log('listening on por 3001'));
+    server.listen(443, () => console.log('listening on por 443'));
   } catch (error) {
     console.log('Unable to connect to the database:', error.message);
   }
