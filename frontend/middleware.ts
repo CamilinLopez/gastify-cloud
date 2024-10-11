@@ -15,13 +15,13 @@ export async function middleware(request: NextRequest) {
         },
         body: JSON.stringify({ token: jwt.value }),
       });
-
       const data = await response.json();
+      console.log(data, 'holaaaa');
       if (response.status == 200) {
         Cookies.set('token', data.token, {
-          expires: 7, 
-          secure: true, 
-          sameSite: 'none', 
+          expires: 7,
+          secure: true,
+          sameSite: 'none',
         });
 
         return NextResponse.next();
