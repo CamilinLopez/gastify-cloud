@@ -15,6 +15,7 @@ const Form = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -50,7 +51,7 @@ const Form = () => {
         <p className="text-16px">Contraseña</p>
         <input
           className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="******"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -58,7 +59,7 @@ const Form = () => {
         />
       </div>
       <div className="flex gap-x-3">
-        <input type="checkbox" />
+        <input type="checkbox" checked={showPassword} onChange={(e) => setShowPassword(e.target.checked)} />
         <p>Mostrar</p>
       </div>
 
