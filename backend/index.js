@@ -20,9 +20,10 @@ const initializeDatabase = async () => {
     console.log(`Connected to ${database.getDatabaseName()} database`);
 
     // Crear el servidor HTTPS
-    https.createServer(httpsOptions, server).listen(3001, () => {
-      console.log('> Server started on https://localhost:3001');
-    });
+    // https.createServer(httpsOptions, server).listen(3001, () => {
+    //   console.log('> Server started on https://localhost:3001');
+    // });
+    server.listen(3001, () => console.log('listening on por 3001'));
   } catch (error) {
     console.log('Unable to connect to the database:', error.message);
   }
