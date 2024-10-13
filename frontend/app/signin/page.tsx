@@ -47,7 +47,7 @@ const Form = () => {
         />
       </div>
       <div className="movile:w-1/2 w-full">
-        <p className="text-16px">Password</p>
+        <p className="text-16px">Contraseña</p>
         <input
           className="h-14 w-full border-[1px] rounded-xl pl-4 pr-24"
           type="password"
@@ -59,7 +59,7 @@ const Form = () => {
       </div>
       <div className="flex gap-x-3">
         <input type="checkbox" />
-        <p>Remember me</p>
+        <p>Mostrar</p>
       </div>
 
       {error && <p className="text-red-500 mt-3">{error}</p>}
