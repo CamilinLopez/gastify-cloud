@@ -12,6 +12,8 @@ const alarmasRouters = require('./alarmasRouters');
 
 const routes = Router();
 
+
+
 routes.use('/prueba', pruebaRouters);
 
 //rutas para la seccion abastecimiento
