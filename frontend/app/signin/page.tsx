@@ -76,7 +76,7 @@ export default function Signin() {
   const apiUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex h-screen flex-col justify-between">
       <div className="border-b-[1px]">
         <div className="px-10">
           <Navbar />
@@ -99,7 +99,7 @@ export default function Signin() {
       <div className="movile:px-40 px-5 w-full">
         <Form />
       </div>
-      <div className="w-full flex items-center justify-center my-20 movile:my-4">
+      <div className="w-full flex items-center justify-center my-4">
         <Link className="text-secondary-14px" href={`${apiUrl}/registrar`}>
           Registrarse
         </Link>
