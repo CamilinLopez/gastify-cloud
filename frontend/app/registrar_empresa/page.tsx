@@ -10,7 +10,6 @@ import { AppDispatch } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 
 const Form = () => {
-  const router = useRouter();
   const [formValues, setFormValues] = useState({
     nombre: '',
     email: '',
@@ -109,7 +108,6 @@ export default function Register() {
             <h1 className="text-24px">Empezar</h1>
             <p className="font-Inter font-[400] text-[16px]">Comience a configurar su cuenta</p>
           </div>
-          <div className="w-full flex justify-center">{/* <p className="text-secondary-14px">|</p> */}</div>
           <div className="w-full">
             <Form />
           </div>
