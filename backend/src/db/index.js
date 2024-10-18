@@ -22,22 +22,22 @@ const urlDocker = 'postgres://protolylab:azsxdcfv@database:5432/gastifycloud';
 const urlDatabase = process.env.URL_DATABASE;
 
 //cambiar urlLocal por urlDocker para ejecutar el proyecto con docker.
-// const database = new Sequelize(`${urlLocal}`, {
-//   logging: false,
-//   native: false,
-// });
-
-const database = new Sequelize(`${urlDatabase}`, {
-  dialect: 'postgres',
+const database = new Sequelize(`${urlLocal}`, {
   logging: false,
   native: false,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-    },
-  },
 });
+
+// const database = new Sequelize(`${urlDatabase}`, {
+//   dialect: 'postgres',
+//   logging: false,
+//   native: false,
+//   dialectOptions: {
+//     ssl: {
+//       require: true,
+//       rejectUnauthorized: false,
+//     },
+//   },
+// });
 
 //llamar modelos
 modelEstadocilindro(database);
